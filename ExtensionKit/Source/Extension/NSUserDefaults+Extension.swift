@@ -6,7 +6,7 @@
 //  Copyright © 2016 Haioo. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 public let UserDefaults = NSUserDefaults.standardUserDefaults()
 
