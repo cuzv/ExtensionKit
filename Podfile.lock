@@ -1,0 +1,43 @@
+PODS:
+  - Alamofire (3.1.4)
+  - Kingfisher (1.8.5)
+  - Localize-Swift (1.0)
+  - ReactiveCocoa (4.0.4-alpha-4):
+    - ReactiveCocoa/UI (= 4.0.4-alpha-4)
+    - Result (~> 1.0)
+  - ReactiveCocoa/Core (4.0.4-alpha-4):
+    - ReactiveCocoa/no-arc
+    - Result (~> 1.0)
+  - ReactiveCocoa/no-arc (4.0.4-alpha-4):
+    - Result (~> 1.0)
+  - ReactiveCocoa/UI (4.0.4-alpha-4):
+    - ReactiveCocoa/Core
+    - Result (~> 1.0)
+  - Redes (0.7):
+    - Alamofire
+  - Result (1.0.1)
+  - Reveal-iOS-SDK (1.6.2)
+  - SnapKit (0.18.0)
+  - Toucan (0.4.3)
+
+DEPENDENCIES:
+  - Kingfisher
+  - Localize-Swift
+  - ReactiveCocoa (~> 4.0.4-alpha-4)
+  - Redes
+  - Reveal-iOS-SDK
+  - SnapKit
+  - Toucan
+
+SPEC CHECKSUMS:
+  Alamofire: fbc829692f351fa1d8a31dd75fd7f7f56fea31fb
+  Kingfisher: 780fed0fa82692a3bd59d53329ae2b85cdd354a5
+  Localize-Swift: ca63dd91a8661baba5b3f807f8209d4590f7caaf
+  ReactiveCocoa: e459ea92099447802df20c4735e31e8139b06094
+  Redes: c10aa4eed7495d6a75449c58a703f8584ff2fbc9
+  Result: caef80340451e1f07492fa1e89117f83613bce24
+  Reveal-iOS-SDK: e2250b3c155bcfac53ae223ddc1f76d08f206c33
+  SnapKit: e1f090a6d47b1dd4bd89b73f72b6746a7835ef3c
+  Toucan: 3e2319c8fb9c7a2fb9c30f6d4ecdc6b8a2f1c92b
+
+COCOAPODS: 0.39.0
