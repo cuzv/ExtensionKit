@@ -112,6 +112,66 @@ public extension UIFont {
         return UIFont.headline
     }
     
+    public class var size18Fixed: UIFont {
+        return UIFont.systemFontOfSize(18.0)
+    }
+    
+    public class var size19Fixed: UIFont {
+        return UIFont.systemFontOfSize(19.0)
+    }
+    
+    public class var size20Fixed: UIFont {
+        return UIFont.systemFontOfSize(20.0)
+    }
+    
+    public class var size21Fixed: UIFont {
+        return UIFont.systemFontOfSize(21.0)
+    }
+    
+    public class var size22Fixed: UIFont {
+        return UIFont.systemFontOfSize(22.0)
+    }
+    
+    public class var size23Fixed: UIFont {
+        return UIFont.systemFontOfSize(23.0)
+    }
+    
+    public class var size24Fixed: UIFont {
+        return UIFont.systemFontOfSize(24.0)
+    }
+    
+    public class var size26Fixed: UIFont {
+        return UIFont.systemFontOfSize(26.0)
+    }
+    
+    public class var size28Fixed: UIFont {
+        return UIFont.systemFontOfSize(28.0)
+    }
+    
+    public class var size30Fixed: UIFont {
+        return UIFont.systemFontOfSize(30.0)
+    }
+    
+    public class var size32Fixed: UIFont {
+        return UIFont.systemFontOfSize(32.0)
+    }
+    
+    public class var size34Fixed: UIFont {
+        return UIFont.systemFontOfSize(34.0)
+    }
+    
+    public class var size36Fixed: UIFont {
+        return UIFont.systemFontOfSize(36.0)
+    }
+    
+    public class var size38Fixed: UIFont {
+        return UIFont.systemFontOfSize(38.0)
+    }
+    
+    public class var size40Fixed: UIFont {
+        return UIFont.systemFontOfSize(40.0)
+    }
+    
     // MARK: - available
     
     public class var callout: UIFont {

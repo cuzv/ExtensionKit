@@ -194,8 +194,37 @@ public extension UITextField {
     
     public var rac_text: MutableProperty<String> {
         return lazyAssociatedProperty(self, key: &AssociationKey.text) {
-            
             self.addTarget(self, action: "changed", forControlEvents: UIControlEvents.EditingChanged)
+            
+            let property = MutableProperty<String>(self.text ?? "")
+            property.producer
+                .startWithNext {
+                    newValue in
+                    self.text = newValue
+            }
+            return property
+        }
+    }
+    
+    internal func changed() {
+        rac_text.value = self.text ?? ""
+    }
+}
+
+public extension UITextView {
+    public func rac_textSignalProducer() -> SignalProducer<String, NoError> {
+        return self.rac_textSignal().toSignalProducer()
+            .map { $0 as! String }
+            .ignoreError()
+    }
+    
+    public var rac_text: MutableProperty<String> {
+        return lazyAssociatedProperty(self, key: &AssociationKey.text) {
+            NSNotificationCenter.defaultCenter()
+                .rac_notifications(UITextViewTextDidChangeNotification, object: self)
+                .startWithNext({ [weak self] (notification) -> () in
+                self?.changed()
+            })
             
             let property = MutableProperty<String>(self.text ?? "")
             property.producer
