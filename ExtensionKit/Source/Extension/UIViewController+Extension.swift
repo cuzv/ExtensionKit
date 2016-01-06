@@ -36,6 +36,17 @@ private struct AssociationKey {
 
 // MARK: - Present UIAlertController
 
+public extension UIAlertAction {
+    private var alertActionIndex: Int! {
+        get { return associatedObjectForKey(&AssociationKey.alertActionIndex) as? Int }
+        set { associateRetainObject(newValue, forKey: &AssociationKey.alertActionIndex) }
+    }
+    
+    public var index: Int! {
+        return self.alertActionIndex
+    }
+}
+
 public extension UIViewController {
     /// Present error.
     public func presentError(error: NSError) {
@@ -49,9 +60,40 @@ public extension UIViewController {
         title title: String = "",
         message: String,
         cancelTitle: String = "好",
-        cancelHandler: ((UIAlertAction) -> ())? = nil)
+        cancelHandler: ((UIAlertAction) -> ())? = nil,
+        otherTitles: [String]? = nil,
+        othersHandler: ((UIAlertAction) -> ())? = nil)
     {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+        let cancelAction = UIAlertAction(title: cancelTitle, style: .Cancel, handler: cancelHandler)
+        alertController.addAction(cancelAction)
+        
+        if let otherTitles = otherTitles {
+            for otherTitle in otherTitles {
+                let action = UIAlertAction(title: otherTitle, style: .Default, handler: othersHandler)
+                action.alertActionIndex = otherTitles.indexOf(otherTitle)
+                alertController.addAction(action)
+            }
+        }
+        
+        presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    /// Present ActionSheet.
+    public func presentActionSheet(
+        title title: String = "",
+        message: String,
+        cancelTitle: String = "取消",
+        cancelHandler: ((UIAlertAction) -> ())? = nil,
+        actionTitles: [String],
+        actionHandler: ((UIAlertAction) -> ())? = nil)
+    {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .ActionSheet)
+        for actionTitle in actionTitles {
+            let action = UIAlertAction(title: actionTitle, style: .Default, handler: actionHandler)
+            action.alertActionIndex = actionTitles.indexOf(actionTitle)
+            alertController.addAction(action)
+        }
         let cancelAction = UIAlertAction(title: cancelTitle, style: .Cancel, handler: cancelHandler)
         alertController.addAction(cancelAction)
         presentViewController(alertController, animated: true, completion: nil)
@@ -80,6 +122,26 @@ public func doPresentError(error: NSError) {
     findLastPresentedViewController()?.presentError(error)
 }
 
+/// The convience version of `presentActionSheet(title:message:cancelTitle:cancelHandler:actionTitles:actionHandler:)`.
+/// Use this func carefully, it maybe iterate many times.
+public func doPresentActionSheet(
+    title title: String = "",
+    message: String,
+    cancelTitle: String = "取消",
+    cancelHandler: ((UIAlertAction) -> ())? = nil,
+    actionTitles:[String],
+    actionHandler:((UIAlertAction) -> ())? = nil)
+{
+    findLastPresentedViewController()?.presentActionSheet(
+        title: title,
+        message: message,
+        cancelTitle: cancelTitle,
+        cancelHandler: cancelHandler,
+        actionTitles: actionTitles,
+        actionHandler: actionHandler
+    )
+}
+
 // MARK: - Find last time presented view controller
 
 /// Returns the most recently presented UIViewController (visible).
@@ -105,17 +167,6 @@ public func findLastPresentedViewController() -> UIViewController? {
 
 // MARK: - Present UIImagePickerController
 
-public extension UIAlertAction {
-    private var alertActionIndex: Int! {
-        get { return associatedObjectForKey(&AssociationKey.alertActionIndex) as? Int }
-        set { associateRetainObject(newValue, forKey: &AssociationKey.alertActionIndex) }
-    }
-    
-    public var index: Int! {
-        return self.alertActionIndex
-    }
-}
-
 private extension UIImagePickerController {
     private var imagePickerCompletionHandlerWrapper: ClosureWrapper<UIImagePickerController> {
         get { return associatedObjectForKey(&AssociationKey.imagePickerCompletionHandlerWrapper) as! ClosureWrapper<UIImagePickerController> }
@@ -124,26 +175,6 @@ private extension UIImagePickerController {
 }
 
 public extension UIViewController {
-    /// Present ActionSheet.
-    public func presentActionSheet(
-        title title: String = "",
-        message: String,
-        cancelTitle: String = "取消",
-        cancelHandler: ((UIAlertAction) -> ())? = nil,
-        actionTitles:[String],
-        actionHandler:((UIAlertAction) -> ())? = nil)
-    {
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .ActionSheet)
-        for actionTitle in actionTitles {
-            let action = UIAlertAction(title: actionTitle, style: .Default, handler: actionHandler)
-            action.alertActionIndex = actionTitles.indexOf(actionTitle)
-            alertController.addAction(action)
-        }
-        let cancelAction = UIAlertAction(title: cancelTitle, style: .Cancel, handler: cancelHandler)
-        alertController.addAction(cancelAction)
-        presentViewController(alertController, animated: true, completion: nil)
-    }
-
     /// Present UIImagePickerController.
     public func presentImagePicker(sourceType sourceType: UIImagePickerControllerSourceType = .PhotoLibrary, completionHandler: ((UIImagePickerController, Any?) -> ())) {
         let imagePicker = UIImagePickerController()
@@ -185,25 +216,6 @@ extension UIViewController: UINavigationControllerDelegate, UIImagePickerControl
     }
 }
 
-/// The convience version of `presentActionSheet(title:message:cancelTitle:cancelHandler:actionTitles:actionHandler:)`.
-/// Use this func carefully, it maybe iterate many times.
-public func doPresentActionSheet(
-    title title: String = "",
-    message: String,
-    cancelTitle: String = "取消",
-    cancelHandler: ((UIAlertAction) -> ())? = nil,
-    actionTitles:[String],
-    actionHandler:((UIAlertAction) -> ())? = nil)
-{
-    findLastPresentedViewController()?.presentActionSheet(
-        title: title,
-        message: message,
-        cancelTitle: cancelTitle,
-        cancelHandler: cancelHandler,
-        actionTitles: actionTitles,
-        actionHandler: actionHandler
-    )
-}
 // MARK: - Navigation
 
 public extension UIViewController {
