@@ -206,7 +206,7 @@ public extension UIView {
     /// Setup border width & color.
     public func setBorder(
         width width: CGFloat = 0.5,
-        color: UIColor = UIColor(red: 239/255.0, green: 239/255.0, blue: 244/255.0, alpha: 1))
+        color: UIColor = UIColor.separatorColor)
     {
         self.layer.borderWidth = width
         self.layer.borderColor = color.CGColor
@@ -216,7 +216,7 @@ public extension UIView {
     /// **Note**: Before you invoke this method, ensure `self` already have correct frame.
     public func addDashBorder(
         width width: CGFloat = 0.5,
-        color: UIColor = UIColor(red: 239/255.0, green: 239/255.0, blue: 244/255.0, alpha: 1),
+        color: UIColor = UIColor.separatorColor,
         lineDashPattern: [CGFloat] = [5, 5])
     {
         let boundLayer = CAShapeLayer()
@@ -233,7 +233,7 @@ public extension UIView {
     /// Add border line view using Autolayout.
     public func addBorderLine(
         width width: CGFloat = 0.5,
-        color: UIColor = UIColor(red: 239/255.0, green: 239/255.0, blue: 244/255.0, alpha: 1),
+        color: UIColor = UIColor.separatorColor,
         rectEdge: UIRectEdge = .All,
         multiplier: CGFloat = 1)
     {
@@ -300,7 +300,7 @@ public extension UIView {
     /// **Note**: Before you invoke this method, ensure `self` already have correct frame.
     public func addDashBorderLine(
         width width: CGFloat = 0.5,
-        color: UIColor = UIColor(red: 239/255.0, green: 239/255.0, blue: 244/255.0, alpha: 1),
+        color: UIColor = UIColor.separatorColor,
         rectEdge: UIRectEdge = .All,
         multiplier: CGFloat = 1,
         lineDashPattern: [CGFloat] = [5, 5])

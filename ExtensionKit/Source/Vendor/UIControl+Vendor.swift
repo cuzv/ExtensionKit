@@ -53,7 +53,7 @@ public class SegmentedToggleControl: UIControl {
         return view
     }()
     
-    public init(items: [String], normalTextColor: UIColor = UIColor.blackColor(), selectedTextColor: UIColor = UIColor.defaultTintColor) {
+    public init(items: [String], normalTextColor: UIColor = UIColor.blackColor(), selectedTextColor: UIColor = UIColor.tintColor) {
         if items.count < 2 {
             fatalError("items.count can not less 2.")
         }

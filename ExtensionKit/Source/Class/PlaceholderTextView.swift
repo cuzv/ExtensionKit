@@ -29,32 +29,33 @@ import UIKit
 /// The UITextView subclass supported a placeholder property like UITextField.
 /// Optional has a counting remain text length present label.
 /// **Note**: Do not forget invoke `invokeTextObserver(maxLength:, actionHandler:)`.
+@IBDesignable
 public class PlaceholderTextView: UITextView {
     private let placeholderLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = UIColor.clearColor()
-        label.textColor = UIColor.grayColor()
+        label.textColor = UIColor.placeholderColor
         label.font = UIFont.preferredFontForTextStyle(UIFontTextStyleFootnote)
         label.lineBreakMode = .ByCharWrapping
         label.numberOfLines = 0
         return label
     }()
     
-    public var placeholder: String? {
+    @IBInspectable public var placeholder: String? {
         didSet {
             self.placeholderLabel.text = self.placeholder
             self.updatePlaceholderLabelFrame()
         }
     }
     
-    override public var font: UIFont! {
+    @IBInspectable override public var font: UIFont! {
         didSet {
             self.placeholderLabel.font = self.font
             self.updatePlaceholderLabelFrame()
         }
     }
     
-    override public var text: String? {
+    @IBInspectable override public var text: String? {
         didSet {
             if let text = self.text where text.length > 0 {
                 self.placeholderLabel.hidden = true
