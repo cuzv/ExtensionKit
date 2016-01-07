@@ -168,20 +168,21 @@ public func findLastPresentedViewController() -> UIViewController? {
 // MARK: - Present UIImagePickerController
 
 private extension UIImagePickerController {
-    private var imagePickerCompletionHandlerWrapper: ClosureWrapper<UIImagePickerController> {
-        get { return associatedObjectForKey(&AssociationKey.imagePickerCompletionHandlerWrapper) as! ClosureWrapper<UIImagePickerController> }
+    private var imagePickerCompletionHandlerWrapper: ClosureWrapper<UIImagePickerController, UIImage> {
+        get { return associatedObjectForKey(&AssociationKey.imagePickerCompletionHandlerWrapper) as! ClosureWrapper<UIImagePickerController, UIImage> }
         set { associateRetainObject(newValue, forKey: &AssociationKey.imagePickerCompletionHandlerWrapper) }
     }
 }
 
 public extension UIViewController {
     /// Present UIImagePickerController.
-    public func presentImagePicker(sourceType sourceType: UIImagePickerControllerSourceType = .PhotoLibrary, completionHandler: ((UIImagePickerController, Any?) -> ())) {
+    public func presentImagePicker(sourceType sourceType: UIImagePickerControllerSourceType = .PhotoLibrary, completionHandler: ((UIImagePickerController, UIImage?) -> ())) {
         let imagePicker = UIImagePickerController()
         imagePicker.sourceType = sourceType
         imagePicker.videoQuality = .TypeLow
         imagePicker.delegate = self
         imagePicker.allowsEditing = true
+        
         imagePicker.imagePickerCompletionHandlerWrapper = ClosureWrapper(closure: completionHandler, holder: imagePicker)
         presentViewController(imagePicker, animated: true, completion: nil)
     }
@@ -281,13 +282,9 @@ extension UIViewController: UIGestureRecognizerDelegate {
 // MARK: - UIBarButtonItem
 
 public extension UIBarButtonItem {
-    private var barButtonItemActionHandlerWrapper: ClosureWrapper<UIBarButtonItem>! {
-        get {
-            return associatedObjectForKey(&AssociationKey.barButtonItemActionHandlerWrapper) as? ClosureWrapper<UIBarButtonItem>
-        }
-        set {
-            associateRetainObject(newValue, forKey: &AssociationKey.barButtonItemActionHandlerWrapper)
-        }
+    private var barButtonItemActionHandlerWrapper: ClosureWrapper<UIBarButtonItem, Any>! {
+        get { return associatedObjectForKey(&AssociationKey.barButtonItemActionHandlerWrapper) as? ClosureWrapper<UIBarButtonItem, Any> }
+        set { associateRetainObject(newValue, forKey: &AssociationKey.barButtonItemActionHandlerWrapper) }
     }
     
     public class func barButtonItemWithTitle(title: String?, actionHandler: ((UIBarButtonItem, Any?) -> ())?) -> UIBarButtonItem {

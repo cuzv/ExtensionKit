@@ -38,8 +38,8 @@ private struct AssociationKey {
 // MARK: - UIGestureRecognizer
 
 private extension UIGestureRecognizer {
-    private var gestureRecognizerWrapper: ClosureWrapper<UIView> {
-        get { return associatedObjectForKey(&AssociationKey.gestureRecognizerWrapper) as! ClosureWrapper<UIView> }
+    private var gestureRecognizerWrapper: ClosureWrapper<UIView, UIGestureRecognizer> {
+        get { return associatedObjectForKey(&AssociationKey.gestureRecognizerWrapper) as! ClosureWrapper<UIView, UIGestureRecognizer> }
         set { associateRetainObject(newValue, forKey: &AssociationKey.gestureRecognizerWrapper) }
     }
 }
@@ -47,7 +47,7 @@ private extension UIGestureRecognizer {
 public extension UIView {
     /// Single tap action closure func.
     /// **Note**: You should call `longPressAction:` or `doubleTapAction` first if you need.
-    public func tapAction(action: ((UIView, Any?) -> ())) {
+    public func tapAction(action: ((UIView, UIGestureRecognizer?) -> ())) {
         userInteractionEnabled = true
         
         let tapGesure = UITapGestureRecognizer(target: self, action: "handleTapAction:")
@@ -68,7 +68,7 @@ public extension UIView {
 
     /// Dobule tap action closure func.
     /// **Note**: You should call `longPressAction:` first if you need.
-    public func doubleTapAction(action: (UIView, Any?) -> ()) {
+    public func doubleTapAction(action: (UIView, UIGestureRecognizer?) -> ()) {
         userInteractionEnabled = true
         
         let doubleTapGesure = UITapGestureRecognizer(target: self, action: "handleTapAction:")
@@ -87,7 +87,7 @@ public extension UIView {
     }
     
     /// Long press action closure func.
-    public func longPressAction(action: (UIView, Any?) -> ()) {
+    public func longPressAction(action: (UIView, UIGestureRecognizer?) -> ()) {
         userInteractionEnabled = true
         
         let longPressGesure = UILongPressGestureRecognizer(target: self, action: "handleTapAction:")
@@ -96,7 +96,7 @@ public extension UIView {
     }
     
     internal func handleTapAction(sender: UITapGestureRecognizer) {
-        sender.gestureRecognizerWrapper.invoke()
+        sender.gestureRecognizerWrapper.invoke(sender)
     }
 }
 

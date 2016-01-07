@@ -33,8 +33,8 @@ private struct AssociationKey {
 }
 
 private extension UIControl {
-    private var closureWrapper: ClosureWrapper<UIControl> {
-        get { return associatedObjectForKey(&AssociationKey.WrapClosure) as! ClosureWrapper<UIControl> }
+    private var closureWrapper: ClosureWrapper<UIControl, Any> {
+        get { return associatedObjectForKey(&AssociationKey.WrapClosure) as! ClosureWrapper<UIControl, Any> }
         set { associateRetainObject(newValue, forKey: &AssociationKey.WrapClosure) }
     }
 }

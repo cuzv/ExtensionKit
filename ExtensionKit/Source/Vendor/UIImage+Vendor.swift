@@ -71,21 +71,21 @@ public extension UIImage {
 
 public extension UIImageView {
     /// Set a crop resize image With a URLPath, a optional placeholder image.
-    public func setCropResizeImageWithURLPath(URLPath: String, placeholderImage: UIImage? = nil) {
+    public func setCropResizeImageWithURLPath(URLPath: String!, placeholderImage: UIImage? = nil) {
         setImageWithURLPath(URLPath, placeholderImage: placeholderImage) {
             $0?.cropResize($1)
         }
     }
     
     /// Set a clip resize image With a URLPath, a optional placeholder image.
-    public func setClipResizeImageWithURLPath(URLPath: String, placeholderImage: UIImage? = nil) {
+    public func setClipResizeImageWithURLPath(URLPath: String!, placeholderImage: UIImage? = nil) {
         setImageWithURLPath(URLPath, placeholderImage: placeholderImage) {
             $0?.clipResize($1)
         }
     }
     
     /// Set a clip resize image With a URLPath, a optional placeholder image.
-    public func setScaleResizeImageWithURLPath(URLPath: String, placeholderImage: UIImage? = nil) {
+    public func setScaleResizeImageWithURLPath(URLPath: String!, placeholderImage: UIImage? = nil) {
         setImageWithURLPath(URLPath, placeholderImage: placeholderImage) {
             $0?.scaleResize($1)
         }
@@ -93,7 +93,7 @@ public extension UIImageView {
     
     /// Set ellipse image with a URLPath, a optional placeholder image, optional border width, optional border color.
     public func setEllipseImageWithURLPath(
-        URLPath: String,
+        URLPath: String!,
         placeholderImage: UIImage? = nil,
         borderWidth: CGFloat = 0,
         borderColor: UIColor = UIColor.whiteColor())
@@ -108,8 +108,9 @@ public extension UIImageView {
     
     /// Set rounded image with a URLPath, a optional placeholder image, optional corner radius, optional border width, optional border color.
     public func setRoundedImageWithURLPath(
-        URLPath: String, placeholderImage: UIImage? = nil,
-        cornerRadius: CGFloat,
+        URLPath: String!,
+        placeholderImage: UIImage? = nil,
+        cornerRadius: CGFloat = 5,
         borderWidth: CGFloat = 0,
         borderColor: UIColor = UIColor.whiteColor())
     {
@@ -123,7 +124,7 @@ public extension UIImageView {
     
     /// Set image with a URLPath, a optional placeholder image, an custom image mask.
     public func setImageWithURLPath(
-        URLPath: String,
+        URLPath: String!,
         placeholderImage: UIImage? = nil,
         maskImage: UIImage)
     {
@@ -137,15 +138,9 @@ public extension UIImageView {
     
     // MARK: -
     
-    /// Set an image with a URLPath, a placeholder image.
-    public func setImageWithURLPath(URLPath: String, placeholderImage: UIImage? = nil) {
-        guard let URL = NSURL(string: URLPath) else { return }
-        kf_setImageWithURL(URL, placeholderImage: placeholderImage, optionsInfo: [.Transition(ImageTransition.Fade(0.5))])
-    }
-    
     /// Set an image with a URLPath, a placeholder image, a reduceSize closure.
     public func setImageWithURLPath(
-        URLPath: String,
+        URLPath: String!,
         placeholderImage: UIImage? = nil,
         reduceSize: (image: UIImage?, size: CGSize) -> UIImage?)
     {
@@ -159,13 +154,13 @@ public extension UIImageView {
     
     /// Set an image with a URLPath, a placeholder image, progressBlock, completion handler.
     public func setImageWithURLPath(
-        URLPath: String,
+        URLPath: String!,
         placeholderImage: UIImage? = nil,
         progressBlock: ((receivedSize: Int64, totalSize: Int64) -> Void)? = nil,
-        completionHandler: ((image: UIImage?, error: NSError?, imageURL: NSURL?) -> Void)?)
+        completionHandler: ((image: UIImage?, error: NSError?, imageURL: NSURL?) -> Void)? = nil)
     {
-        guard let URL = NSURL(string: URLPath) else { return }
-        kf_setImageWithURL(URL, placeholderImage: placeholderImage, optionsInfo: nil, progressBlock: progressBlock) { (image, error, cacheType, imageURL) -> () in
+        guard let URLPath = URLPath, URL = NSURL(string: URLPath) else { return }
+        kf_setImageWithURL(URL, placeholderImage: placeholderImage, optionsInfo: [.Transition(ImageTransition.Fade(0.5))], progressBlock: progressBlock) { (image, error, cacheType, imageURL) -> () in
             completionHandler?(image: image, error: error, imageURL: imageURL)
         }
     }

@@ -1,5 +1,5 @@
 //
-//  Double+Extension.swift
+//  Number+Extension.swift
 //  ExtensionKit
 //
 //  Created by Moch Xiao on 12/31/15.
@@ -43,5 +43,33 @@ public extension Double {
     
     public var USDShortString: String {
         return String(format: "$%.0f", self)
+    }
+    
+    public var str: String {
+        return String(self)
+    }
+}
+
+// MARK: - Int -> String
+
+public extension Int {
+    public var CNYString: String {
+        return String(format: "¥%.2i", self)
+    }
+    
+    public var CNYShortString: String {
+        return String(format: "¥%.0i", self)
+    }
+    
+    public var USDString: String {
+        return String(format: "$%.2i", self)
+    }
+    
+    public var USDShortString: String {
+        return String(format: "$%.0i", self)
+    }
+    
+    public var str: String {
+        return String(self)
     }
 }

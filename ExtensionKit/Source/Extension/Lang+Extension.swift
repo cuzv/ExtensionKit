@@ -61,20 +61,20 @@ public func randomInRange(range: Range<Int>) -> Int {
 
 // MARK: - ClosureWrapper
 /// ClosureWrapper, make closure can interactive with NSObject
-public class ClosureWrapper<T: NSObjectProtocol>: NSObject {
-    private let _closure: ((T, Any?) -> ())
+public class ClosureWrapper<T: NSObjectProtocol, U>: NSObject {
+    private let _closure: ((T, U?) -> ())
     private unowned let _holder: T
     
     deinit {
         debugPrint("\(__FILE__):\(__LINE__):\(self.dynamicType):\(__FUNCTION__)")
     }
     
-    public init(closure: ((T, Any?) -> ()), holder: T) {
+    public init(closure: ((T, U?) -> ()), holder: T) {
         _closure = closure
         _holder = holder
     }
     
-    public func invoke(object: Any? = nil) {
+    public func invoke(object: U? = nil) {
         _closure(_holder, object)
     }
 }
