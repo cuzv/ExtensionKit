@@ -50,7 +50,7 @@ public func merge<T, E>(signals: [SignalProducer<T, E>]) -> SignalProducer<T, E>
 
 // MARK: - Timer
 
-public class CountDownTimerWrapper {
+final public class CountDownTimerWrapper {
     private let startTime: NSDate
     private let interval: NSTimeInterval
     private let duration: NSTimeInterval

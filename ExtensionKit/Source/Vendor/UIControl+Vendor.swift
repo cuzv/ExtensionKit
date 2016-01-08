@@ -29,7 +29,7 @@ import SnapKit
 
 // MARK: - SegmentedToggleControl
 
-public class SegmentedToggleControl: UIControl {
+final public class SegmentedToggleControl: UIControl {
     private var items: [String]
     private var buttons: [UIButton] = []
     private let normalTextColor: UIColor

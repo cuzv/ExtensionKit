@@ -30,7 +30,7 @@ import UIKit
 /// Optional has a counting remain text length present label.
 /// **Note**: Do not forget invoke `invokeTextObserver(maxLength:, actionHandler:)`.
 @IBDesignable
-public class PlaceholderTextView: UITextView {
+final public class PlaceholderTextView: UITextView {
     private let placeholderLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = UIColor.clearColor()
