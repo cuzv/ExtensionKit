@@ -168,8 +168,8 @@ public func findLastPresentedViewController() -> UIViewController? {
 // MARK: - Present UIImagePickerController
 
 private extension UIImagePickerController {
-    private var imagePickerCompletionHandlerWrapper: ClosureWrapper<UIImagePickerController, UIImage> {
-        get { return associatedObjectForKey(&AssociationKey.imagePickerCompletionHandlerWrapper) as! ClosureWrapper<UIImagePickerController, UIImage> }
+    private var imagePickerCompletionHandlerWrapper: ClosureDecorator<(UIImagePickerController, UIImage?)> {
+        get { return associatedObjectForKey(&AssociationKey.imagePickerCompletionHandlerWrapper) as! ClosureDecorator<(UIImagePickerController, UIImage?)> }
         set { associateRetainObject(newValue, forKey: &AssociationKey.imagePickerCompletionHandlerWrapper) }
     }
 }
@@ -183,14 +183,14 @@ public extension UIViewController {
         imagePicker.delegate = self
         imagePicker.allowsEditing = true
         
-        imagePicker.imagePickerCompletionHandlerWrapper = ClosureWrapper(closure: completionHandler, holder: imagePicker)
+        imagePicker.imagePickerCompletionHandlerWrapper = ClosureDecorator(completionHandler)
         presentViewController(imagePicker, animated: true, completion: nil)
     }
 }
 
 extension UIViewController: UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     public func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        picker.imagePickerCompletionHandlerWrapper.invoke(nil)
+        picker.imagePickerCompletionHandlerWrapper.invoke((picker, nil))
         picker.dismissAnimated(completion: nil)
     }
     
@@ -201,7 +201,7 @@ extension UIViewController: UINavigationControllerDelegate, UIImagePickerControl
                 if let imageData = newImage.compressAsPossible() {
                     let resultImage = UIImage(data: imageData, scale: UIScreen.scale)
                     UIThreadAsyncAction({ () -> Void in
-                        picker.imagePickerCompletionHandlerWrapper.invoke(resultImage)
+                        picker.imagePickerCompletionHandlerWrapper.invoke((picker, resultImage))
                         picker.dismissAnimated(completion: nil)
                     })
                     return
@@ -212,7 +212,7 @@ extension UIViewController: UINavigationControllerDelegate, UIImagePickerControl
     }
     
     public func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
-        picker.imagePickerCompletionHandlerWrapper.invoke(image)
+        picker.imagePickerCompletionHandlerWrapper.invoke((picker, image))
         picker.dismissAnimated(completion: nil)
     }
 }
@@ -282,8 +282,8 @@ extension UIViewController: UIGestureRecognizerDelegate {
 // MARK: - UIBarButtonItem
 
 public extension UIBarButtonItem {
-    private var barButtonItemActionHandlerWrapper: ClosureWrapper<UIBarButtonItem, Any>! {
-        get { return associatedObjectForKey(&AssociationKey.barButtonItemActionHandlerWrapper) as? ClosureWrapper<UIBarButtonItem, Any> }
+    private var barButtonItemActionHandlerWrapper: ClosureDecorator<(UIBarButtonItem, Any?)>! {
+        get { return associatedObjectForKey(&AssociationKey.barButtonItemActionHandlerWrapper) as? ClosureDecorator<(UIBarButtonItem, Any?)> }
         set { associateRetainObject(newValue, forKey: &AssociationKey.barButtonItemActionHandlerWrapper) }
     }
     
@@ -291,7 +291,7 @@ public extension UIBarButtonItem {
         let barButtonItem = UIBarButtonItem(title: title, style: .Plain, target: self, action: "performActionHandler:")
         
         if let actionHandler = actionHandler {
-            barButtonItem.barButtonItemActionHandlerWrapper = ClosureWrapper(closure: actionHandler, holder: barButtonItem)
+            barButtonItem.barButtonItemActionHandlerWrapper = ClosureDecorator(actionHandler)
         }
         
         return barButtonItem
@@ -301,7 +301,7 @@ public extension UIBarButtonItem {
         let barButtonItem = UIBarButtonItem(image: image, style: .Plain, target: self, action: "performActionHandler:")
         
         if let actionHandler = actionHandler {
-            barButtonItem.barButtonItemActionHandlerWrapper = ClosureWrapper(closure: actionHandler, holder: barButtonItem)
+            barButtonItem.barButtonItemActionHandlerWrapper = ClosureDecorator(actionHandler)
         }
         
         return barButtonItem
@@ -309,7 +309,7 @@ public extension UIBarButtonItem {
     
     /// Helper func
     internal class func performActionHandler(sender: UIBarButtonItem) {
-        sender.barButtonItemActionHandlerWrapper.invoke()
+        sender.barButtonItemActionHandlerWrapper.invoke((sender, nil))
     }
 }
 

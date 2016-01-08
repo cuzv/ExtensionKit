@@ -59,44 +59,6 @@ public func randomInRange(range: Range<Int>) -> Int {
     return  Int(arc4random_uniform(count)) + range.startIndex
 }
 
-// MARK: - ClosureWrapper
-
-/// ClosureWrapper, make closure can interact with Object.
-/// Take no paramters but the holder.
-public final class ClosureTrampoline<T: AnyObject>: NSObject {
-    private let closure: T -> ()
-    private unowned let holder: T
-    
-    deinit { debugPrint("\(__FILE__):\(__LINE__):\(self.dynamicType):\(__FUNCTION__)") }
-    
-    public init(closure: T -> (), holder: T) {
-        self.closure = closure
-        self.holder = holder
-    }
-
-    public func invoke() {
-        closure(holder)
-    }
-}
-
-/// ClosureWrapper, make closure can interact with Object.
-/// Take other paramters besides the holder.
-/// The `U` normally be a tuple if other paramters count great than one.
-public final class ClosureWrapper<T: AnyObject, U>: NSObject {
-    private let closure: ((T, U?) -> ())
-    private unowned let holder: T
-    
-    deinit { debugPrint("\(__FILE__):\(__LINE__):\(self.dynamicType):\(__FUNCTION__)") }
-    
-    public init(closure: ((T, U?) -> ()), holder: T) {
-        self.closure = closure
-        self.holder = holder
-    }
-    
-    public func invoke(param: U? = nil) {
-        closure(holder, param)
-    }
-}
 
 // MARK: - GCD
 
@@ -215,3 +177,29 @@ public func directoryForPictures() -> String? {
     return searchPathForDirectory(.PicturesDirectory)
 }
 
+// MARK: - ClosureDecorator
+
+/// ClosureDecorator, make use closure like a NSObject, aka objc_asscoiateXXX.
+final public class ClosureDecorator<T>: NSObject {
+    private let closure: Any
+    
+    private override init() {
+        fatalError("Use init(action:) instead.")
+    }
+    
+    public init(_ closure: () -> ()) {
+        self.closure = closure
+    }
+    
+    public init(_ closure: (T) -> ()) {
+        self.closure = closure
+    }
+    
+    func invoke(param: T) {
+        if let closure = closure as? () -> () {
+            closure()
+        } else if let closure = closure as? (T) -> () {
+            closure(param)
+        }
+    }
+}

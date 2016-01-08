@@ -26,9 +26,6 @@
 
 import UIKit
 
-// MARK: - UIControl Swifty Target & Action
-// See: https://www.mikeash.com/pyblog/friday-qa-2015-12-25-swifty-targetaction.html
-
 private struct AssociationKey {
     private static var touchDownHandlerWrapper: String = "touchDownHandlerWrapper"
     private static var touchDownRepeatHandlerWrapper: String = "touchDownRepeatHandlerWrapper"
@@ -50,27 +47,21 @@ private struct AssociationKey {
     private static var applicationReservedHandlerWrapper: String = "applicationReservedHandlerWrapper"
     private static var systemReservedHandlerWrapper: String = "systemReservedHandlerWrapper"
     private static var allEventsHandlerWrapper: String = "allEventsHandlerWrapper"
-    
-    private static var tapActionHandlerWrapper = "tapActionHandlerWrapper"
 }
 
-final public class ActionTrampoline<T>: NSObject {
-    private let action: T -> ()
-    
-    init(action: T -> ()) {
-        self.action = action
+// MARK: - UIControl Action
+
+public protocol UIControlActionFunctionProtocol {}
+extension UIControl: UIControlActionFunctionProtocol {}
+
+public extension UIControlActionFunctionProtocol where Self: UIControl {
+    public func addControlEvents(events: UIControlEvents, handler: Self -> ()) {
+        let trampoline = ActionTrampoline(action: handler)
+        addTarget(trampoline, action: Selector("action:"), forControlEvents: events)
+        associateObject(trampoline, forEvents: events)
     }
     
-    @objc func action(sender: AnyObject) {
-        action(sender as! T)
-    }
-    
-    deinit {
-        debugPrint("\(__FILE__):\(__LINE__):\(self.dynamicType):\(__FUNCTION__)")
-    }
-    
-    private func associateForEvents(events: UIControlEvents) {
-        let object = self
+    private func associateObject(object: AnyObject, forEvents events: UIControlEvents) {
         if events == .TouchDown {
             associateRetainObject(object, forKey: &AssociationKey.touchDownHandlerWrapper)
         } else if events == .TouchDownRepeat {
@@ -116,18 +107,5 @@ final public class ActionTrampoline<T>: NSObject {
                 associateRetainObject(object, forKey: &AssociationKey.primaryActionTriggeredHandlerWrapper)
             }
         }
-    }
-}
-
-// MARK: - UIControl Action
-
-public protocol UIControlActionFunctionProtocol {}
-extension UIControl: UIControlActionFunctionProtocol {}
-
-public extension UIControlActionFunctionProtocol where Self: UIControl {
-    public func addControlEvents(events: UIControlEvents, handler: Self -> ()) {
-        let trampoline = ActionTrampoline(action: handler)
-        addTarget(trampoline, action: Selector("action:"), forControlEvents: events)
-        trampoline.associateForEvents(events)
     }
 }
