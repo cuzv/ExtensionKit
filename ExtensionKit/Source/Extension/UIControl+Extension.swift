@@ -41,11 +41,11 @@ private extension UIControl {
 
 public extension UIControl {
     public func addControlEvents(events: UIControlEvents, actionHandler: ((T: UIControl, Any?) -> ())) {
-        self.addTarget(self, action: "handleEventsAction:", forControlEvents: events)
-        self.closureWrapper = ClosureWrapper(closure: actionHandler, holder: self)
+        addTarget(self, action: "handleEventsAction:", forControlEvents: events)
+        closureWrapper = ClosureWrapper(closure: actionHandler, holder: self)
     }
     
     internal func handleEventsAction(sender: UIControl) {
-        self.closureWrapper.invoke()
+        closureWrapper.invoke()
     }
 }

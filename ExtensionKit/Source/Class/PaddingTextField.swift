@@ -49,21 +49,21 @@ final public class PaddingTextField: UITextField {
     }
     
     public override func intrinsicContentSize() -> CGSize {
-        let size = sizeThatFits(CGSizeMake(CGRectGetWidth(self.bounds), CGRectGetHeight(self.bounds)))
-        let width = size.width + self.contentEdgeInsets.left + self.contentEdgeInsets.right
-        let height = size.height + self.contentEdgeInsets.top + self.contentEdgeInsets.bottom
+        let size = sizeThatFits(CGSizeMake(CGRectGetWidth(bounds), CGRectGetHeight(bounds)))
+        let width = size.width + contentEdgeInsets.left + contentEdgeInsets.right
+        let height = size.height + contentEdgeInsets.top + contentEdgeInsets.bottom
         return CGSizeMake(width, height)
     }
     
     public override func textRectForBounds(bounds: CGRect) -> CGRect {
-        let width = CGRectGetWidth(bounds) + self.contentEdgeInsets.left + self.contentEdgeInsets.right
-        let height = CGRectGetHeight(bounds) + self.contentEdgeInsets.top + self.contentEdgeInsets.bottom
+        let width = CGRectGetWidth(bounds) + contentEdgeInsets.left + contentEdgeInsets.right
+        let height = CGRectGetHeight(bounds) + contentEdgeInsets.top + contentEdgeInsets.bottom
         return CGRectMake(0, 0, width, height)
     }
     
     public override func editingRectForBounds(bounds: CGRect) -> CGRect {
-        let width = CGRectGetWidth(bounds) + self.contentEdgeInsets.left + self.contentEdgeInsets.right;
-        let height = CGRectGetHeight(bounds) + self.contentEdgeInsets.top + self.contentEdgeInsets.bottom;
+        let width = CGRectGetWidth(bounds) + contentEdgeInsets.left + contentEdgeInsets.right;
+        let height = CGRectGetHeight(bounds) + contentEdgeInsets.top + contentEdgeInsets.bottom;
         return CGRectMake(0, 0, width, height);
     }
 }

@@ -39,12 +39,12 @@ public class SegmentedToggleControl: UIControl {
     private var animated: Bool = true
     
     public var selectedSegmentIndex: Int {
-        get { return self.currentSelectedIndex }
+        get { return currentSelectedIndex }
         set {
-            self.animated = false
-            let index = newValue >= self.items.count ? self.items.count - 1 : newValue
-            self.hanleClickAction(self.buttons[index])
-            self.animated = true
+            animated = false
+            let index = newValue >= items.count ? items.count - 1 : newValue
+            hanleClickAction(buttons[index])
+            animated = true
         }
     }
     
@@ -79,12 +79,12 @@ public class SegmentedToggleControl: UIControl {
     
     public override func intrinsicContentSize() -> CGSize {
         // Calculate text size
-        let str = self.items.reduce("") { (str1, str2) -> String in
+        let str = items.reduce("") { (str1, str2) -> String in
             return "\(str1)\(str2)"
         }
-        if let font = self.font {
+        if let font = font {
             var size = str.sizeWithFont(font)
-            size.width += CGFloat(self.items.count * 12)
+            size.width += CGFloat(items.count * 12)
             size.height = size.height >= 44 ? size.height : 44
             return size
         } else {
@@ -96,17 +96,17 @@ public class SegmentedToggleControl: UIControl {
 public extension SegmentedToggleControl {
     private func setup() {
         var lastButton: UIButton!
-        let count = self.items.count
+        let count = items.count
         for i in 0 ..< count {
             // Make button
             let button = UIButton(type: .System)
             button.tag = i
             button.addTarget(self, action: "hanleClickAction:", forControlEvents: .TouchUpInside)
-            button.title = self.items[i]
+            button.title = items[i]
             button.setTitleColor(normalTextColor, forState: .Normal)
             button.setTitleColor(selectedTextColor, forState: .Selected)
             button.tintColor = UIColor.whiteColor()
-            self.addSubview(button)
+            addSubview(button)
             
             // Set position
             button.snp_makeConstraints(closure: { (make) -> Void in
@@ -126,18 +126,18 @@ public extension SegmentedToggleControl {
             
             lastButton = button
             
-            self.buttons.append(button)
+            buttons.append(button)
         }
         
-        self.font = lastButton.titleLabel?.font
+        font = lastButton.titleLabel?.font
         
-        if let firstButton = self.buttons.first {
+        if let firstButton = buttons.first {
             firstButton.selected = true
             
-            self.addSubview(lineView)
-            lineView.backgroundColor = self.selectedTextColor
+            addSubview(lineView)
+            lineView.backgroundColor = selectedTextColor
             lineView.snp_makeConstraints { (make) -> Void in
-                make.width.equalTo(self.lineViewWidthForIndex(0))
+                make.width.equalTo(lineViewWidthForIndex(0))
                 make.height.equalTo(1)
                 make.centerX.equalTo(firstButton)
                 make.bottom.equalTo(self)
@@ -155,17 +155,17 @@ public extension SegmentedToggleControl {
         // Move lineView
         if let index = buttons.indexOf(sender) {
             lineView.snp_remakeConstraints(closure: { (make) -> Void in
-                make.width.equalTo(self.lineViewWidthForIndex(index))
+                make.width.equalTo(lineViewWidthForIndex(index))
                 make.height.equalTo(1)
                 make.bottom.equalTo(self)
                 let currentButton = buttons[index]
                 make.centerX.equalTo(currentButton)
             })
             
-            let duration: NSTimeInterval = self.animated ? fabs(Double(currentSelectedIndex - index)) * 0.1 : 0
+            let duration: NSTimeInterval = animated ? fabs(Double(currentSelectedIndex - index)) * 0.1 : 0
             if duration <= 0 {
-                self.setNeedsLayout()
-                self.layoutIfNeeded()
+                setNeedsLayout()
+                layoutIfNeeded()
             } else {
                 UIView.animateWithDuration(duration, animations: { () -> Void in
                     self.setNeedsLayout()
@@ -176,10 +176,10 @@ public extension SegmentedToggleControl {
         currentSelectedIndex = sender.tag
         
         // Send action
-        self.sendActionsForControlEvents(.ValueChanged)
+        sendActionsForControlEvents(.ValueChanged)
     }
     
     private func lineViewWidthForIndex(index: Int) -> CGFloat {
-        return self.items[index].sizeWithFont(self.font).width
+        return items[index].sizeWithFont(font).width
     }
 }

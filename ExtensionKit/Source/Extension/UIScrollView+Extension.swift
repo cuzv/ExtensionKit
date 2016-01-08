@@ -29,74 +29,74 @@ import UIKit
 @IBDesignable
 public extension UIScrollView {
     @IBInspectable public var insetTop: CGFloat {
-        get { return self.contentInset.top }
+        get { return contentInset.top }
         set {
-            var inset = self.contentInset
+            var inset = contentInset
             inset.top = newValue
-            self.contentInset = inset
+            contentInset = inset
         }
     }
     
     @IBInspectable public var insetLeft: CGFloat {
-        get { return self.contentInset.left }
+        get { return contentInset.left }
         set {
-            var inset = self.contentInset
+            var inset = contentInset
             inset.left = newValue
-            self.contentInset = inset
+            contentInset = inset
         }
     }
     
     @IBInspectable public var insetBottom: CGFloat {
-        get { return self.contentInset.bottom }
+        get { return contentInset.bottom }
         set {
-            var inset = self.contentInset
+            var inset = contentInset
             inset.bottom = newValue
-            self.contentInset = inset
+            contentInset = inset
         }
     }
     
     @IBInspectable public var insetRight: CGFloat {
-        get { return self.contentInset.right }
+        get { return contentInset.right }
         set {
-            var inset = self.contentInset
+            var inset = contentInset
             inset.right = newValue
-            self.contentInset = inset
+            contentInset = inset
         }
     }
     
     @IBInspectable public var contentOffsetX: CGFloat {
-        get { return self.contentOffset.x }
+        get { return contentOffset.x }
         set {
-            var contentOffset = self.contentOffset
-            contentOffset.x = newValue
-            self.contentOffset = contentOffset
+            var offset = contentOffset
+            offset.x = newValue
+            contentOffset = offset
         }
     }
     
     @IBInspectable public var contentOffsetY: CGFloat {
-        get { return self.contentOffset.y }
+        get { return contentOffset.y }
         set {
-            var contentOffset = self.contentOffset
-            contentOffset.y = newValue
-            self.contentOffset = contentOffset
+            var offset = contentOffset
+            offset.y = newValue
+            contentOffset = offset
         }
     }
     
     @IBInspectable public var contentSizeWidth: CGFloat {
-        get { return self.contentSize.width }
+        get { return contentSize.width }
         set {
-            var contentSize = self.contentSize
-            contentSize.width = newValue
-            self.contentSize = contentSize
+            var size = contentSize
+            size.width = newValue
+            contentSize = size
         }
     }
     
     @IBInspectable public var contentSizeHeight: CGFloat {
-        get { return self.contentSize.height }
+        get { return contentSize.height }
         set {
-            var contentSize = self.contentSize
-            contentSize.height = newValue
-            self.contentSize = contentSize
+            var size = contentSize
+            size.height = newValue
+            contentSize = size
         }
     }
 }

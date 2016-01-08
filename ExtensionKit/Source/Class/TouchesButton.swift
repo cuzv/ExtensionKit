@@ -31,26 +31,26 @@ import UIKit
 final public class TouchesButton: UIButton {
     public var touchesEdgeInsets: UIEdgeInsets?
     private var touchesLocation: CGRect {
-        if let touchesEdgeInsets = self.touchesEdgeInsets {
+        if let touchesEdgeInsets = touchesEdgeInsets {
             let top = touchesEdgeInsets.top
             let left = touchesEdgeInsets.left
             let bottom = touchesEdgeInsets.bottom
             let right = touchesEdgeInsets.right
             if 0.0 != top || 0.0 != left || 0.0 != bottom || 0.0 != right {
                 return CGRectMake(
-                    self.bounds.origin.x - left,
-                    self.bounds.origin.y - top,
-                    self.bounds.size.width + left + right,
-                    self.bounds.size.height + top + bottom
+                    bounds.origin.x - left,
+                    bounds.origin.y - top,
+                    bounds.size.width + left + right,
+                    bounds.size.height + top + bottom
                 )
             }
         }
         
-        return self.bounds
+        return bounds
     }
     
     override public func pointInside(point: CGPoint, withEvent event: UIEvent?) -> Bool {
-        if CGRectEqualToRect(touchesLocation, self.bounds) {
+        if CGRectEqualToRect(touchesLocation, bounds) {
             return super.pointInside(point, withEvent: event)
         }
         

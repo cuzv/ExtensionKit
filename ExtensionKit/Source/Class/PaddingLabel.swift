@@ -49,13 +49,13 @@ final public class PaddingLabel: UILabel {
     }
     
     public override func intrinsicContentSize() -> CGSize {
-        let size = sizeThatFits(CGSizeMake(CGRectGetWidth(self.bounds), CGRectGetHeight(self.bounds)))
-        let width = size.width + self.contentEdgeInsets.left + self.contentEdgeInsets.right
-        let height = size.height + self.contentEdgeInsets.top + self.contentEdgeInsets.bottom
+        let size = sizeThatFits(CGSizeMake(CGRectGetWidth(bounds), CGRectGetHeight(bounds)))
+        let width = size.width + contentEdgeInsets.left + contentEdgeInsets.right
+        let height = size.height + contentEdgeInsets.top + contentEdgeInsets.bottom
         return CGSizeMake(width, height)
     }
     
     public override func drawTextInRect(rect: CGRect) {
-        super.drawTextInRect(UIEdgeInsetsInsetRect(rect, self.contentEdgeInsets))
+        super.drawTextInRect(UIEdgeInsetsInsetRect(rect, contentEdgeInsets))
     }
 }

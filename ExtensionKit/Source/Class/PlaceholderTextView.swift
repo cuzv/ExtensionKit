@@ -43,24 +43,24 @@ public class PlaceholderTextView: UITextView {
     
     @IBInspectable public var placeholder: String? {
         didSet {
-            self.placeholderLabel.text = self.placeholder
-            self.updatePlaceholderLabelFrame()
+            placeholderLabel.text = placeholder
+            updatePlaceholderLabelFrame()
         }
     }
     
     @IBInspectable override public var font: UIFont! {
         didSet {
-            self.placeholderLabel.font = self.font
-            self.updatePlaceholderLabelFrame()
+            placeholderLabel.font = font
+            updatePlaceholderLabelFrame()
         }
     }
     
     @IBInspectable override public var text: String? {
         didSet {
-            if let text = self.text where text.length > 0 {
-                self.placeholderLabel.hidden = true
+            if let text = text where text.length > 0 {
+                placeholderLabel.hidden = true
             } else {
-                self.placeholderLabel.hidden = false
+                placeholderLabel.hidden = false
             }
         }
     }
@@ -78,24 +78,24 @@ public class PlaceholderTextView: UITextView {
     public override func layoutSubviews() {
         super.layoutSubviews()
         
-        self.updatePlaceholderLabelFrame()
+        updatePlaceholderLabelFrame()
     }
 }
 
 public extension PlaceholderTextView {
     private func setup() {
-        self.addSubview(self.placeholderLabel)
+        addSubview(placeholderLabel)
     }
     
     private func updatePlaceholderLabelFrame() {
-        if let size = self.placeholderLabel.text?.sizeWithFont(self.placeholderLabel.font, preferredMaxLayoutWidth: CGRectGetWidth(self.bounds) - 10) {
-            self.placeholderLabel.frame = CGRectMake(5, 4, size.width + 10, size.height + 8)
+        if let size = placeholderLabel.text?.sizeWithFont(placeholderLabel.font, preferredMaxLayoutWidth: CGRectGetWidth(bounds) - 10) {
+            placeholderLabel.frame = CGRectMake(5, 4, size.width + 10, size.height + 8)
         }
     }
     
     /// **Note**: Do not invoke `setupTextObserver(maxLength:, actionHandler:)` the both.
     public func invokeTextObserver(maxLength maxLength: Int = 100, actionHandler: ((Int) -> ())? = nil) {
-        self.setupTextObserver(maxLength: maxLength) { [weak self] (remainCount) -> () in
+        setupTextObserver(maxLength: maxLength) { [weak self] (remainCount) -> () in
             self?.placeholderLabel.hidden = remainCount != maxLength
             actionHandler?(remainCount)
         }

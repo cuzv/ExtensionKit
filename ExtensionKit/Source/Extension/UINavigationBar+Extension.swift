@@ -30,21 +30,21 @@ import UIKit
 
 public extension UINavigationBar {
     /// Set UINavigationBar can not see, but exist.
-    public func setAsInvisible(tintColor tintColor: UIColor! = UIApplication.sharedApplication().keyWindow?.tintColor) {
+    public func setAsInvisible(tintColor tintColor_: UIColor! = UIApplication.sharedApplication().keyWindow?.tintColor) {
         setBackgroundImage(UIImage(), forBarMetrics: .Default)
         shadowImage = UIImage()
         barStyle = .Default
         translucent = true
-        self.tintColor = tintColor
+        tintColor = tintColor_
     }
     
     /// Revert `setAsInvisible` effect.
-    public func setAsVisible(translucent translucent: Bool = true, tintColor: UIColor! = UINavigationBar.appearance().tintColor) {
+    public func setAsVisible(translucent translucent_: Bool = true, tintColor tintColor_: UIColor! = UINavigationBar.appearance().tintColor) {
         setBackgroundImage(nil, forBarMetrics: .Default)
         shadowImage = nil
         barStyle = translucent ? .Default : .Black
-        self.translucent = translucent
-        self.tintColor = tintColor
+        translucent = translucent_
+        tintColor = tintColor_
     }
 }
 
@@ -55,7 +55,7 @@ public extension UINavigationBar {
     public var hairline: UIView? {
         guard let cls = NSClassFromString("_UINavigationBarBackground") else { return nil }
         
-        for subview in self.subviews {
+        for subview in subviews {
             if subview.isKindOfClass(cls) {
                 for view in subview.subviews {
                     if view is UIImageView && view.frame.size.height == 1.0 / UIScreen.scale {
@@ -70,7 +70,7 @@ public extension UINavigationBar {
     
     /// Remoe the hairline view.
     public func removeHairline() {
-        guard let hairline = self.hairline else { return }
+        guard let hairline = hairline else { return }
         hairline.removeFromSuperview()
     }
 }

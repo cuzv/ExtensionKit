@@ -32,11 +32,11 @@ public extension String {
     }
     
     public var isEmpty: Bool {
-        return 0 == self.trimedString.length
+        return 0 == trimedString.length
     }
     
     public var trimedString: String {
-        return self.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+        return stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
     }
     
     public func sizeWithFont(font: UIFont, preferredMaxLayoutWidth: CGFloat = UIScreen.width) -> CGSize {
@@ -46,24 +46,24 @@ public extension String {
     }
     
     public subscript(range: Range<Index>) -> String {
-        return self.substringWithRange(range)
+        return substringWithRange(range)
     }
     
-    public func substringFromIndex(startIndex: Int, toIndex endIndex: Int) -> String {
-        let start = self.startIndex.advancedBy(startIndex)
-        let end = self.startIndex.advancedBy(endIndex, limit: self.endIndex)
+    public func substringFromIndex(minIndex: Int, toIndex maxIndex: Int) -> String {
+        let start = startIndex.advancedBy(minIndex)
+        let end = startIndex.advancedBy(maxIndex, limit: endIndex)
         let range = Range<String.Index>(start: start, end: end)
-        return self.substringWithRange(range)
+        return substringWithRange(range)
     }
     
-    public func substringFromIndexAt(startIndex: Int) -> String {
-        let start = self.startIndex.advancedBy(startIndex)
-        return self.substringFromIndex(start)
+    public func substringFromIndexAt(minIndex: Int) -> String {
+        let start = startIndex.advancedBy(minIndex)
+        return substringFromIndex(start)
     }
     
-    public func substringToIndexAt(endIndex: Int) -> String {
-        let end = self.startIndex.advancedBy(endIndex, limit: self.endIndex)
-        return self.substringToIndex(end)
+    public func substringToIndexAt(index: Int) -> String {
+        let end = startIndex.advancedBy(index, limit: endIndex)
+        return substringToIndex(end)
     }
     
     public static var uniqueIdentifier: String {
@@ -164,13 +164,12 @@ extension NSMutableData {
     
     /** Convenient way to append bytes */
     internal func appendBytes(arrayOfBytes: [UInt8]) {
-        self.appendBytes(arrayOfBytes, length: arrayOfBytes.count)
+        appendBytes(arrayOfBytes, length: arrayOfBytes.count)
     }
     
 }
 
 class HashBase {
-    
     var message: NSData
     
     init(_ message: NSData) {
@@ -179,7 +178,7 @@ class HashBase {
     
     /** Common part for hash calculation. Prepare header data. */
     func prepare(len: Int = 64) -> NSMutableData {
-        let tmpMessage: NSMutableData = NSMutableData(data: self.message)
+        let tmpMessage: NSMutableData = NSMutableData(data: message)
         
         // Step 1. Append Padding Bits
         tmpMessage.appendBytes([0x80]) // append one bit (UInt8 with one bit) to message

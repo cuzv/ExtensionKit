@@ -68,12 +68,12 @@ public func UIImageFromFileFullName(fileName: String) -> UIImage? {
 public extension UIImage {
     /// Represent current image to render mode original.
     public var originalImage: UIImage {
-        return self.imageWithRenderingMode(.AlwaysOriginal)
+        return imageWithRenderingMode(.AlwaysOriginal)
     }
     
     /// Decompressed image.
     public var decompressedImage: UIImage {
-        UIGraphicsBeginImageContextWithOptions(self.size, true, 0)
+        UIGraphicsBeginImageContextWithOptions(size, true, 0)
         drawAtPoint(CGPointZero)
         let decompressedImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
@@ -91,11 +91,11 @@ public extension UIImage {
     
     /// Compress image as possible to target size kb.
     public func compressAsPossible(toCapacity capacity: Int = 50, targetSize: CGSize = CGSizeMake(UIScreen.mainScreen().bounds.width, UIScreen.mainScreen().bounds.width)) -> NSData? {
-        let currentRepresention = self.size.width * self.size.height
+        let currentRepresention = size.width * size.height
         let targetRepresention = targetSize.width * targetSize.height
         var scaledImage = self
         if currentRepresention > targetRepresention {
-            scaledImage = self.scaleToSize(targetSize)
+            scaledImage = scaleToSize(targetSize)
         }
         
         var compressionQuality: CGFloat = 0.5
@@ -110,11 +110,11 @@ public extension UIImage {
     }
     
     public func orientationTo(orientation: UIImageOrientation) -> UIImage {
-        if self.imageOrientation == orientation {
+        if imageOrientation == orientation {
             return self
         }
         
-        if let CGImage = self.CGImage {
+        if let CGImage = CGImage {
             return UIImage(CGImage: CGImage, scale: UIScreen.scale, orientation: orientation)
         }
     

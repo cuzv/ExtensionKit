@@ -30,56 +30,56 @@ import UIKit
 
 public extension UIButton {
     public var title: String? {
-        get { return self.titleForState(.Normal) }
+        get { return titleForState(.Normal) }
         set {
-            self.setTitle(newValue, forState: .Normal)
-            self.setTitle(newValue, forState: .Highlighted)
+            setTitle(newValue, forState: .Normal)
+            setTitle(newValue, forState: .Highlighted)
         }
     }
     
     public var attributedTitle: NSAttributedString? {
-        get { return self.attributedTitleForState(.Normal) }
+        get { return attributedTitleForState(.Normal) }
         set {
-            self.setAttributedTitle(newValue, forState: .Normal)
-            self.setAttributedTitle(newValue, forState: .Highlighted)
+            setAttributedTitle(newValue, forState: .Normal)
+            setAttributedTitle(newValue, forState: .Highlighted)
         }
     }
     
     public var titleColor: UIColor? {
-        get { return self.titleColorForState(.Normal) }
+        get { return titleColorForState(.Normal) }
         set {
-            self.setTitleColor(newValue, forState: .Normal)
-            self.setTitleColor(newValue, forState: .Highlighted)
-            self.setTitleColor(newValue?.colorWithAlphaComponent(0.2), forState: .Disabled)
-            self.setTitleColor(UIApplication.sharedApplication().keyWindow?.tintColor, forState: .Selected)
+            setTitleColor(newValue, forState: .Normal)
+            setTitleColor(newValue, forState: .Highlighted)
+            setTitleColor(newValue?.colorWithAlphaComponent(0.2), forState: .Disabled)
+            setTitleColor(UIApplication.sharedApplication().keyWindow?.tintColor, forState: .Selected)
         }
     }
     
     public var titleShadowColor: UIColor? {
-        get { return self.titleShadowColorForState(.Normal) }
+        get { return titleShadowColorForState(.Normal) }
         set {
-            self.setTitleShadowColor(newValue, forState: .Normal)
-            self.setTitleShadowColor(newValue, forState: .Highlighted)
-            self.setTitleShadowColor(newValue?.colorWithAlphaComponent(0.2), forState: .Disabled)
-            self.setTitleShadowColor(UIApplication.sharedApplication().keyWindow?.tintColor, forState: .Selected)
+            setTitleShadowColor(newValue, forState: .Normal)
+            setTitleShadowColor(newValue, forState: .Highlighted)
+            setTitleShadowColor(newValue?.colorWithAlphaComponent(0.2), forState: .Disabled)
+            setTitleShadowColor(UIApplication.sharedApplication().keyWindow?.tintColor, forState: .Selected)
         }
     }
     
     public var image: UIImage? {
-        get { return self.imageForState(.Normal) }
+        get { return imageForState(.Normal) }
         set {
             let originalImage = newValue?.imageWithRenderingMode(.AlwaysOriginal)
-            self.setImage(originalImage, forState: .Normal)
-            self.setImage(originalImage, forState: .Highlighted)
+            setImage(originalImage, forState: .Normal)
+            setImage(originalImage, forState: .Highlighted)
         }
     }
     
     public var backgroundImage: UIImage? {
-        get { return self.backgroundImageForState(.Normal) }
+        get { return backgroundImageForState(.Normal) }
         set {
             let originalImage = newValue?.imageWithRenderingMode(.AlwaysOriginal)
-            self.setBackgroundImage(originalImage, forState: .Normal)
-            self.setBackgroundImage(originalImage, forState: .Highlighted)
+            setBackgroundImage(originalImage, forState: .Normal)
+            setBackgroundImage(originalImage, forState: .Highlighted)
         }
     }
 }
@@ -123,14 +123,14 @@ public extension UIButton {
     /// Setup image position relate to title
     /// **NOTE**: Before invoke this methods you should setup and title image already
     public func setImageAlignmentToTop(titleSpace space: CGFloat = 4.0) {
-        guard let currentImage = self.currentImage else { return }
-        guard let currentTitle = self.currentTitle as NSString? else { return }
-        guard let titleLabel = self.titleLabel else { return }
+        guard let currentImage = currentImage else { return }
+        guard let currentTitle = currentTitle as NSString? else { return }
+        guard let titleLabel = titleLabel else { return }
         
         let halfSpace = space / 2.0
         let halfImageWidth = currentImage.size.width / 2.0
         let halfImageHeight = currentImage.size.height / 2.0
-        self.titleEdgeInsets = UIEdgeInsetsMake(
+        titleEdgeInsets = UIEdgeInsetsMake(
             halfImageHeight + halfSpace,
             -halfImageWidth,
             -halfImageHeight - halfSpace,
@@ -140,7 +140,7 @@ public extension UIButton {
         let titleBounds = currentTitle.sizeWithAttributes([NSFontAttributeName: titleLabel.font])
         let halfEdgeWidth = titleBounds.width / 2.0
         let halfEdgeHeight = titleBounds.height / 2.0
-        self.imageEdgeInsets = UIEdgeInsetsMake(
+        imageEdgeInsets = UIEdgeInsetsMake(
             -halfEdgeHeight - halfSpace,
             halfEdgeWidth,
             halfEdgeHeight + halfSpace,
@@ -151,14 +151,14 @@ public extension UIButton {
     /// Setup image position relate to title
     /// **NOTE**: Before invoke this methods you should setup and title image already
     public func setImageAlignmentToBottom(titleSpace space: CGFloat = 4.0) {
-        guard let currentImage = self.currentImage else { return }
-        guard let currentTitle = self.currentTitle as NSString? else { return }
-        guard let titleLabel = self.titleLabel else { return }
+        guard let currentImage = currentImage else { return }
+        guard let currentTitle = currentTitle as NSString? else { return }
+        guard let titleLabel = titleLabel else { return }
         
         let halfSpace = space / 2.0
         let halfImageWidth = currentImage.size.width / 2.0
         let halfImageHeight = currentImage.size.height / 2.0
-        self.titleEdgeInsets = UIEdgeInsetsMake(
+        titleEdgeInsets = UIEdgeInsetsMake(
             -halfImageHeight - halfSpace,
             -halfImageWidth,
             halfImageHeight + halfSpace,
@@ -168,7 +168,7 @@ public extension UIButton {
         let titleBounds = currentTitle.sizeWithAttributes([NSFontAttributeName: titleLabel.font])
         let halfEdgeWidth = titleBounds.width / 2.0
         let halfEdgeHeight = titleBounds.height / 2.0
-        self.imageEdgeInsets = UIEdgeInsetsMake(
+        imageEdgeInsets = UIEdgeInsetsMake(
             halfEdgeHeight + halfSpace,
             halfEdgeWidth,
             -halfEdgeHeight - halfSpace,
@@ -181,13 +181,13 @@ public extension UIButton {
     public func setImageAlignmentToLeft(titleSpace space: CGFloat = 4.0) {
         let halfSpace = space / 2.0
         
-        self.titleEdgeInsets = UIEdgeInsetsMake(
+        titleEdgeInsets = UIEdgeInsetsMake(
             0,
             halfSpace,
             0,
             -halfSpace
         )
-        self.imageEdgeInsets = UIEdgeInsetsMake(
+        imageEdgeInsets = UIEdgeInsetsMake(
             0,
             -halfSpace,
             0,
@@ -198,21 +198,21 @@ public extension UIButton {
     /// Setup image position relate to title
     /// **NOTE**: Before invoke this methods you should setup and title image already
     public func setImageAlignmentToRight(titleSpace space: CGFloat = 4.0) {
-        guard let currentImage = self.currentImage else { return }
-        guard let currentTitle = self.currentTitle as NSString? else { return }
-        guard let titleLabel = self.titleLabel else { return }
+        guard let currentImage = currentImage else { return }
+        guard let currentTitle = currentTitle as NSString? else { return }
+        guard let titleLabel = titleLabel else { return }
         
         let halfSpace = space / 2.0
         let imageWidth = currentImage.size.width
         let edgeWidth = currentTitle.sizeWithAttributes([NSFontAttributeName: titleLabel.font]).width
         
-        self.titleEdgeInsets = UIEdgeInsetsMake(
+        titleEdgeInsets = UIEdgeInsetsMake(
             0,
             -imageWidth - halfSpace,
             0,
             imageWidth + halfSpace
         )
-        self.imageEdgeInsets = UIEdgeInsetsMake(
+        imageEdgeInsets = UIEdgeInsetsMake(
             0,
             edgeWidth + halfSpace,
             0,

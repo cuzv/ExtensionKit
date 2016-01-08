@@ -16,6 +16,7 @@ class ViewController: UIViewController {
         
         let value = "value"
         UserDefaults["some"] = value
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -25,4 +26,3 @@ class ViewController: UIViewController {
 
 
 }
-

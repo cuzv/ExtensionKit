@@ -74,20 +74,26 @@ public class CountDownTimerWrapper {
     }
     
     private func dispose() {
-        self.disposable?.dispose()
+        disposable?.dispose()
     }
     
     public func start() {
-        self.disposable = {
-            timer(self.interval, onScheduler: QueueScheduler.mainQueueScheduler)
-                .on(disposed: { self.completion?() }, next: {
-                    let overTimeInterval = $0.timeIntervalSinceDate(self.startTime)
-                    let leftTimeInterval = fabs(ceil(self.duration - overTimeInterval))
-                    self.next?(leftTimeInterval)
-                    if leftTimeInterval <= 0 {
-                        self.dispose()
-                    }
-                }).start()
+        disposable = {
+            timer(interval, onScheduler: QueueScheduler.mainQueueScheduler)
+                .on(disposed: { [weak self] in
+                        self?.completion?()
+                    },
+                    next: { [weak self] in
+                        guard let _self = self else { return }
+                        
+                        let overTimeInterval = $0.timeIntervalSinceDate(_self.startTime)
+                        let leftTimeInterval = fabs(ceil(_self.duration - overTimeInterval))
+                        _self.next?(leftTimeInterval)
+                        if leftTimeInterval <= 0 {
+                            _self.dispose()
+                        }
+                    })
+                .start()
             }()
     }
     
@@ -187,7 +193,7 @@ public extension UILabel {
 
 public extension UITextField {
     public func rac_textSignalProducer() -> SignalProducer<String, NoError> {
-        return self.rac_textSignal().toSignalProducer()
+        return rac_textSignal().toSignalProducer()
             .map { $0 as! String }
             .ignoreError()
     }
@@ -207,13 +213,13 @@ public extension UITextField {
     }
     
     internal func changed() {
-        rac_text.value = self.text ?? ""
+        rac_text.value = text ?? ""
     }
 }
 
 public extension UITextView {
     public func rac_textSignalProducer() -> SignalProducer<String, NoError> {
-        return self.rac_textSignal().toSignalProducer()
+        return rac_textSignal().toSignalProducer()
             .map { $0 as! String }
             .ignoreError()
     }
@@ -237,7 +243,7 @@ public extension UITextView {
     }
     
     internal func changed() {
-        rac_text.value = self.text ?? ""
+        rac_text.value = text ?? ""
     }
 }
 
@@ -267,7 +273,7 @@ public extension SignalProducer {
     public func rac_values(initialValue: Value) -> MutableProperty<Value> {
         let property = MutableProperty<Value>(initialValue)
         
-        self.startWithNext { (value) -> () in
+        startWithNext { (value) -> () in
             property.value = value
         }
         
@@ -277,7 +283,7 @@ public extension SignalProducer {
     public func rac_errors(initialValue: Error) -> MutableProperty<Error> {
         let property = MutableProperty<Error>(initialValue)
         
-        self.startWithFailed { (error) -> () in
+        startWithFailed { (error) -> () in
             property.value = error
         }
         
@@ -289,7 +295,7 @@ extension Signal {
     public func rac_next(initialValue: Value) -> MutableProperty<Value> {
         let property = MutableProperty<Value>(initialValue)
 
-        self.observeNext { (value) -> () in
+        observeNext { (value) -> () in
             property.value = value
         }
         
@@ -299,7 +305,7 @@ extension Signal {
     public func rac_errors(initialValue: Error) -> MutableProperty<Error> {
         let property = MutableProperty<Error>(initialValue)
         
-        self.observeFailed { (error) -> () in
+        observeFailed { (error) -> () in
             property.value = error
         }
         
@@ -309,11 +315,11 @@ extension Signal {
 
 extension Action {
     public func rac_errors(initialValue: Error) -> MutableProperty<Error> {
-        return self.errors.rac_next(initialValue)
+        return errors.rac_next(initialValue)
     }
     
     public func rac_values(initialValue: Output) -> MutableProperty<Output> {
-        return self.values.rac_next(initialValue)
+        return values.rac_next(initialValue)
     }
 }
 

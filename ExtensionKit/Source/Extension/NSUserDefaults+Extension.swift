@@ -30,7 +30,7 @@ public let UserDefaults = NSUserDefaults.standardUserDefaults()
 
 public extension NSUserDefaults {
     public subscript(key: String) -> Any? {
-        get { return self.valueForKey(key) as Any }
+        get { return valueForKey(key) as Any }
         set {
             switch newValue {
             case let value as Int: setInteger(value, forKey: key)
@@ -46,12 +46,12 @@ public extension NSUserDefaults {
     
     private func setter(key: String, _ value: AnyObject?) {
         self[key] = value
-        self.synchronize()
+        synchronize()
     }
 
     /// Is there a object for specific key exist.
     public func hasKey(key: String) -> Bool {
-        return nil != self.objectForKey(key)
+        return nil != objectForKey(key)
     }
     
     /// Archive object to NSData to save.
@@ -59,13 +59,13 @@ public extension NSUserDefaults {
         if let value = object {
             setter(key, NSKeyedArchiver.archivedDataWithRootObject(value))
         } else {
-            self.removeObjectForKey(key)
+            removeObjectForKey(key)
         }
     }
     
     /// Unarchive object for specific key.
     public func unarchiveObjectForKey(key: String) -> AnyObject? {
-        return self.dataForKey(key).flatMap { NSKeyedUnarchiver.unarchiveObjectWithData($0) }
+        return dataForKey(key).flatMap { NSKeyedUnarchiver.unarchiveObjectWithData($0) }
     }
     
     

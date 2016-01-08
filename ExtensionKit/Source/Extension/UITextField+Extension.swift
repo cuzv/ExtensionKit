@@ -47,6 +47,6 @@ public extension UITextField {
             actionHandler?(remainCount)
         }
         textObserver.observe(self)
-        self.textFieldTextObserver = textObserver
+        textFieldTextObserver = textObserver
     }
 }

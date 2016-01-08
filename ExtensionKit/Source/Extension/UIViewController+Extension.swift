@@ -43,7 +43,7 @@ public extension UIAlertAction {
     }
     
     public var index: Int! {
-        return self.alertActionIndex
+        return alertActionIndex
     }
 }
 
@@ -254,9 +254,9 @@ public extension UIViewController {
     
     public func addSubViewController(viewController: UIViewController) {
         viewController.willMoveToParentViewController(self)
-        self.addChildViewController(viewController)
-        viewController.view.frame = self.view.frame
-        self.view.addSubview(viewController.view)
+        addChildViewController(viewController)
+        viewController.view.frame = view.frame
+        view.addSubview(viewController.view)
         viewController.didMoveToParentViewController(self)
     }
 }

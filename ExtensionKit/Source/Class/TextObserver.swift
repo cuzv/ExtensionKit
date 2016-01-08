@@ -42,11 +42,11 @@ final public class TextObserver {
     deinit {
         debugPrint("\(__FILE__):\(__LINE__):\(self.dynamicType):\(__FUNCTION__)")
         
-        if let textFieldObserver = self.textFieldObserver {
+        if let textFieldObserver = textFieldObserver {
             NSNotificationCenter.defaultCenter().removeObserver(textFieldObserver)
         }
         
-        if let textViewObserver = self.textViewObserver {
+        if let textViewObserver = textViewObserver {
             NSNotificationCenter.defaultCenter().removeObserver(textViewObserver)
         }
     }
@@ -54,7 +54,7 @@ final public class TextObserver {
     // MARK: - UITextField
     
     public func observe(object: UITextField) {
-        self.textFieldObserver = NSNotificationCenter.defaultCenter().addObserverForName(
+        textFieldObserver = NSNotificationCenter.defaultCenter().addObserverForName(
             UITextFieldTextDidChangeNotification,
             object: object,
             queue: NSOperationQueue.mainQueue()) { [weak self] (notification) -> Void in
@@ -74,7 +74,7 @@ final public class TextObserver {
     // MARK: - UITextView
     
     public func observe(object: UITextView) {
-        self.textViewObserver = NSNotificationCenter.defaultCenter().addObserverForName(
+        textViewObserver = NSNotificationCenter.defaultCenter().addObserverForName(
             UITextViewTextDidChangeNotification,
             object: object,
             queue: NSOperationQueue.mainQueue()) { [weak self] (notification) -> Void in

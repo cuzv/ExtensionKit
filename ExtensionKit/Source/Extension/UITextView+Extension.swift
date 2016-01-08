@@ -47,7 +47,7 @@ public extension UITextView {
             actionHandler?(remainCount)
         }
         textObserver.observe(self)
-        self.textViewTextObserver = textObserver
+        textViewTextObserver = textObserver
     }
 }
 
@@ -55,9 +55,9 @@ public extension UITextView {
 
 public extension UITextView {
     public func scrollCursorToVisible() {
-        let cursorLocation = self.selectedRange.location
+        let cursorLocation = selectedRange.location
         let range = NSMakeRange(0, cursorLocation)
-        self.scrollRangeToVisible(range)
+        scrollRangeToVisible(range)
     }
 }
 
