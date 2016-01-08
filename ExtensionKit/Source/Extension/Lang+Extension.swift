@@ -60,22 +60,41 @@ public func randomInRange(range: Range<Int>) -> Int {
 }
 
 // MARK: - ClosureWrapper
-/// ClosureWrapper, make closure can interactive with NSObject
-public class ClosureWrapper<T: NSObjectProtocol, U>: NSObject {
-    private let _closure: ((T, U?) -> ())
-    private unowned let _holder: T
+
+/// ClosureWrapper, make closure can interact with Object.
+/// Take no paramters but the holder.
+public final class ClosureTrampoline<T: AnyObject>: NSObject {
+    private let closure: T -> ()
+    private unowned let holder: T
     
-    deinit {
-        debugPrint("\(__FILE__):\(__LINE__):\(self.dynamicType):\(__FUNCTION__)")
+    deinit { debugPrint("\(__FILE__):\(__LINE__):\(self.dynamicType):\(__FUNCTION__)") }
+    
+    public init(closure: T -> (), holder: T) {
+        self.closure = closure
+        self.holder = holder
     }
+
+    public func invoke() {
+        closure(holder)
+    }
+}
+
+/// ClosureWrapper, make closure can interact with Object.
+/// Take other paramters besides the holder.
+/// The `U` normally be a tuple if other paramters count great than one.
+public final class ClosureWrapper<T: AnyObject, U>: NSObject {
+    private let closure: ((T, U?) -> ())
+    private unowned let holder: T
+    
+    deinit { debugPrint("\(__FILE__):\(__LINE__):\(self.dynamicType):\(__FUNCTION__)") }
     
     public init(closure: ((T, U?) -> ()), holder: T) {
-        _closure = closure
-        _holder = holder
+        self.closure = closure
+        self.holder = holder
     }
     
-    public func invoke(object: U? = nil) {
-        _closure(_holder, object)
+    public func invoke(param: U? = nil) {
+        closure(holder, param)
     }
 }
 
