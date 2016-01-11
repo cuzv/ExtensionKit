@@ -28,8 +28,9 @@ import UIKit
 
 // MARK: - Property for state
 
+@IBDesignable
 public extension UIButton {
-    public var title: String? {
+    @IBInspectable public var title: String? {
         get { return titleForState(.Normal) }
         set {
             setTitle(newValue, forState: .Normal)
@@ -37,7 +38,7 @@ public extension UIButton {
         }
     }
     
-    public var attributedTitle: NSAttributedString? {
+    @IBInspectable public var attributedTitle: NSAttributedString? {
         get { return attributedTitleForState(.Normal) }
         set {
             setAttributedTitle(newValue, forState: .Normal)
@@ -45,7 +46,7 @@ public extension UIButton {
         }
     }
     
-    public var titleColor: UIColor? {
+    @IBInspectable public var titleColor: UIColor? {
         get { return titleColorForState(.Normal) }
         set {
             setTitleColor(newValue, forState: .Normal)
@@ -55,7 +56,7 @@ public extension UIButton {
         }
     }
     
-    public var titleShadowColor: UIColor? {
+    @IBInspectable public var titleShadowColor: UIColor? {
         get { return titleShadowColorForState(.Normal) }
         set {
             setTitleShadowColor(newValue, forState: .Normal)
@@ -65,7 +66,7 @@ public extension UIButton {
         }
     }
     
-    public var image: UIImage? {
+    @IBInspectable public var image: UIImage? {
         get { return imageForState(.Normal) }
         set {
             let originalImage = newValue?.imageWithRenderingMode(.AlwaysOriginal)
@@ -74,7 +75,7 @@ public extension UIButton {
         }
     }
     
-    public var backgroundImage: UIImage? {
+    @IBInspectable public var backgroundImage: UIImage? {
         get { return backgroundImageForState(.Normal) }
         set {
             let originalImage = newValue?.imageWithRenderingMode(.AlwaysOriginal)
