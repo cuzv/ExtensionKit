@@ -212,7 +212,7 @@ public extension UIView {
     }
     
     @IBInspectable public var height: CGFloat {
-        get { return CGRectGetWidth(bounds) }
+        get { return CGRectGetHeight(bounds) }
         set { frame = CGRectMake(minX, minY, width, newValue) }
     }
 } 
