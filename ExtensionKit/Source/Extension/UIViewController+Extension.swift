@@ -147,22 +147,34 @@ public func doPresentActionSheet(
 /// Returns the most recently presented UIViewController (visible).
 /// http://stackoverflow.com/questions/24825123/get-the-current-view-controller-from-the-app-delegate
 public func findLastPresentedViewController() -> UIViewController? {
-    guard let rootViewController = UIApplication.sharedApplication().keyWindow?.rootViewController else { return nil }
-    
-    if let navigationController = rootViewController as? UINavigationController {
-        // If the root view is a navigation controller, we can just return the visible ViewController.
-        return navigationController.visibleViewController
-    } else {
-        // Otherwise, we must get the root UIViewController and iterate through presented views.
-        var currentController: UIViewController = rootViewController
-        // Each ViewController keeps track of the view it has presented, so we
-        // can move from the head to the tail, which will always be the current view.
-        while (nil != currentController.presentedViewController) {
-            currentController = currentController.presentedViewController!
+    func findTopLevelViewController(viewController: UIViewController) -> UIViewController? {
+        if let vc = viewController.presentedViewController {
+            return findTopLevelViewController(vc)
+        } else if let vc = viewController as? UISplitViewController  {
+            if let vc = vc.viewControllers.last {
+                return findTopLevelViewController(vc)
+            }
+            return vc
+        } else if let vc = viewController as? UINavigationController {
+            if let vc = vc.topViewController {
+                return findTopLevelViewController(vc)
+            }
+            return vc
+        } else if let vc = viewController as? UITabBarController {
+            if let vc = vc.viewControllers?.last {
+                return findTopLevelViewController(vc)
+            }
+            return vc
+        } else {
+            return viewController
         }
-        
-        return currentController
     }
+
+    if let rootViewController = UIApplication.sharedApplication().keyWindow?.rootViewController {
+        return findTopLevelViewController(rootViewController)
+    }
+
+    return nil
 }
 
 // MARK: - Present UIImagePickerController
