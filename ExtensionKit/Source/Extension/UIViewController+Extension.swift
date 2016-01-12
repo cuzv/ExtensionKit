@@ -161,7 +161,7 @@ public func findLastPresentedViewController() -> UIViewController? {
             }
             return vc
         } else if let vc = viewController as? UITabBarController {
-            if let vc = vc.viewControllers?.last {
+            if let vc = vc.selectedViewController {
                 return findTopLevelViewController(vc)
             }
             return vc
