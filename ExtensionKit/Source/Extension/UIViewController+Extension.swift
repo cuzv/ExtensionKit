@@ -157,7 +157,7 @@ public func findLastPresentedViewController() -> UIViewController? {
         var currentController: UIViewController = rootViewController
         // Each ViewController keeps track of the view it has presented, so we
         // can move from the head to the tail, which will always be the current view.
-        while(nil != currentController.presentedViewController) {
+        while (nil != currentController.presentedViewController) {
             currentController = currentController.presentedViewController!
         }
         
