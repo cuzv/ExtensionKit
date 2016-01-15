@@ -38,6 +38,11 @@ public extension UIButton {
         }
     }
     
+    @IBInspectable public var titleFont: UIFont? {
+        get { return titleLabel?.font }
+        set { titleLabel?.font = newValue }
+    }
+    
     @IBInspectable public var attributedTitle: NSAttributedString? {
         get { return attributedTitleForState(.Normal) }
         set {
@@ -75,12 +80,28 @@ public extension UIButton {
         }
     }
     
+    @IBInspectable public var selectedImage: UIImage? {
+        get { return imageForState(.Selected) }
+        set {
+            let originalImage = newValue?.imageWithRenderingMode(.AlwaysOriginal)
+            setImage(originalImage, forState: .Selected)
+        }
+    }
+    
     @IBInspectable public var backgroundImage: UIImage? {
         get { return backgroundImageForState(.Normal) }
         set {
             let originalImage = newValue?.imageWithRenderingMode(.AlwaysOriginal)
             setBackgroundImage(originalImage, forState: .Normal)
             setBackgroundImage(originalImage, forState: .Highlighted)
+        }
+    }
+    
+    @IBInspectable public var selectedBackgroundImage: UIImage? {
+        get { return backgroundImageForState(.Selected) }
+        set {
+            let originalImage = newValue?.imageWithRenderingMode(.AlwaysOriginal)
+            setBackgroundImage(originalImage, forState: .Selected)
         }
     }
 }

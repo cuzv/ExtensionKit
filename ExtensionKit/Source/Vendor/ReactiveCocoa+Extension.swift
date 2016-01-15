@@ -44,8 +44,22 @@ public extension SignalProducer {
     }
 }
 
-public func merge<T, E>(signals: [SignalProducer<T, E>]) -> SignalProducer<T, E> {
-    return SignalProducer<SignalProducer<T, E>, E>(values: signals).flatten(.Merge)
+public func merge<Value, Error: ErrorType>(producers: [SignalProducer<Value, Error>]) -> SignalProducer<Value, Error> {
+    return SignalProducer<SignalProducer<Value, Error>, Error>(values: producers).flatten(.Merge)
+}
+
+// MARK: - Signal
+
+public func merge<Value, Error: ErrorType>(signals: [Signal<Value, Error>]) -> Signal<Value, Error> {
+    return Signal<Value, Error>.merge(signals)
+}
+
+public func reduceErrors(errors: [Signal<NSError, NoError>]) -> MutableProperty<NSError> {
+    return merge(errors).rac_next(NSError.defaultError())
+}
+
+public func reduceActionsErrors<Input, Output>(actions: [ReactiveCocoa.Action<Input, Output, NSError>]) -> MutableProperty<NSError> {
+    return reduceErrors(actions.map { $0.errors })
 }
 
 // MARK: - Timer
@@ -291,10 +305,10 @@ public extension SignalProducer {
     }
 }
 
-extension Signal {
+public extension Signal {
     public func rac_next(initialValue: Value) -> MutableProperty<Value> {
         let property = MutableProperty<Value>(initialValue)
-
+        
         observeNext { (value) -> () in
             property.value = value
         }
@@ -313,7 +327,7 @@ extension Signal {
     }
 }
 
-extension Action {
+public extension Action {
     public func rac_errors(initialValue: Error) -> MutableProperty<Error> {
         return errors.rac_next(initialValue)
     }

@@ -488,7 +488,7 @@ public extension UIView {
         set { associateAssignObject(newValue, forKey: &AssociationKey.executeConainerView) }
     }
     
-    public func startExecute(backgroundColor backgroundColor: UIColor = UIColor.whiteColor(), indicatorColor: UIColor = UIColor.lightGrayColor()) {
+    public func startExecute(backgroundColor backgroundColor: UIColor = UIColor.clearColor(), indicatorColor: UIColor = UIColor.lightGrayColor()) {
         if let executeConainerView = executeConainerView {
             executeConainerView.backgroundColor = backgroundColor
             executeConainerView.hidden = false
