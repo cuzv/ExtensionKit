@@ -26,6 +26,24 @@
 
 import UIKit
 
+// MARK: - RegEx
+
+public extension String {
+    public func isMatchRegEx(regEx: String) -> Bool {
+        return NSPredicate(format: "SELF MATCHES %@", regEx).evaluateWithObject(self)
+    }
+    
+    public var isPhoneNumber: Bool {
+        return isMatchRegEx("^(1[345789])\\d{9}")
+    }
+    
+    public var isEmail: Bool {
+        return isMatchRegEx("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$")
+    }
+}
+
+// MARK: - 
+
 public extension String {
     public var length: Int {
         return lengthOfBytesUsingEncoding(NSUTF8StringEncoding)
@@ -69,7 +87,6 @@ public extension String {
     public static var uniqueIdentifier: String {
         return NSUUID().UUIDString.stringByReplacingOccurrencesOfString("-", withString: "")
     }
-    
 }
 
 // MARK: - String -> Numbers
