@@ -41,3 +41,20 @@ extension UITableViewHeaderFooterView: SetupData {
 extension UICollectionReusableView: SetupData {
     public func setupData(data: AnyObject!) {}
 }
+
+@objc public protocol LazyLoadImagesData {
+    func lazilySetupData(data: AnyObject!)
+}
+
+extension UITableViewCell: LazyLoadImagesData {
+    public func lazilySetupData(data: AnyObject!) {}
+}
+
+extension UITableViewHeaderFooterView: LazyLoadImagesData {
+    public func lazilySetupData(data: AnyObject!) {}
+}
+
+extension UICollectionReusableView: LazyLoadImagesData {
+    public func lazilySetupData(data: AnyObject!) {}
+}
+
