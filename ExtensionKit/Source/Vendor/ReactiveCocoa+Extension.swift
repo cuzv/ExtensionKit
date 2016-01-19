@@ -54,12 +54,20 @@ public func merge<Value, Error: ErrorType>(signals: [Signal<Value, Error>]) -> S
     return Signal<Value, Error>.merge(signals)
 }
 
-public func reduceErrors(errors: [Signal<NSError, NoError>]) -> MutableProperty<NSError> {
+public func mergeErrors(errors: [Signal<NSError, NoError>]) -> MutableProperty<NSError> {
     return merge(errors).rac_next(NSError.defaultError())
 }
 
-public func reduceActionsErrors<Input, Output>(actions: [ReactiveCocoa.Action<Input, Output, NSError>]) -> MutableProperty<NSError> {
-    return reduceErrors(actions.map { $0.errors })
+public func mergeActionsErrors<Input, Output>(actions: [ReactiveCocoa.Action<Input, Output, NSError>]) -> MutableProperty<NSError> {
+    return mergeErrors(actions.map { $0.errors })
+}
+
+public func mergeExecuting(executings: [AnyProperty<Bool>]) -> AnyProperty<Bool> {
+    return AnyProperty(initialValue: false, producer: merge(executings.map { $0.producer }))
+}
+
+public func mergeActionsExecuting<Input, Output>(actions: [ReactiveCocoa.Action<Input, Output, NSError>]) -> AnyProperty<Bool> {
+    return AnyProperty(initialValue: false, producer: merge(actions.map { $0.executing.producer }))
 }
 
 // MARK: - Timer
