@@ -28,8 +28,9 @@ import UIKit
 
 // MARK: - Property for state
 
+@IBDesignable
 public extension UIButton {
-    public var title: String? {
+    @IBInspectable public var title: String? {
         get { return titleForState(.Normal) }
         set {
             setTitle(newValue, forState: .Normal)
@@ -37,7 +38,12 @@ public extension UIButton {
         }
     }
     
-    public var attributedTitle: NSAttributedString? {
+    @IBInspectable public var titleFont: UIFont? {
+        get { return titleLabel?.font }
+        set { titleLabel?.font = newValue }
+    }
+    
+    @IBInspectable public var attributedTitle: NSAttributedString? {
         get { return attributedTitleForState(.Normal) }
         set {
             setAttributedTitle(newValue, forState: .Normal)
@@ -45,7 +51,7 @@ public extension UIButton {
         }
     }
     
-    public var titleColor: UIColor? {
+    @IBInspectable public var titleColor: UIColor? {
         get { return titleColorForState(.Normal) }
         set {
             setTitleColor(newValue, forState: .Normal)
@@ -55,7 +61,7 @@ public extension UIButton {
         }
     }
     
-    public var titleShadowColor: UIColor? {
+    @IBInspectable public var titleShadowColor: UIColor? {
         get { return titleShadowColorForState(.Normal) }
         set {
             setTitleShadowColor(newValue, forState: .Normal)
@@ -65,7 +71,7 @@ public extension UIButton {
         }
     }
     
-    public var image: UIImage? {
+    @IBInspectable public var image: UIImage? {
         get { return imageForState(.Normal) }
         set {
             let originalImage = newValue?.imageWithRenderingMode(.AlwaysOriginal)
@@ -74,12 +80,28 @@ public extension UIButton {
         }
     }
     
-    public var backgroundImage: UIImage? {
+    @IBInspectable public var selectedImage: UIImage? {
+        get { return imageForState(.Selected) }
+        set {
+            let originalImage = newValue?.imageWithRenderingMode(.AlwaysOriginal)
+            setImage(originalImage, forState: .Selected)
+        }
+    }
+    
+    @IBInspectable public var backgroundImage: UIImage? {
         get { return backgroundImageForState(.Normal) }
         set {
             let originalImage = newValue?.imageWithRenderingMode(.AlwaysOriginal)
             setBackgroundImage(originalImage, forState: .Normal)
             setBackgroundImage(originalImage, forState: .Highlighted)
+        }
+    }
+    
+    @IBInspectable public var selectedBackgroundImage: UIImage? {
+        get { return backgroundImageForState(.Selected) }
+        set {
+            let originalImage = newValue?.imageWithRenderingMode(.AlwaysOriginal)
+            setBackgroundImage(originalImage, forState: .Selected)
         }
     }
 }
@@ -91,33 +113,25 @@ public extension UIButton {
     /// Convenience `setImageAlignmentToTop:` setter.
     @IBInspectable public var imageAlignmentTopSpace: CGFloat {
         get { fatalError("Unavailable.") }
-        set {
-            setImageAlignmentToTop(titleSpace: newValue)
-        }
+        set { setImageAlignmentToTop(titleSpace: newValue) }
     }
     
     /// Convenience `setImageAlignmentToLeft:` setter.
     @IBInspectable public var imageAlignmentLeftSpace: CGFloat {
         get { fatalError("Unavailable.") }
-        set {
-            setImageAlignmentToLeft(titleSpace: newValue)
-        }
+        set { setImageAlignmentToLeft(titleSpace: newValue) }
     }
     
     /// Convenience `setImageAlignmentToBottom:` setter.
     @IBInspectable public var imageAlignmentBottomSpace: CGFloat {
         get { fatalError("Unavailable.") }
-        set {
-            setImageAlignmentToBottom(titleSpace: newValue)
-        }
+        set { setImageAlignmentToBottom(titleSpace: newValue) }
     }
     
     /// Convenience `setImageAlignmentToRight:` setter.
     @IBInspectable public var imageAlignmentRightSpace: CGFloat {
         get { fatalError("Unavailable.") }
-        set {
-            setImageAlignmentToRight(titleSpace: newValue)
-        }
+        set { setImageAlignmentToRight(titleSpace: newValue) }
     }
     
     /// Setup image position relate to title

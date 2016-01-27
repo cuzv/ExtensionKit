@@ -147,29 +147,41 @@ public func doPresentActionSheet(
 /// Returns the most recently presented UIViewController (visible).
 /// http://stackoverflow.com/questions/24825123/get-the-current-view-controller-from-the-app-delegate
 public func findLastPresentedViewController() -> UIViewController? {
-    guard let rootViewController = UIApplication.sharedApplication().keyWindow?.rootViewController else { return nil }
-    
-    if let navigationController = rootViewController as? UINavigationController {
-        // If the root view is a navigation controller, we can just return the visible ViewController.
-        return navigationController.visibleViewController
-    } else {
-        // Otherwise, we must get the root UIViewController and iterate through presented views.
-        var currentController: UIViewController = rootViewController
-        // Each ViewController keeps track of the view it has presented, so we
-        // can move from the head to the tail, which will always be the current view.
-        while(nil != currentController.presentedViewController) {
-            currentController = currentController.presentedViewController!
+    func findTopLevelViewController(viewController: UIViewController) -> UIViewController? {
+        if let vc = viewController.presentedViewController {
+            return findTopLevelViewController(vc)
+        } else if let vc = viewController as? UISplitViewController  {
+            if let vc = vc.viewControllers.last {
+                return findTopLevelViewController(vc)
+            }
+            return vc
+        } else if let vc = viewController as? UINavigationController {
+            if let vc = vc.topViewController {
+                return findTopLevelViewController(vc)
+            }
+            return vc
+        } else if let vc = viewController as? UITabBarController {
+            if let vc = vc.selectedViewController {
+                return findTopLevelViewController(vc)
+            }
+            return vc
+        } else {
+            return viewController
         }
-        
-        return currentController
     }
+
+    if let rootViewController = UIApplication.sharedApplication().keyWindow?.rootViewController {
+        return findTopLevelViewController(rootViewController)
+    }
+
+    return nil
 }
 
 // MARK: - Present UIImagePickerController
 
 private extension UIImagePickerController {
-    private var imagePickerCompletionHandlerWrapper: ClosureWrapper<UIImagePickerController, UIImage> {
-        get { return associatedObjectForKey(&AssociationKey.imagePickerCompletionHandlerWrapper) as! ClosureWrapper<UIImagePickerController, UIImage> }
+    private var imagePickerCompletionHandlerWrapper: ClosureDecorator<(UIImagePickerController, UIImage?)> {
+        get { return associatedObjectForKey(&AssociationKey.imagePickerCompletionHandlerWrapper) as! ClosureDecorator<(UIImagePickerController, UIImage?)> }
         set { associateRetainObject(newValue, forKey: &AssociationKey.imagePickerCompletionHandlerWrapper) }
     }
 }
@@ -183,14 +195,14 @@ public extension UIViewController {
         imagePicker.delegate = self
         imagePicker.allowsEditing = true
         
-        imagePicker.imagePickerCompletionHandlerWrapper = ClosureWrapper(closure: completionHandler, holder: imagePicker)
+        imagePicker.imagePickerCompletionHandlerWrapper = ClosureDecorator(completionHandler)
         presentViewController(imagePicker, animated: true, completion: nil)
     }
 }
 
 extension UIViewController: UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     public func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        picker.imagePickerCompletionHandlerWrapper.invoke(nil)
+        picker.imagePickerCompletionHandlerWrapper.invoke((picker, nil))
         picker.dismissAnimated(completion: nil)
     }
     
@@ -201,7 +213,7 @@ extension UIViewController: UINavigationControllerDelegate, UIImagePickerControl
                 if let imageData = newImage.compressAsPossible() {
                     let resultImage = UIImage(data: imageData, scale: UIScreen.scale)
                     UIThreadAsyncAction({ () -> Void in
-                        picker.imagePickerCompletionHandlerWrapper.invoke(resultImage)
+                        picker.imagePickerCompletionHandlerWrapper.invoke((picker, resultImage))
                         picker.dismissAnimated(completion: nil)
                     })
                     return
@@ -212,7 +224,7 @@ extension UIViewController: UINavigationControllerDelegate, UIImagePickerControl
     }
     
     public func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
-        picker.imagePickerCompletionHandlerWrapper.invoke(image)
+        picker.imagePickerCompletionHandlerWrapper.invoke((picker, image))
         picker.dismissAnimated(completion: nil)
     }
 }
@@ -282,8 +294,8 @@ extension UIViewController: UIGestureRecognizerDelegate {
 // MARK: - UIBarButtonItem
 
 public extension UIBarButtonItem {
-    private var barButtonItemActionHandlerWrapper: ClosureWrapper<UIBarButtonItem, Any>! {
-        get { return associatedObjectForKey(&AssociationKey.barButtonItemActionHandlerWrapper) as? ClosureWrapper<UIBarButtonItem, Any> }
+    private var barButtonItemActionHandlerWrapper: ClosureDecorator<(UIBarButtonItem, Any?)>! {
+        get { return associatedObjectForKey(&AssociationKey.barButtonItemActionHandlerWrapper) as? ClosureDecorator<(UIBarButtonItem, Any?)> }
         set { associateRetainObject(newValue, forKey: &AssociationKey.barButtonItemActionHandlerWrapper) }
     }
     
@@ -291,7 +303,7 @@ public extension UIBarButtonItem {
         let barButtonItem = UIBarButtonItem(title: title, style: .Plain, target: self, action: "performActionHandler:")
         
         if let actionHandler = actionHandler {
-            barButtonItem.barButtonItemActionHandlerWrapper = ClosureWrapper(closure: actionHandler, holder: barButtonItem)
+            barButtonItem.barButtonItemActionHandlerWrapper = ClosureDecorator(actionHandler)
         }
         
         return barButtonItem
@@ -301,7 +313,7 @@ public extension UIBarButtonItem {
         let barButtonItem = UIBarButtonItem(image: image, style: .Plain, target: self, action: "performActionHandler:")
         
         if let actionHandler = actionHandler {
-            barButtonItem.barButtonItemActionHandlerWrapper = ClosureWrapper(closure: actionHandler, holder: barButtonItem)
+            barButtonItem.barButtonItemActionHandlerWrapper = ClosureDecorator(actionHandler)
         }
         
         return barButtonItem
@@ -309,7 +321,7 @@ public extension UIBarButtonItem {
     
     /// Helper func
     internal class func performActionHandler(sender: UIBarButtonItem) {
-        sender.barButtonItemActionHandlerWrapper.invoke()
+        sender.barButtonItemActionHandlerWrapper.invoke((sender, nil))
     }
 }
 

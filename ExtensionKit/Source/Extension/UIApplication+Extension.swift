@@ -85,12 +85,12 @@ public func doSendAction(action: Selector, fromSender sender: AnyObject?) -> Boo
 
 // MARK: - Properties
 
-// Setting the statusBarStyle does nothing if your application is using the default UIViewController-based status bar system.
+/// Setting the statusBarStyle does nothing if your application is using the default UIViewController-based status bar system.
 public func doMakeStatusBarDark() {
     UIApplication.sharedApplication().statusBarStyle = .Default
 }
 
-// Setting the statusBarStyle does nothing if your application is using the default UIViewController-based status bar system.
+/// Setting the statusBarStyle does nothing if your application is using the default UIViewController-based status bar system.
 public func doMakeStatusBarLight() {
     UIApplication.sharedApplication().statusBarStyle = .LightContent
 }

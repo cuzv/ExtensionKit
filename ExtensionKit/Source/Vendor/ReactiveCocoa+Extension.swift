@@ -44,13 +44,35 @@ public extension SignalProducer {
     }
 }
 
-public func merge<T, E>(signals: [SignalProducer<T, E>]) -> SignalProducer<T, E> {
-    return SignalProducer<SignalProducer<T, E>, E>(values: signals).flatten(.Merge)
+public func merge<Value, Error: ErrorType>(producers: [SignalProducer<Value, Error>]) -> SignalProducer<Value, Error> {
+    return SignalProducer<SignalProducer<Value, Error>, Error>(values: producers).flatten(.Merge)
+}
+
+// MARK: - Signal
+
+public func merge<Value, Error: ErrorType>(signals: [Signal<Value, Error>]) -> Signal<Value, Error> {
+    return Signal<Value, Error>.merge(signals)
+}
+
+public func mergeErrors(errors: [Signal<NSError, NoError>]) -> MutableProperty<NSError> {
+    return merge(errors).rac_next(NSError.defaultError())
+}
+
+public func mergeActionsErrors<Input, Output>(actions: [ReactiveCocoa.Action<Input, Output, NSError>]) -> MutableProperty<NSError> {
+    return mergeErrors(actions.map { $0.errors })
+}
+
+public func mergeExecuting(executings: [AnyProperty<Bool>]) -> AnyProperty<Bool> {
+    return AnyProperty(initialValue: false, producer: merge(executings.map { $0.producer }))
+}
+
+public func mergeActionsExecuting<Input, Output>(actions: [ReactiveCocoa.Action<Input, Output, NSError>]) -> AnyProperty<Bool> {
+    return AnyProperty(initialValue: false, producer: merge(actions.map { $0.executing.producer }))
 }
 
 // MARK: - Timer
 
-public class CountDownTimerWrapper {
+final public class CountDownTimerWrapper {
     private let startTime: NSDate
     private let interval: NSTimeInterval
     private let duration: NSTimeInterval
@@ -291,10 +313,10 @@ public extension SignalProducer {
     }
 }
 
-extension Signal {
+public extension Signal {
     public func rac_next(initialValue: Value) -> MutableProperty<Value> {
         let property = MutableProperty<Value>(initialValue)
-
+        
         observeNext { (value) -> () in
             property.value = value
         }
@@ -313,7 +335,7 @@ extension Signal {
     }
 }
 
-extension Action {
+public extension Action {
     public func rac_errors(initialValue: Error) -> MutableProperty<Error> {
         return errors.rac_next(initialValue)
     }

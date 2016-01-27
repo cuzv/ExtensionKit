@@ -29,8 +29,8 @@ import SnapKit
 
 // MARK: - SegmentedToggleControl
 
-public class SegmentedToggleControl: UIControl {
-    private let items: [String]
+final public class SegmentedToggleControl: UIControl {
+    private var items: [String]
     private var buttons: [UIButton] = []
     private let normalTextColor: UIColor
     private let selectedTextColor: UIColor
@@ -154,24 +154,7 @@ public extension SegmentedToggleControl {
         
         // Move lineView
         if let index = buttons.indexOf(sender) {
-            lineView.snp_remakeConstraints(closure: { (make) -> Void in
-                make.width.equalTo(lineViewWidthForIndex(index))
-                make.height.equalTo(1)
-                make.bottom.equalTo(self)
-                let currentButton = buttons[index]
-                make.centerX.equalTo(currentButton)
-            })
-            
-            let duration: NSTimeInterval = animated ? fabs(Double(currentSelectedIndex - index)) * 0.1 : 0
-            if duration <= 0 {
-                setNeedsLayout()
-                layoutIfNeeded()
-            } else {
-                UIView.animateWithDuration(duration, animations: { () -> Void in
-                    self.setNeedsLayout()
-                    self.layoutIfNeeded()
-                })
-            }
+            remakeLineViewConstraintsForIndex(index)
         }
         currentSelectedIndex = sender.tag
         
@@ -179,7 +162,74 @@ public extension SegmentedToggleControl {
         sendActionsForControlEvents(.ValueChanged)
     }
     
+    private func remakeLineViewConstraintsForIndex(index: Int) {
+        lineView.snp_remakeConstraints(closure: { (make) -> Void in
+            make.width.equalTo(lineViewWidthForIndex(index))
+            make.height.equalTo(1)
+            make.bottom.equalTo(self)
+            let currentButton = buttons[index]
+            make.centerX.equalTo(currentButton)
+        })
+        
+        let duration: NSTimeInterval = animated ? fabs(Double(currentSelectedIndex - index)) * 0.1 : 0
+        if duration <= 0 {
+            setNeedsLayout()
+            layoutIfNeeded()
+        } else {
+            UIView.animateWithDuration(duration, animations: { () -> Void in
+                self.setNeedsLayout()
+                self.layoutIfNeeded()
+            })
+        }
+    }
+    
     private func lineViewWidthForIndex(index: Int) -> CGFloat {
         return items[index].sizeWithFont(font).width
+    }
+}
+
+public extension SegmentedToggleControl {
+    /// can only have image or title, not both. must be 0..#segments - 1 (or ignored). default is nil
+    public func setTitle(title: String, forSegmentAtIndex segment: Int) {
+        if items.count <= segment {
+            debugPrint("Index beyound the boundary.")
+            return
+        }
+        
+        let button = buttons[segment]
+        button.title = title
+        button.image = nil
+        
+        items.replaceElementAtIndex(segment, withElement: title)
+        remakeLineViewConstraintsForIndex(segment)
+    }
+    
+    public func titleForSegmentAtIndex(segment: Int) -> String? {
+        if items.count <= segment {
+            return nil
+        }
+        
+        return items[segment]
+    }
+
+    /// can only have image or title, not both. must be 0..#segments - 1 (or ignored). default is nil
+    public func setImage(image: UIImage, forSegmentAtIndex segment: Int) {
+        if items.count <= segment {
+            debugPrint("Index beyound the boundary.")
+            return
+        }
+        
+        let button = buttons[segment]
+        button.image = image
+        button.title = nil
+    }
+    
+    public func imageForSegmentAtIndex(segment: Int) -> UIImage? {
+        if items.count <= segment {
+            return nil
+        }
+        
+        return buttons[segment].image
+
     }
 }

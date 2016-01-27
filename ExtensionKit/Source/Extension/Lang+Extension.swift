@@ -59,25 +59,6 @@ public func randomInRange(range: Range<Int>) -> Int {
     return  Int(arc4random_uniform(count)) + range.startIndex
 }
 
-// MARK: - ClosureWrapper
-/// ClosureWrapper, make closure can interactive with NSObject
-public class ClosureWrapper<T: NSObjectProtocol, U>: NSObject {
-    private let _closure: ((T, U?) -> ())
-    private unowned let _holder: T
-    
-    deinit {
-        debugPrint("\(__FILE__):\(__LINE__):\(self.dynamicType):\(__FUNCTION__)")
-    }
-    
-    public init(closure: ((T, U?) -> ()), holder: T) {
-        _closure = closure
-        _holder = holder
-    }
-    
-    public func invoke(object: U? = nil) {
-        _closure(_holder, object)
-    }
-}
 
 // MARK: - GCD
 
@@ -196,3 +177,29 @@ public func directoryForPictures() -> String? {
     return searchPathForDirectory(.PicturesDirectory)
 }
 
+// MARK: - ClosureDecorator
+
+/// ClosureDecorator, make use closure like a NSObject, aka objc_asscoiateXXX.
+final public class ClosureDecorator<T>: NSObject {
+    private let closure: Any
+    
+    private override init() {
+        fatalError("Use init(action:) instead.")
+    }
+    
+    public init(_ closure: () -> ()) {
+        self.closure = closure
+    }
+    
+    public init(_ closure: (T) -> ()) {
+        self.closure = closure
+    }
+    
+    func invoke(param: T) {
+        if let closure = closure as? () -> () {
+            closure()
+        } else if let closure = closure as? (T) -> () {
+            closure(param)
+        }
+    }
+}

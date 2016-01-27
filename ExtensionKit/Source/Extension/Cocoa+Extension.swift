@@ -1,8 +1,8 @@
 //
-//  UIKit+Extension.swift
+//  Cocoa+Extension.swift
 //  ExtensionKit
 //
-//  Created by Moch Xiao on 1/4/16.
+//  Created by Moch Xiao on 1/8/16.
 //  Copyright © @2016 Moch Xiao (https://github.com/cuzv).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -26,35 +26,29 @@
 
 import UIKit
 
-@objc public protocol SetupData {
-    func setupData(data: AnyObject!)
-}
+// MARK: - Swifty Target & Action
+// See: https://www.mikeash.com/pyblog/friday-qa-2015-12-25-swifty-targetaction.html
 
-extension UITableViewCell: SetupData {
-    public func setupData(data: AnyObject!) {}
-}
-
-extension UITableViewHeaderFooterView: SetupData {
-    public func setupData(data: AnyObject!) {}
-}
-
-extension UICollectionReusableView: SetupData {
-    public func setupData(data: AnyObject!) {}
-}
-
-@objc public protocol LazyLoadImagesData {
-    func lazilySetupData(data: AnyObject!)
-}
-
-extension UITableViewCell: LazyLoadImagesData {
-    public func lazilySetupData(data: AnyObject!) {}
-}
-
-extension UITableViewHeaderFooterView: LazyLoadImagesData {
-    public func lazilySetupData(data: AnyObject!) {}
-}
-
-extension UICollectionReusableView: LazyLoadImagesData {
-    public func lazilySetupData(data: AnyObject!) {}
+final public class ActionTrampoline<T>: NSObject {
+    private let action: T -> ()
+    
+    init(action: T -> ()) {
+        self.action = action
+    }
+    
+    @objc func action(sender: AnyObject) {
+        // UIControl: addTarget(target: AnyObject?, action: Selector, forControlEvents controlEvents: UIControlEvents)
+        if let sender = sender as? T {
+            action(sender)
+        }
+            // UIGestureRecognizer: addTarget(target: AnyObject, action: Selector)
+        else if let sender = sender as? UIGestureRecognizer {
+            action(sender.view as! T)
+        }
+    }
+    
+    deinit {
+        debugPrint("\(__FILE__):\(__LINE__):\(self.dynamicType):\(__FUNCTION__)")
+    }
 }
 

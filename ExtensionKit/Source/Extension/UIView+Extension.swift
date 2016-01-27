@@ -29,74 +29,129 @@ import UIKit
 // MARK: - AssociationKey
 
 private struct AssociationKey {
-    private static var gestureRecognizerWrapper: String = "closureWrapper"
+    private static var gestureRecognizerWrapper: String = "gestureRecognizerWrapper"
     private static var activityIndicatorView: String = "activityIndicatorView"
     private static var arcIndicatorLayer: String = "arcIndicatorLayer"
     private static var executeConainerView: String =  "executeConainerView"
+    
+    /// ActionTrampoline
+    private static var singleTapGestureRecognizer: String = "singleTapGestureRecognizer"
+    private static var doubleTapGestureRecognizer: String = "doubleTapGestureRecognizer"
+    private static var longPressGestureRecognizer: String = "longPressGestureRecognizer"
 }
 
 // MARK: - UIGestureRecognizer
 
+// MARK: The `ClosureDecorator` implement
+
 private extension UIGestureRecognizer {
-    private var gestureRecognizerWrapper: ClosureWrapper<UIView, UIGestureRecognizer> {
-        get { return associatedObjectForKey(&AssociationKey.gestureRecognizerWrapper) as! ClosureWrapper<UIView, UIGestureRecognizer> }
+    private var gestureRecognizerWrapper: ClosureDecorator<(UIView, UIGestureRecognizer)> {
+        get { return associatedObjectForKey(&AssociationKey.gestureRecognizerWrapper) as! ClosureDecorator<(UIView, UIGestureRecognizer)> }
         set { associateRetainObject(newValue, forKey: &AssociationKey.gestureRecognizerWrapper) }
     }
 }
 
 public extension UIView {
     /// Single tap action closure func.
-    /// **Note**: You should call `longPressAction:` or `doubleTapAction` first if you need.
+    /// **Note**: You should invoke `longPressAction:` or `doubleTapAction` first if you need.
     public func tapAction(action: ((UIView, UIGestureRecognizer?) -> ())) {
         userInteractionEnabled = true
         
-        let tapGesure = UITapGestureRecognizer(target: self, action: "handleTapAction:")
-        
-        if let gestures = gestureRecognizers {
-            for gesture in gestures {
-                if let tapGesture = gesture as? UITapGestureRecognizer where tapGesture.numberOfTapsRequired > 1 {
-                    tapGesure.requireGestureRecognizerToFail(gesture)
-                } else if gesture is UILongPressGestureRecognizer {
-                    tapGesure.requireGestureRecognizerToFail(gesture)
-                }
-            }
-        }
-        
-        addGestureRecognizer(tapGesure)
-        tapGesure.gestureRecognizerWrapper = ClosureWrapper(closure: action, holder: self)
+        let tapGesureRecognizer = UITapGestureRecognizer(target: self, action: "handleGestureRecognizerAction:")
+        checkRequireGestureRecognizerToFailForSingleTapGesureRecognizer(tapGesureRecognizer)
+        addGestureRecognizer(tapGesureRecognizer)
+        tapGesureRecognizer.gestureRecognizerWrapper = ClosureDecorator(action)
     }
-
+    
     /// Dobule tap action closure func.
-    /// **Note**: You should call `longPressAction:` first if you need.
+    /// **Note**: You should invoke `longPressAction:` first if you need.
     public func doubleTapAction(action: (UIView, UIGestureRecognizer?) -> ()) {
         userInteractionEnabled = true
         
-        let doubleTapGesure = UITapGestureRecognizer(target: self, action: "handleTapAction:")
-        doubleTapGesure.numberOfTapsRequired = 2
-
-        if let gestures = gestureRecognizers {
-            for gesture in gestures {
-                if gesture is UILongPressGestureRecognizer {
-                    doubleTapGesure.requireGestureRecognizerToFail(gesture)
-                }
-            }
-        }
-
-        addGestureRecognizer(doubleTapGesure)
-        doubleTapGesure.gestureRecognizerWrapper = ClosureWrapper(closure: action, holder: self)
+        let doubleTapGesureRecognizer = UITapGestureRecognizer(target: self, action: "handleGestureRecognizerAction:")
+        doubleTapGesureRecognizer.numberOfTapsRequired = 2
+        checkRequireGestureRecognizerToFailForDoubleTapGesureRecognizer(doubleTapGesureRecognizer)
+        addGestureRecognizer(doubleTapGesureRecognizer)
+        doubleTapGesureRecognizer.gestureRecognizerWrapper = ClosureDecorator(action)
     }
     
     /// Long press action closure func.
     public func longPressAction(action: (UIView, UIGestureRecognizer?) -> ()) {
         userInteractionEnabled = true
         
-        let longPressGesure = UILongPressGestureRecognizer(target: self, action: "handleTapAction:")
-        addGestureRecognizer(longPressGesure)
-        longPressGesure.gestureRecognizerWrapper = ClosureWrapper(closure: action, holder: self)
+        let longPressGesureRecognizer = UILongPressGestureRecognizer(target: self, action: "handleGestureRecognizerAction:")
+        addGestureRecognizer(longPressGesureRecognizer)
+        longPressGesureRecognizer.gestureRecognizerWrapper = ClosureDecorator(action)
     }
     
-    internal func handleTapAction(sender: UITapGestureRecognizer) {
-        sender.gestureRecognizerWrapper.invoke(sender)
+    internal func handleGestureRecognizerAction(sender: UIGestureRecognizer) {
+        sender.gestureRecognizerWrapper.invoke((self, sender))
+    }
+}
+
+private extension UIView {
+    private func checkRequireGestureRecognizerToFailForSingleTapGesureRecognizer(tapGesureRecognizer: UITapGestureRecognizer) {
+        if let gestureRecognizers = gestureRecognizers {
+            for gestureRecognizer in gestureRecognizers {
+                if let tapGestureRecognizer = gestureRecognizer as? UITapGestureRecognizer where tapGestureRecognizer.numberOfTapsRequired > 1 {
+                    tapGesureRecognizer.requireGestureRecognizerToFail(gestureRecognizer)
+                } else if gestureRecognizer is UILongPressGestureRecognizer {
+                    tapGesureRecognizer.requireGestureRecognizerToFail(gestureRecognizer)
+                }
+            }
+        }
+    }
+    
+    private func checkRequireGestureRecognizerToFailForDoubleTapGesureRecognizer(doubleTapGesureRecognizer: UITapGestureRecognizer) {
+        if let gesturesRecognizers = gestureRecognizers {
+            for gesturesRecognizer in gesturesRecognizers {
+                if gesturesRecognizer is UILongPressGestureRecognizer {
+                    doubleTapGesureRecognizer.requireGestureRecognizerToFail(gesturesRecognizer)
+                }
+            }
+        }
+    }
+}
+
+// MARK: The `ActionTrampoline` implement
+
+@objc public protocol UIGestureRecognizerFunctionProtocol {}
+extension UIView: UIGestureRecognizerFunctionProtocol {}
+
+public extension UIGestureRecognizerFunctionProtocol where Self: UIView {
+    /// Single tap action closure func.
+    /// **Note**: You should invoke `longPressAction:` or `doubleTapAction` first if you need.
+    public func tapAction(action: ((Self) -> ())) {
+        userInteractionEnabled = true
+        
+        let trampoline = ActionTrampoline(action: action)
+        let tapGestureRecognizer = UITapGestureRecognizer(target: trampoline, action: Selector("action:"))
+        checkRequireGestureRecognizerToFailForSingleTapGesureRecognizer(tapGestureRecognizer)
+        addGestureRecognizer(tapGestureRecognizer)
+        associateRetainObject(trampoline, forKey: &AssociationKey.singleTapGestureRecognizer)
+    }
+
+    /// Dobule tap action closure func.
+    /// **Note**: You should invoke `longPressAction:` first if you need.
+    public func doubleTapAction(action: (Self) -> ()) {
+        userInteractionEnabled = true
+
+        let trampoline = ActionTrampoline(action: action)
+        let doubleTapGesureRecognizer = UITapGestureRecognizer(target: trampoline, action: Selector("action:"))
+        doubleTapGesureRecognizer.numberOfTapsRequired = 2
+        checkRequireGestureRecognizerToFailForDoubleTapGesureRecognizer(doubleTapGesureRecognizer)
+        addGestureRecognizer(doubleTapGesureRecognizer)
+        associateRetainObject(trampoline, forKey: &AssociationKey.doubleTapGestureRecognizer)
+    }
+
+    /// Long press action closure func.
+    public func longPressAction(action: (Self) -> ()) {
+        userInteractionEnabled = true
+        
+        let trampoline = ActionTrampoline(action: action)
+        let longPressGesureRecognizer = UILongPressGestureRecognizer(target: trampoline, action: Selector("action:"))
+        addGestureRecognizer(longPressGesureRecognizer)
+        associateRetainObject(trampoline, forKey: &AssociationKey.longPressGestureRecognizer)
     }
 }
 
@@ -157,7 +212,7 @@ public extension UIView {
     }
     
     @IBInspectable public var height: CGFloat {
-        get { return CGRectGetWidth(bounds) }
+        get { return CGRectGetHeight(bounds) }
         set { frame = CGRectMake(minX, minY, width, newValue) }
     }
 } 
@@ -433,7 +488,7 @@ public extension UIView {
         set { associateAssignObject(newValue, forKey: &AssociationKey.executeConainerView) }
     }
     
-    public func startExecute(backgroundColor backgroundColor: UIColor = UIColor.whiteColor(), indicatorColor: UIColor = UIColor.lightGrayColor()) {
+    public func startExecute(backgroundColor backgroundColor: UIColor = UIColor.clearColor(), indicatorColor: UIColor = UIColor.lightGrayColor()) {
         if let executeConainerView = executeConainerView {
             executeConainerView.backgroundColor = backgroundColor
             executeConainerView.hidden = false

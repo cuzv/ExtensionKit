@@ -140,6 +140,6 @@ let CHXBrownColor     = UIColor.brownColor()
 
 let CHXGroupedTableViewBackgroundColor = UIColor.groupedBackgroundColor
 let CHXSeparatorColor                  = UIColor.separatorColor
-let CHXImageBackgroundColor            = UIColor.disclosureIndicatorColor
+let CHXImageBackgroundColor            = CHXGroupedTableViewBackgroundColor
 
 
