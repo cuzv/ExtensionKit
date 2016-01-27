@@ -26,3 +26,19 @@ class ViewController: UIViewController {
 
 
 }
+
+
+enum Color {
+    case Red
+    case Green
+    
+    var rawValue: UIColor {
+        switch self {
+        case .Red: return UIColor.redColor()
+        case .Green: return UIColor.greenColor()
+        }
+    }
+}
+
+let color = Color.Red.rawValue
+
