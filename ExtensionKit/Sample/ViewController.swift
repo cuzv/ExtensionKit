@@ -51,7 +51,6 @@ class ViewController: UIViewController {
 //            debugPrint("单击：\(view)")
 //        }
         
-
         
         
         showRightBarButtonItemWithTitle("TapME") { (bar: UIBarButtonItem, _) -> () in

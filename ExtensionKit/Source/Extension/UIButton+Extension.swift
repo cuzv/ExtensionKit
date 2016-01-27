@@ -113,33 +113,25 @@ public extension UIButton {
     /// Convenience `setImageAlignmentToTop:` setter.
     @IBInspectable public var imageAlignmentTopSpace: CGFloat {
         get { fatalError("Unavailable.") }
-        set {
-            setImageAlignmentToTop(titleSpace: newValue)
-        }
+        set { setImageAlignmentToTop(titleSpace: newValue) }
     }
     
     /// Convenience `setImageAlignmentToLeft:` setter.
     @IBInspectable public var imageAlignmentLeftSpace: CGFloat {
         get { fatalError("Unavailable.") }
-        set {
-            setImageAlignmentToLeft(titleSpace: newValue)
-        }
+        set { setImageAlignmentToLeft(titleSpace: newValue) }
     }
     
     /// Convenience `setImageAlignmentToBottom:` setter.
     @IBInspectable public var imageAlignmentBottomSpace: CGFloat {
         get { fatalError("Unavailable.") }
-        set {
-            setImageAlignmentToBottom(titleSpace: newValue)
-        }
+        set { setImageAlignmentToBottom(titleSpace: newValue) }
     }
     
     /// Convenience `setImageAlignmentToRight:` setter.
     @IBInspectable public var imageAlignmentRightSpace: CGFloat {
         get { fatalError("Unavailable.") }
-        set {
-            setImageAlignmentToRight(titleSpace: newValue)
-        }
+        set { setImageAlignmentToRight(titleSpace: newValue) }
     }
     
     /// Setup image position relate to title
