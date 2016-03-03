@@ -39,6 +39,12 @@ public extension UIApplication {
         }
     }
     
+    public class func chatToQQ(qq: String) {
+        if let URL = NSURL(string: "mqq://im/chat?chat_type=wpa&uin=\(qq)&version=1&src_type=iOS") {
+            UIApplication.openURL(URL)
+        }
+    }
+    
     public class func clearIconBadge() {
         let badgeNumber = _sharedApplication.applicationIconBadgeNumber
         _sharedApplication.applicationIconBadgeNumber = 1
@@ -77,6 +83,10 @@ public func doSendMessageTo(phoneNumber: String) {
 
 public func doMailTo(email: String) {
     UIApplication.mailTo(email)
+}
+
+public func doChatToQQ(qq: String) {
+    UIApplication.chatToQQ(qq)
 }
 
 public func doSendAction(action: Selector, fromSender sender: AnyObject?) -> Bool {

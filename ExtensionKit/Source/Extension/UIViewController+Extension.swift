@@ -207,7 +207,7 @@ extension UIViewController: UINavigationControllerDelegate, UIImagePickerControl
     }
     
     public func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        BackendThreadAsyncAction { () -> Void in
+        BackgroundThreadAsyncAction { () -> Void in
             if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
                 let newImage = image.orientationTo(.Up)
                 if let imageData = newImage.compressAsPossible() {

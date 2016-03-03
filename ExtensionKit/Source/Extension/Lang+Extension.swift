@@ -102,7 +102,7 @@ public func UIThreadAsyncAction(block: dispatch_block_t) {
     dispatch_async(dispatch_get_main_queue(), block)
 }
 
-public func BackendThreadAsyncAction(block: dispatch_block_t) {
+public func BackgroundThreadAsyncAction(block: dispatch_block_t) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), block)
 }
 
