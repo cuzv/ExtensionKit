@@ -57,10 +57,20 @@ public extension UIImage {
         
         return nil
     }
+    
+    /// Load bundle image with file name
+    public class func imageWithFileName(fileName: String) -> UIImage? {
+        let fileFullName = "\(fileName)@\(UIScreen.width > 750 ? 3 : 2)x.png"
+        return imageWithFileFullName(fileFullName)
+    }
 }
 
 public func UIImageFromFileFullName(fileName: String) -> UIImage? {
     return UIImage.imageWithFileFullName(fileName)
+}
+
+public func UIImageFromFileName(fileName: String) -> UIImage? {
+    return UIImage.imageWithFileName(fileName)
 }
 
 // MARK: - Compress & Decompress
