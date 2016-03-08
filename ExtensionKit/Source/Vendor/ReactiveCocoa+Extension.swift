@@ -74,12 +74,12 @@ public func mergeActionsExecuting<Input, Output>(actions: [ReactiveCocoa.Action<
 
 // MARK: - Timer
 
-final public class CountDownTimerWrapper {
+final public class CountdownTimer {
     private let startTime: NSDate
     private let interval: NSTimeInterval
     private let duration: NSTimeInterval
-    private var next: ((NSTimeInterval) -> ())? = nil
-    private var completion: (() -> ())? = nil
+    private var next: ((NSTimeInterval) -> ())
+    private var completion: (() -> ())
     
     private var disposable: Disposable?
     
@@ -87,8 +87,8 @@ final public class CountDownTimerWrapper {
         startTime: NSDate = NSDate(),
         interval: NSTimeInterval = 1,
         duration: NSTimeInterval = 60,
-        next: ((NSTimeInterval) -> ())? = nil,
-        completion: (() -> ())? = nil)
+        next: ((NSTimeInterval) -> ()),
+        completion: (() -> ()))
     {
         self.startTime = startTime
         self.interval = interval
@@ -97,49 +97,25 @@ final public class CountDownTimerWrapper {
         self.completion = completion
     }
     
-    private func dispose() {
-        disposable?.dispose()
-    }
-    
     public func start() {
-        disposable = {
-            timer(interval, onScheduler: QueueScheduler.mainQueueScheduler)
-                .on(disposed: { [weak self] in
-                        self?.completion?()
-                    },
-                    next: { [weak self] in
-                        guard let _self = self else { return }
-                        
-                        let overTimeInterval = $0.timeIntervalSinceDate(_self.startTime)
-                        let leftTimeInterval = fabs(ceil(_self.duration - overTimeInterval))
-                        _self.next?(leftTimeInterval)
-                        if leftTimeInterval <= 0 {
-                            _self.dispose()
-                        }
-                    })
-                .start()
-            }()
+        disposable = timer(interval, onScheduler: QueueScheduler.mainQueueScheduler).on(
+            disposed: {
+                self.completion()
+            },
+            next: {
+                let overTimeInterval = $0.timeIntervalSinceDate(self.startTime)
+                let leftTimeInterval = fabs(ceil(self.duration - overTimeInterval))
+                self.next(leftTimeInterval)
+                if leftTimeInterval <= 0 {
+                    self.disposable?.dispose()
+                }
+            }
+        ).start()
     }
     
     deinit {
         debugPrint("CountDownTimerWrapper: \(__FUNCTION__)")
     }
-}
-
-public func countDownTimerAction(
-    startTime: NSDate = NSDate(),
-    interval: NSTimeInterval = 1,
-    duration: NSTimeInterval = 60,
-    next: ((NSTimeInterval) -> ())? = nil,
-    completion: (() -> ())? = nil)
-{
-    CountDownTimerWrapper(
-        startTime: startTime,
-        interval: interval,
-        duration: duration,
-        next: next,
-        completion: completion
-    ).start()
 }
 
 // MARK: - MutableProperty
