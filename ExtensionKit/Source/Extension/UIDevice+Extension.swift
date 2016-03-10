@@ -46,4 +46,12 @@ public extension UIDevice {
     public class var iOS8Plus: Bool {
         return _iOS8Plus
     }
+    
+    private static func deviceOrientation(result: (UIDeviceOrientation) -> ()) {
+        if !_currentDevice.generatesDeviceOrientationNotifications {
+            _currentDevice.beginGeneratingDeviceOrientationNotifications()
+        }
+        result(_currentDevice.orientation)
+        _currentDevice.endGeneratingDeviceOrientationNotifications()
+    }
 }
