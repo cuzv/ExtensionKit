@@ -152,5 +152,16 @@ public extension UIImage {
         
         return output
     }
+    
+    public func imgeWithAlpha(alpha: CGFloat) -> UIImage {
+        UIGraphicsBeginImageContext(size)
+        
+        let rect = CGRectMake(0, 0, size.width, size.height)
+        drawInRect(rect, blendMode: .Normal, alpha: alpha)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return image
+    }
 }
 

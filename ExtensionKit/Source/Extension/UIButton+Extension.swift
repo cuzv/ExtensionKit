@@ -32,10 +32,7 @@ import UIKit
 public extension UIButton {
     @IBInspectable public var title: String? {
         get { return titleForState(.Normal) }
-        set {
-            setTitle(newValue, forState: .Normal)
-            setTitle(newValue, forState: .Highlighted)
-        }
+        set { setTitle(newValue, forState: .Normal) }
     }
     
     @IBInspectable public var titleFont: UIFont? {
@@ -45,19 +42,18 @@ public extension UIButton {
     
     @IBInspectable public var attributedTitle: NSAttributedString? {
         get { return attributedTitleForState(.Normal) }
-        set {
-            setAttributedTitle(newValue, forState: .Normal)
-            setAttributedTitle(newValue, forState: .Highlighted)
-        }
+        set { setAttributedTitle(newValue, forState: .Normal) }
     }
     
     @IBInspectable public var titleColor: UIColor? {
         get { return titleColorForState(.Normal) }
         set {
             setTitleColor(newValue, forState: .Normal)
-            setTitleColor(newValue, forState: .Highlighted)
-            setTitleColor(newValue?.colorWithAlphaComponent(0.2), forState: .Disabled)
-            setTitleColor(UIApplication.sharedApplication().keyWindow?.tintColor, forState: .Selected)
+            setTitleColor(newValue?.colorWithAlphaComponent(0.5), forState: .Disabled)
+            setTitleColor(newValue, forState: .Selected)
+            if buttonType == .Custom {
+                setTitleColor(newValue?.colorWithAlphaComponent(0.5), forState: .Highlighted)
+            }
         }
     }
     
@@ -65,44 +61,43 @@ public extension UIButton {
         get { return titleShadowColorForState(.Normal) }
         set {
             setTitleShadowColor(newValue, forState: .Normal)
-            setTitleShadowColor(newValue, forState: .Highlighted)
-            setTitleShadowColor(newValue?.colorWithAlphaComponent(0.2), forState: .Disabled)
-            setTitleShadowColor(UIApplication.sharedApplication().keyWindow?.tintColor, forState: .Selected)
+            setTitleShadowColor(newValue?.colorWithAlphaComponent(0.5), forState: .Disabled)
+            setTitleShadowColor(newValue, forState: .Selected)
         }
     }
     
     @IBInspectable public var image: UIImage? {
         get { return imageForState(.Normal) }
         set {
-            let originalImage = newValue?.imageWithRenderingMode(.AlwaysOriginal)
-            setImage(originalImage, forState: .Normal)
-            setImage(originalImage, forState: .Highlighted)
+            setImage(newValue?.imageWithRenderingMode(.AlwaysOriginal), forState: .Normal)
         }
     }
     
     @IBInspectable public var selectedImage: UIImage? {
         get { return imageForState(.Selected) }
-        set {
-            let originalImage = newValue?.imageWithRenderingMode(.AlwaysOriginal)
-            setImage(originalImage, forState: .Selected)
-        }
+        set { setImage(newValue?.imageWithRenderingMode(.AlwaysOriginal), forState: .Selected) }
     }
     
     @IBInspectable public var backgroundImage: UIImage? {
         get { return backgroundImageForState(.Normal) }
         set {
-            let originalImage = newValue?.imageWithRenderingMode(.AlwaysOriginal)
-            setBackgroundImage(originalImage, forState: .Normal)
-            setBackgroundImage(originalImage, forState: .Highlighted)
+            let image = newValue?.imageWithRenderingMode(.AlwaysOriginal)
+            setBackgroundImage(image, forState: .Normal)
+            if buttonType == .Custom {
+                setBackgroundImage(image?.imgeWithAlpha(0.5), forState: .Highlighted)
+                setBackgroundImage(image?.imgeWithAlpha(0.5), forState: .Disabled)
+            }
         }
     }
     
     @IBInspectable public var selectedBackgroundImage: UIImage? {
         get { return backgroundImageForState(.Selected) }
-        set {
-            let originalImage = newValue?.imageWithRenderingMode(.AlwaysOriginal)
-            setBackgroundImage(originalImage, forState: .Selected)
-        }
+        set { setBackgroundImage(newValue?.imageWithRenderingMode(.AlwaysOriginal), forState: .Selected) }
+    }
+    
+    @IBInspectable public var disabledBackgroundImage: UIImage? {
+        get { return backgroundImageForState(.Disabled) }
+        set { setBackgroundImage(newValue?.imageWithRenderingMode(.AlwaysOriginal), forState: .Disabled) }
     }
 }
 
