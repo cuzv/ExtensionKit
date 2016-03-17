@@ -116,6 +116,24 @@ public func doPresentAlert(
     )
 }
 
+public func doPresentAlert(
+    title title: String = "",
+    message: String,
+    cancelTitle: String = "好",
+    cancelHandler: ((UIAlertAction) -> ())? = nil,
+    actionTitles: [String],
+    actionHandler: ((UIAlertAction) -> ())? = nil)
+{
+    findLastPresentedViewController()?.presentAlert(
+        title: title,
+        message: message,
+        cancelTitle: cancelTitle,
+        cancelHandler: cancelHandler,
+        otherTitles: actionTitles,
+        othersHandler: actionHandler
+    )
+}
+
 /// The convience version of `presentError:`.
 /// Use this func carefully, it maybe iterate many times.
 public func doPresentError(error: NSError) {
