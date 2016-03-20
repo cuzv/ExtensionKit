@@ -37,12 +37,12 @@ private struct AssociationKey {
 // MARK: - Present UIAlertController
 
 public extension UIAlertAction {
-    private var alertActionIndex: Int! {
+    private var alertActionIndex: Int? {
         get { return associatedObjectForKey(&AssociationKey.alertActionIndex) as? Int }
         set { associateRetainObject(newValue, forKey: &AssociationKey.alertActionIndex) }
     }
     
-    public var index: Int! {
+    public var index: Int? {
         return alertActionIndex
     }
 }

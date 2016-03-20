@@ -35,3 +35,13 @@ public extension CGFloat {
         return CGFloat(Double(native) / M_PI * 180.0)
     }
 }
+
+public extension Double {
+    public var radian: CGFloat {
+        return CGFloat(self / 180.0 * M_PI)
+    }
+    
+    public var angle: CGFloat {
+        return CGFloat(self / M_PI * 180.0)
+    }
+}

@@ -558,7 +558,7 @@ public extension UIView {
 }
 
 public extension UIView {
-    private var executeConainerView: UIView! {
+    private var executeConainerView: UIView? {
         get { return associatedObjectForKey(&AssociationKey.executeConainerView) as? UIView }
         set { associateAssignObject(newValue, forKey: &AssociationKey.executeConainerView) }
     }
