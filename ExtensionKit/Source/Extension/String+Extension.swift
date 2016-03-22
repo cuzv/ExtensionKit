@@ -70,7 +70,7 @@ public extension String {
     public func substringFromIndex(minIndex: Int, toIndex maxIndex: Int) -> String {
         let start = startIndex.advancedBy(minIndex)
         let end = startIndex.advancedBy(maxIndex, limit: endIndex)
-        let range = Range<String.Index>(start: start, end: end)
+        let range = Range<String.Index>(start ..< end)
         return substringWithRange(range)
     }
     
@@ -204,8 +204,8 @@ class HashBase {
         var msgLength = tmpMessage.length
         var counter = 0
         while msgLength % len != (len - 8) {
-            counter++
-            msgLength++
+            counter += 1
+            msgLength += 1
         }
         let bufZeros = UnsafeMutablePointer<UInt8>(calloc(counter, sizeof(UInt8)))
         tmpMessage.appendBytes(bufZeros, length: counter)
@@ -260,8 +260,14 @@ class MD5 : HashBase {
         // Process the message in successive 512-bit chunks:
         let chunkSizeBytes = 512 / 8 // 64
         var leftMessageBytes = tmpMessage.length
-        for (var i = 0; i < tmpMessage.length; i = i + chunkSizeBytes, leftMessageBytes -= chunkSizeBytes) {
-            let chunk = tmpMessage.subdataWithRange(NSRange(location: i, length: min(chunkSizeBytes,leftMessageBytes)))
+        
+        var realIndex = 0
+        for index in 0 ..< tmpMessage.length {
+            if index != realIndex {
+                continue
+            }
+            
+            let chunk = tmpMessage.subdataWithRange(NSRange(location: index, length: min(chunkSizeBytes,leftMessageBytes)))
             
             // break chunk into sixteen 32-bit words M[j], 0 ≤ j ≤ 15
             var M:[UInt32] = [UInt32](count: 16, repeatedValue: 0)
@@ -312,6 +318,9 @@ class MD5 : HashBase {
             hh[1] = hh[1] &+ B
             hh[2] = hh[2] &+ C
             hh[3] = hh[3] &+ D
+            
+            leftMessageBytes -= chunkSizeBytes
+            realIndex = index + chunkSizeBytes
         }
         
         let buf: NSMutableData = NSMutableData()

@@ -57,7 +57,7 @@ extension UIControl: UIControlActionFunctionProtocol {}
 public extension UIControlActionFunctionProtocol where Self: UIControl {
     public func addControlEvents(events: UIControlEvents, handler: Self -> ()) {
         let trampoline = ActionTrampoline(action: handler)
-        addTarget(trampoline, action: Selector("action:"), forControlEvents: events)
+        addTarget(trampoline, action: NSSelectorFromString("action:"), forControlEvents: events)
         associateObject(trampoline, forEvents: events)
     }
     

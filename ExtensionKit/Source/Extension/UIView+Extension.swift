@@ -57,7 +57,7 @@ public extension UIView {
     public func tapAction(action: ((UIView, UIGestureRecognizer?) -> ())) {
         userInteractionEnabled = true
         
-        let tapGesureRecognizer = UITapGestureRecognizer(target: self, action: "handleGestureRecognizerAction:")
+        let tapGesureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIView.handleGestureRecognizerAction(_:)))
         checkRequireGestureRecognizerToFailForSingleTapGesureRecognizer(tapGesureRecognizer)
         addGestureRecognizer(tapGesureRecognizer)
         tapGesureRecognizer.gestureRecognizerWrapper = ClosureDecorator(action)
@@ -68,7 +68,7 @@ public extension UIView {
     public func doubleTapAction(action: (UIView, UIGestureRecognizer?) -> ()) {
         userInteractionEnabled = true
         
-        let doubleTapGesureRecognizer = UITapGestureRecognizer(target: self, action: "handleGestureRecognizerAction:")
+        let doubleTapGesureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIView.handleGestureRecognizerAction(_:)))
         doubleTapGesureRecognizer.numberOfTapsRequired = 2
         checkRequireGestureRecognizerToFailForDoubleTapGesureRecognizer(doubleTapGesureRecognizer)
         addGestureRecognizer(doubleTapGesureRecognizer)
@@ -79,7 +79,7 @@ public extension UIView {
     public func longPressAction(action: (UIView, UIGestureRecognizer?) -> ()) {
         userInteractionEnabled = true
         
-        let longPressGesureRecognizer = UILongPressGestureRecognizer(target: self, action: "handleGestureRecognizerAction:")
+        let longPressGesureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(UIView.handleGestureRecognizerAction(_:)))
         addGestureRecognizer(longPressGesureRecognizer)
         longPressGesureRecognizer.gestureRecognizerWrapper = ClosureDecorator(action)
     }
@@ -125,7 +125,7 @@ public extension UIGestureRecognizerFunctionProtocol where Self: UIView {
         userInteractionEnabled = true
         
         let trampoline = ActionTrampoline(action: action)
-        let tapGestureRecognizer = UITapGestureRecognizer(target: trampoline, action: Selector("action:"))
+        let tapGestureRecognizer = UITapGestureRecognizer(target: trampoline, action: NSSelectorFromString("action:"))
         checkRequireGestureRecognizerToFailForSingleTapGesureRecognizer(tapGestureRecognizer)
         addGestureRecognizer(tapGestureRecognizer)
         associateRetainObject(trampoline, forKey: &AssociationKey.singleTapGestureRecognizer)
@@ -137,7 +137,7 @@ public extension UIGestureRecognizerFunctionProtocol where Self: UIView {
         userInteractionEnabled = true
 
         let trampoline = ActionTrampoline(action: action)
-        let doubleTapGesureRecognizer = UITapGestureRecognizer(target: trampoline, action: Selector("action:"))
+        let doubleTapGesureRecognizer = UITapGestureRecognizer(target: trampoline, action: NSSelectorFromString("action:"))
         doubleTapGesureRecognizer.numberOfTapsRequired = 2
         checkRequireGestureRecognizerToFailForDoubleTapGesureRecognizer(doubleTapGesureRecognizer)
         addGestureRecognizer(doubleTapGesureRecognizer)
@@ -149,7 +149,7 @@ public extension UIGestureRecognizerFunctionProtocol where Self: UIView {
         userInteractionEnabled = true
         
         let trampoline = ActionTrampoline(action: action)
-        let longPressGesureRecognizer = UILongPressGestureRecognizer(target: trampoline, action: Selector("action:"))
+        let longPressGesureRecognizer = UILongPressGestureRecognizer(target: trampoline, action: NSSelectorFromString("action:"))
         addGestureRecognizer(longPressGesureRecognizer)
         associateRetainObject(trampoline, forKey: &AssociationKey.longPressGestureRecognizer)
     }
@@ -466,7 +466,7 @@ public extension UIView {
         
         func pixel(num: Double) -> Double {
             var unit: Double
-            switch Int(UIScreen.mainScreen().scale()) {
+            switch Int(UIScreen.mainScreen().scale) {
             case 1: unit = 1.0 / 1.0
             case 2: unit = 1.0 / 2.0
             case 3: unit = 1.0 / 3.0
@@ -478,7 +478,7 @@ public extension UIView {
         let sizeToFit = CGSize(width: pixel(Double(bounds.size.width)), height: Double(bounds.size.height))
         let halfBorderWidth = CGFloat(borderWidth / 2.0)
         
-        UIGraphicsBeginImageContextWithOptions(sizeToFit, false, UIScreen.mainScreen().scale())
+        UIGraphicsBeginImageContextWithOptions(sizeToFit, false, UIScreen.mainScreen().scale)
         let context = UIGraphicsGetCurrentContext()
         
         CGContextSetLineWidth(context, borderWidth)

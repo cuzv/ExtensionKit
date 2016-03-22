@@ -58,7 +58,7 @@ public extension UINavigationBar {
         for subview in subviews {
             if subview.isKindOfClass(cls) {
                 for view in subview.subviews {
-                    if view is UIImageView && view.frame.size.height == 1.0 / UIScreen.scale {
+                    if view is UIImageView && view.frame.size.height == 1.0 / UIScreen.scale_var {
                         return view
                     }
                 }

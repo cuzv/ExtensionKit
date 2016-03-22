@@ -33,9 +33,9 @@ public func objectIsType<T>(object: Any, someObjectOfType: T.Type) -> Bool {
 
 /// Log func.
 public func log<T>(message: T,
-    file: String = __FILE__,
-    method: String = __FUNCTION__,
-    line: Int = __LINE__)
+    file: String = #file,
+    method: String = #function,
+    line: Int = #line)
 {
     debugPrint("\((file as NSString).lastPathComponent)[\(line)], \(method): \(message)")
 }

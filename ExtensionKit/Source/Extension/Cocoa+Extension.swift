@@ -32,11 +32,11 @@ import UIKit
 final public class ActionTrampoline<T>: NSObject {
     private let action: T -> ()
     
-    init(action: T -> ()) {
+    public init(action: T -> ()) {
         self.action = action
     }
     
-    @objc func action(sender: AnyObject) {
+    @objc public func action(sender: AnyObject) {
         // UIControl: addTarget(target: AnyObject?, action: Selector, forControlEvents controlEvents: UIControlEvents)
         if let sender = sender as? T {
             action(sender)
@@ -47,8 +47,10 @@ final public class ActionTrampoline<T>: NSObject {
         }
     }
     
+    #if DEBUG
     deinit {
-        debugPrint("\(__FILE__):\(__LINE__):\(self.dynamicType):\(__FUNCTION__)")
+        debugPrint("\(#file):\(#line):\(self.dynamicType):\(#function)")
     }
+    #endif
 }
 

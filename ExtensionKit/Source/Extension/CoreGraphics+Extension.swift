@@ -50,7 +50,7 @@ public func GetUIKitContextSize() -> CGSize {
         CGFloat(CGBitmapContextGetWidth(context)),
         CGFloat(CGBitmapContextGetHeight(context))
     )
-    let scale: CGFloat = UIScreen.mainScreen().scale()
+    let scale: CGFloat = UIScreen.mainScreen().scale
     return CGSizeMake(
             size.width / scale,
             size.height / scale

@@ -29,20 +29,20 @@ import UIKit
 public extension UIDevice {
     private static let _currentDevice = UIDevice.currentDevice()
     
-    public class var systemVersion: String {
-        return _currentDevice.systemVersion()
+    public class var sysVersion: String {
+        return _currentDevice.systemVersion
     }
     
     public class var majorVersion: Int {
-        return Int(UIDevice.systemVersion.componentsSeparatedByString(".").first!)!
+        return Int(UIDevice.sysVersion.componentsSeparatedByString(".").first!)!
     }
 
-    private static let _iOS7Plus = Float(UIDevice.systemVersion) >= 7.0
+    private static let _iOS7Plus = Float(UIDevice.sysVersion) >= 7.0
     public class var iOS7Plus: Bool {
         return _iOS7Plus
     }
 
-    private static let _iOS8Plus = Float(UIDevice.systemVersion) >= 8.0
+    private static let _iOS8Plus = Float(UIDevice.sysVersion) >= 8.0
     public class var iOS8Plus: Bool {
         return _iOS8Plus
     }

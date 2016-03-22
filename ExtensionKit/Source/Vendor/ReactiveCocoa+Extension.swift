@@ -113,9 +113,11 @@ final public class CountdownTimer {
         ).start()
     }
     
+#if DEBUG
     deinit {
-        debugPrint("CountDownTimerWrapper: \(__FUNCTION__)")
+        debugPrint("\(#file):\(#line):\(self.dynamicType):\(#function)")
     }
+#endif
 }
 
 // MARK: - MutableProperty
@@ -200,7 +202,7 @@ public extension UITextField {
     
     public var rac_text: MutableProperty<String> {
         return lazyAssociatedProperty(self, key: &AssociationKey.text) {
-            self.addTarget(self, action: "changed", forControlEvents: UIControlEvents.EditingChanged)
+            self.addTarget(self, action: #selector(UITextField.changed), forControlEvents: UIControlEvents.EditingChanged)
             
             let property = MutableProperty<String>(self.text ?? "")
             property.producer

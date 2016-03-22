@@ -229,7 +229,7 @@ extension UIViewController: UINavigationControllerDelegate, UIImagePickerControl
             if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
                 let newImage = image.orientationTo(.Up)
                 if let imageData = newImage.compressAsPossible() {
-                    let resultImage = UIImage(data: imageData, scale: UIScreen.scale)
+                    let resultImage = UIImage(data: imageData, scale: UIScreen.scale_var)
                     UIThreadAsyncAction({ () -> Void in
                         picker.imagePickerCompletionHandlerWrapper.invoke((picker, resultImage))
                         picker.dismissAnimated(completion: nil)
@@ -318,7 +318,7 @@ public extension UIBarButtonItem {
     }
     
     public class func barButtonItemWithTitle(title: String?, actionHandler: ((UIBarButtonItem, Any?) -> ())?) -> UIBarButtonItem {
-        let barButtonItem = UIBarButtonItem(title: title, style: .Plain, target: self, action: "performActionHandler:")
+        let barButtonItem = UIBarButtonItem(title: title, style: .Plain, target: self, action: #selector(UIBarButtonItem.performActionHandler(_:)))
         
         if let actionHandler = actionHandler {
             barButtonItem.barButtonItemActionHandlerWrapper = ClosureDecorator(actionHandler)
@@ -328,7 +328,7 @@ public extension UIBarButtonItem {
     }
     
     public class func barButtonItemWithImage(image: UIImage?, actionHandler: ((UIBarButtonItem, Any?) -> ())?) -> UIBarButtonItem {
-        let barButtonItem = UIBarButtonItem(image: image, style: .Plain, target: self, action: "performActionHandler:")
+        let barButtonItem = UIBarButtonItem(image: image, style: .Plain, target: self, action: #selector(UIBarButtonItem.performActionHandler(_:)))
         
         if let actionHandler = actionHandler {
             barButtonItem.barButtonItemActionHandlerWrapper = ClosureDecorator(actionHandler)

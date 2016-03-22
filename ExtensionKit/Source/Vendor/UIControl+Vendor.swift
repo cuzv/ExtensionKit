@@ -101,7 +101,7 @@ public extension SegmentedToggleControl {
             // Make button
             let button = UIButton(type: .System)
             button.tag = i
-            button.addTarget(self, action: "hanleClickAction:", forControlEvents: .TouchUpInside)
+            button.addTarget(self, action: #selector(SegmentedToggleControl.hanleClickAction(_:)), forControlEvents: .TouchUpInside)
             button.title = items[i]
             button.setTitleColor(normalTextColor, forState: .Normal)
             button.setTitleColor(selectedTextColor, forState: .Selected)

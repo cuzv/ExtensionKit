@@ -29,7 +29,7 @@ import UIKit
 public extension UIScreen {
     private static let _sharedApplication  = UIApplication.sharedApplication()
     private static let _isLandscape        = UIInterfaceOrientationIsLandscape(_sharedApplication.statusBarOrientation)
-    private static let _iOS8Plus           = Float(UIDevice.systemVersion) >= 8.0
+    private static let _iOS8Plus           = Float(UIDevice.sysVersion) >= 8.0
     private static let _mainScreen         = UIScreen.mainScreen()
 
     private static let _nativeBounds       = _mainScreen.nativeBounds
@@ -94,7 +94,7 @@ public extension UIScreen {
         if _iOS8Plus {
             return _nativeScale
         } else {
-            return UIScreen.mainScreen().scale()
+            return UIScreen.mainScreen().scale
         }
     }
     
@@ -106,7 +106,7 @@ public extension UIScreen {
         return UIScreen.screenHeight()
     }
     
-    public class var scale: CGFloat {
+    public class var scale_var: CGFloat {
         return UIScreen.screenScale()
     }
 }

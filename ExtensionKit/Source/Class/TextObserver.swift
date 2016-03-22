@@ -39,9 +39,7 @@ final public class TextObserver {
         self.actionHandler = actionHandler
     }
     
-    deinit {
-        debugPrint("\(__FILE__):\(__LINE__):\(self.dynamicType):\(__FUNCTION__)")
-        
+    deinit {        
         if let textFieldObserver = textFieldObserver {
             NSNotificationCenter.defaultCenter().removeObserver(textFieldObserver)
         }
