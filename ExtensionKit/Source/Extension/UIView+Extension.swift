@@ -478,7 +478,7 @@ public extension UIView {
         let sizeToFit = CGSize(width: pixel(Double(bounds.size.width)), height: Double(bounds.size.height))
         let halfBorderWidth = CGFloat(borderWidth / 2.0)
         
-        UIGraphicsBeginImageContextWithOptions(sizeToFit, false, UIScreen.mainScreen().scale)
+        UIGraphicsBeginImageContextWithOptions(sizeToFit, false, 0)
         let context = UIGraphicsGetCurrentContext()
         
         CGContextSetLineWidth(context, borderWidth)
@@ -492,7 +492,7 @@ public extension UIView {
         CGContextAddArcToPoint(context, halfBorderWidth, halfBorderWidth, width - halfBorderWidth, halfBorderWidth, radius) // 左上角
         CGContextAddArcToPoint(context, width - halfBorderWidth, halfBorderWidth, width - halfBorderWidth, radius + halfBorderWidth, radius) // 右上角
         
-        CGContextDrawPath(UIGraphicsGetCurrentContext(), .FillStroke)
+        CGContextDrawPath(context, .FillStroke)
         let output = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return output
