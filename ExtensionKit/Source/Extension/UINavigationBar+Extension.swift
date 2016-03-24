@@ -29,22 +29,14 @@ import UIKit
 // MARK: - Visible & Invisible
 
 public extension UINavigationBar {
-    /// Set UINavigationBar can not see, but exist.
-    public func setAsInvisible(tintColor tintColor_: UIColor! = UIApplication.sharedApplication().keyWindow?.tintColor) {
-        setBackgroundImage(UIImage(), forBarMetrics: .Default)
-        shadowImage = UIImage()
-        barStyle = .Default
-        translucent = true
-        tintColor = tintColor_
-    }
-    
-    /// Revert `setAsInvisible` effect.
-    public func setAsVisible(translucent translucent_: Bool = true, tintColor tintColor_: UIColor! = UINavigationBar.appearance().tintColor) {
-        setBackgroundImage(nil, forBarMetrics: .Default)
-        shadowImage = nil
-        barStyle = translucent ? .Default : .Black
-        translucent = translucent_
-        tintColor = tintColor_
+    /// Only effect when `translucent` is true.
+    public func setBackgroundVisible(visible: Bool) {
+        if !translucent {
+            debugPrint("`translucent` must be true if you wanna change background visible.")
+        }
+        
+        setBackgroundImage(visible ? nil : UIImage(), forBarMetrics: .Default)
+        shadowImage = visible ? nil : UIImage()
     }
 }
 
