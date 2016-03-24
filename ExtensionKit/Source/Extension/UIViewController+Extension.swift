@@ -295,17 +295,19 @@ public extension UIViewController {
 
 extension UIViewController: UIGestureRecognizerDelegate {
     /// Set UINavigationBar hidden with `interactivePopGestureRecognizer` enabled.
-    public func setNavigationBarInvisible() {
-        // Hide navigation bar
-        navigationController?.setNavigationBarHidden(true, animated: true)
-        // Enable slide-back
-        navigationController?.interactivePopGestureRecognizer?.enabled = true
-        navigationController?.interactivePopGestureRecognizer?.delegate = self
-    }
-    
-    /// Revert `setNavigationBarInvisible` effect.
-    public func setNavigationBarVisible() {
-        navigationController?.setNavigationBarHidden(false, animated: true)
+    public var prefersNavigationBarHidden: Bool {
+        set {
+            navigationController?.setNavigationBarHidden(newValue, animated: true)
+            // Enable slide-back
+            navigationController?.interactivePopGestureRecognizer?.enabled = true
+            navigationController?.interactivePopGestureRecognizer?.delegate = self
+        }
+        get {
+            if let hidden = navigationController?.navigationBarHidden {
+                return hidden
+            }
+            return true
+        }
     }
 }
 
