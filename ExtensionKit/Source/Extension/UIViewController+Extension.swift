@@ -32,6 +32,7 @@ private struct AssociationKey {
     private static var alertActionIndex: String = "alertActionIndex"
     private static var imagePickerCompletionHandlerWrapper = "imagePickerCompletionHandlerWrapper"
     private static var barButtonItemActionHandlerWrapper: String = "barButtonItemActionHandlerWrapper"
+    private static var preferredNavigationBarHidden: String = "preferredNavigationBarHidden"
 }
 
 // MARK: - Present UIAlertController
@@ -295,18 +296,22 @@ public extension UIViewController {
 
 extension UIViewController: UIGestureRecognizerDelegate {
     /// Set UINavigationBar hidden with `interactivePopGestureRecognizer` enabled.
-    public var prefersNavigationBarHidden: Bool {
-        set {
-            navigationController?.setNavigationBarHidden(newValue, animated: true)
-            // Enable slide-back
-            navigationController?.interactivePopGestureRecognizer?.enabled = true
-            navigationController?.interactivePopGestureRecognizer?.delegate = self
-        }
-        get {
-            if let hidden = navigationController?.navigationBarHidden {
-                return hidden
-            }
-            return true
+    public func setNavigationBarHidden(hidden: Bool, animated: Bool) {
+        navigationController?.setNavigationBarHidden(hidden, animated: animated)
+        // Enable slide-back
+        navigationController?.interactivePopGestureRecognizer?.enabled = true
+        navigationController?.interactivePopGestureRecognizer?.delegate = self
+        preferredNavigationBarHidden = hidden
+    }
+    
+    public var preferredNavigationBarHidden: Bool? {
+        get { return associatedObjectForKey(&AssociationKey.preferredNavigationBarHidden) as? Bool }
+        set { associateAssignObject(newValue, forKey: &AssociationKey.preferredNavigationBarHidden) }
+    }
+    
+    public func setNeedsNavigationBarAppearanceUpdate() {
+        if let preferredNavigationBarHidden = preferredNavigationBarHidden {
+            setNavigationBarHidden(preferredNavigationBarHidden, animated: false)
         }
     }
 }
