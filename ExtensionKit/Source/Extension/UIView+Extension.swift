@@ -502,12 +502,25 @@ public extension UIView {
 // MARK: - Blur
 
 public extension UIView {
-    public func blur() {
-        backgroundColor = UIColor.clearColor()
-        let backend = UIToolbar(frame: bounds)
-        backend.barStyle = .Default
-        backend.clipsToBounds = true
-        insertSubview(backend, atIndex: 0)
+    public func blur(useAutolayout: Bool = true) {
+        var blurView: UIView!
+        if NSProcessInfo().isOperatingSystemAtLeastVersion(NSOperatingSystemVersion(majorVersion: 8, minorVersion: 0, patchVersion: 0)) {
+            let visualView = UIVisualEffectView(frame: bounds)
+            visualView.effect = UIBlurEffect(style: .Light)
+            blurView = visualView
+        } else {
+            let visualView = UIToolbar(frame: bounds)
+            visualView.barStyle = .Default
+            visualView.translucent = true
+            blurView = visualView
+        }
+        
+        insertSubview(blurView, atIndex: 0)
+        if useAutolayout {
+            blurView.translatesAutoresizingMaskIntoConstraints = false
+            addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("|[blurView]|", options: NSLayoutFormatOptions.DirectionLeadingToTrailing, metrics: nil, views: ["blurView": blurView]))
+            addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[blurView]|", options: NSLayoutFormatOptions.DirectionLeadingToTrailing, metrics: nil, views: ["blurView": blurView]))
+        }
     }
 }
 
