@@ -28,7 +28,7 @@ import UIKit
 
 public extension UIImageView {
     /// Draw corner for image
-    public func addCorner(radius radius: CGFloat) {
+    public func addCornerWithRadius(radius: CGFloat) {
         image = image?.drawRectWithRoundedCorner(radius: radius, bounds.size)
     }
 }

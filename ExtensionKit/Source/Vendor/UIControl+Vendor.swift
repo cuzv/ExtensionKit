@@ -83,7 +83,7 @@ final public class SegmentedToggleControl: UIControl {
             return "\(str1)\(str2)"
         }
         if let font = font {
-            var size = str.sizeWithFont(font)
+            var size = str.size(withFont: font)
             size.width += CGFloat(items.count * 12)
             size.height = size.height >= 44 ? size.height : 44
             return size
@@ -184,13 +184,13 @@ public extension SegmentedToggleControl {
     }
     
     private func lineViewWidthForIndex(index: Int) -> CGFloat {
-        return items[index].sizeWithFont(font).width
+        return items[index].size(withFont: font).width
     }
 }
 
 public extension SegmentedToggleControl {
     /// can only have image or title, not both. must be 0..#segments - 1 (or ignored). default is nil
-    public func setTitle(title: String, forSegmentAtIndex segment: Int) {
+    public func set(title title: String, forSegmentAtIndex segment: Int) {
         if items.count <= segment {
             debugPrint("Index beyound the boundary.")
             return
@@ -200,7 +200,7 @@ public extension SegmentedToggleControl {
         button.title = title
         button.image = nil
         
-        items.replaceElementAtIndex(segment, withElement: title)
+        items.replaceElementAt(index: segment, withElement: title)
         remakeLineViewConstraintsForIndex(segment)
     }
     
@@ -213,7 +213,7 @@ public extension SegmentedToggleControl {
     }
 
     /// can only have image or title, not both. must be 0..#segments - 1 (or ignored). default is nil
-    public func setImage(image: UIImage, forSegmentAtIndex segment: Int) {
+    public func set(image image: UIImage, forSegmentAtIndex segment: Int) {
         if items.count <= segment {
             debugPrint("Index beyound the boundary.")
             return
@@ -230,6 +230,5 @@ public extension SegmentedToggleControl {
         }
         
         return buttons[segment].image
-
     }
 }

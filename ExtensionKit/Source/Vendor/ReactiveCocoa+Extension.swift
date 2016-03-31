@@ -133,7 +133,7 @@ private struct AssociationKey {
 
 /// Lazily creates a gettable associated property via the given factory.
 private func lazyAssociatedProperty<T: AnyObject>(
-    host: AnyObject,
+    host host: AnyObject,
     key: UnsafePointer<Void>,
     factory: ()->T) -> T
 {
@@ -145,12 +145,12 @@ private func lazyAssociatedProperty<T: AnyObject>(
 }
 
 private func lazyMutableProperty<T>(
-    host: AnyObject,
+    host host: AnyObject,
     key: UnsafePointer<Void>,
     setter: T -> (),
     getter: () -> T) -> MutableProperty<T>
 {
-    return lazyAssociatedProperty(host, key: key) {
+    return lazyAssociatedProperty(host: host, key: key) {
         let property = MutableProperty<T>(getter())
         property.producer
             .startWithNext {
@@ -165,7 +165,7 @@ private func lazyMutableProperty<T>(
 public extension UIView {
     public var rac_alpha: MutableProperty<CGFloat> {
         return lazyMutableProperty(
-            self,
+            host: self,
             key: &AssociationKey.alpha,
             setter: { self.alpha = $0 },
             getter: { self.alpha  }
@@ -174,7 +174,7 @@ public extension UIView {
     
     public var rac_hidden: MutableProperty<Bool> {
         return lazyMutableProperty(
-            self,
+            host: self,
             key: &AssociationKey.hidden,
             setter: { self.hidden = $0 },
             getter: { self.hidden  }
@@ -185,7 +185,7 @@ public extension UIView {
 public extension UILabel {
     public var rac_text: MutableProperty<String> {
         return lazyMutableProperty(
-            self,
+            host: self,
             key: &AssociationKey.text,
             setter: { self.text = $0 },
             getter: { self.text ?? "" }
@@ -201,7 +201,7 @@ public extension UITextField {
     }
     
     public var rac_text: MutableProperty<String> {
-        return lazyAssociatedProperty(self, key: &AssociationKey.text) {
+        return lazyAssociatedProperty(host: self, key: &AssociationKey.text) {
             self.addTarget(self, action: #selector(UITextField.changed), forControlEvents: UIControlEvents.EditingChanged)
             
             let property = MutableProperty<String>(self.text ?? "")
@@ -227,7 +227,7 @@ public extension UITextView {
     }
     
     public var rac_text: MutableProperty<String> {
-        return lazyAssociatedProperty(self, key: &AssociationKey.text) {
+        return lazyAssociatedProperty(host: self, key: &AssociationKey.text) {
             NSNotificationCenter.defaultCenter()
                 .rac_notifications(UITextViewTextDidChangeNotification, object: self)
                 .startWithNext({ [weak self] (notification) -> () in
@@ -252,7 +252,7 @@ public extension UITextView {
 public extension UIImageView {
     public var rac_image: MutableProperty<UIImage?> {
         return lazyMutableProperty(
-            self,
+            host: self,
             key: &AssociationKey.image,
             setter: { self.image = $0 },
             getter: { self.image }
@@ -263,7 +263,7 @@ public extension UIImageView {
 public extension UIButton {
     public var rac_enabled: MutableProperty<Bool> {
         return lazyMutableProperty(
-            self,
+            host: self,
             key: &AssociationKey.enabled,
             setter: { self.enabled = $0 },
             getter: { self.enabled }
@@ -328,7 +328,7 @@ public extension Action {
 // MARK: - CocoaAction
 
 public extension UIControl {
-    public func addTarget(target: CocoaAction, forControlEvents events: UIControlEvents = .TouchUpInside) {
+    public func addCocoaAction(target target: CocoaAction, forControlEvents events: UIControlEvents = .TouchUpInside) {
         addTarget(target, action: CocoaAction.selector, forControlEvents: events)
     }
 }

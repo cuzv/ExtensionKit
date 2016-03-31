@@ -40,7 +40,7 @@ private struct AssociationKey {
 public extension UIAlertAction {
     private var alertActionIndex: Int? {
         get { return associatedObjectForKey(&AssociationKey.alertActionIndex) as? Int }
-        set { associateRetainObject(newValue, forKey: &AssociationKey.alertActionIndex) }
+        set { associate(retainObject: newValue, forKey: &AssociationKey.alertActionIndex) }
     }
     
     public var index: Int? {
@@ -201,7 +201,7 @@ public func findLastPresentedViewController() -> UIViewController? {
 private extension UIImagePickerController {
     private var imagePickerCompletionHandlerWrapper: ClosureDecorator<(UIImagePickerController, UIImage?)> {
         get { return associatedObjectForKey(&AssociationKey.imagePickerCompletionHandlerWrapper) as! ClosureDecorator<(UIImagePickerController, UIImage?)> }
-        set { associateRetainObject(newValue, forKey: &AssociationKey.imagePickerCompletionHandlerWrapper) }
+        set { associate(retainObject: newValue, forKey: &AssociationKey.imagePickerCompletionHandlerWrapper) }
     }
 }
 
@@ -222,10 +222,10 @@ public extension UIViewController {
 extension UIViewController: UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     public func imagePickerControllerDidCancel(picker: UIImagePickerController) {
         picker.imagePickerCompletionHandlerWrapper.invoke((picker, nil))
-        picker.dismissAnimated(completion: nil)
+        picker.dismiss()
     }
     
-    public func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+    public func imagePickerController(picker picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         BackgroundThreadAsyncAction { () -> Void in
             if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
                 let newImage = image.orientationTo(.Up)
@@ -233,7 +233,7 @@ extension UIViewController: UINavigationControllerDelegate, UIImagePickerControl
                     let resultImage = UIImage(data: imageData, scale: UIScreen.scale_var)
                     UIThreadAsyncAction({ () -> Void in
                         picker.imagePickerCompletionHandlerWrapper.invoke((picker, resultImage))
-                        picker.dismissAnimated(completion: nil)
+                        picker.dismiss()
                     })
                     return
                 }
@@ -242,9 +242,9 @@ extension UIViewController: UINavigationControllerDelegate, UIImagePickerControl
         }
     }
     
-    public func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
+    public func imagePickerController(picker picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
         picker.imagePickerCompletionHandlerWrapper.invoke((picker, image))
-        picker.dismissAnimated(completion: nil)
+        picker.dismiss()
     }
 }
 
@@ -255,7 +255,7 @@ public extension UIViewController {
         navigationController?.showViewController(viewController, sender: self)
     }
     
-    public func backToPreviousViewController(animated: Bool = true) {
+    public func backToPreviousViewControllerAnimated(animated: Bool = true) {
         if let presentingViewController = presentingViewController {
             presentingViewController.dismissViewControllerAnimated(animated, completion: nil)
         } else {
@@ -263,7 +263,7 @@ public extension UIViewController {
         }
     }
     
-    public func backToRootViewController(animated: Bool = true) {
+    public func backToRootViewControllerAnimated(animated: Bool = true) {
         if let presentingViewController = presentingViewController {
             presentingViewController.dismissViewControllerAnimated(animated, completion: nil)
         } else {
@@ -271,7 +271,7 @@ public extension UIViewController {
         }
     }
     
-    public func presentTranslucentViewController(viewController: UIViewController, modalTransitionStyle: UIModalTransitionStyle = .CoverVertical, animated flag: Bool = true, completion: (() -> Void)? = nil) {
+    public func presentTranslucentViewController(viewController viewController: UIViewController, modalTransitionStyle: UIModalTransitionStyle = .CoverVertical, animated flag: Bool = true, completion: (() -> Void)? = nil) {
         viewController.modalPresentationStyle = .Custom
         viewController.modalTransitionStyle = UIDevice.iOS8Plus ? modalTransitionStyle : .CrossDissolve
         // Very important
@@ -279,7 +279,7 @@ public extension UIViewController {
         presentViewController(viewController, animated: flag, completion: completion)
     }
     
-    public func dismissAnimated(animated: Bool = true, completion: (() -> Void)? = nil) {
+    public func dismiss(animated animated: Bool = true, completion: (() -> Void)? = nil) {
         presentingViewController?.dismissViewControllerAnimated(animated, completion: completion)
     }
     
@@ -296,7 +296,7 @@ public extension UIViewController {
 
 extension UIViewController: UIGestureRecognizerDelegate {
     /// Set UINavigationBar hidden with `interactivePopGestureRecognizer` enabled.
-    public func setNavigationBarHidden(hidden: Bool, animated: Bool) {
+    public func setNavigationBar(hidden hidden: Bool, animated: Bool) {
         navigationController?.setNavigationBarHidden(hidden, animated: animated)
         // Enable slide-back
         navigationController?.interactivePopGestureRecognizer?.enabled = true
@@ -306,12 +306,12 @@ extension UIViewController: UIGestureRecognizerDelegate {
     
     public var preferredNavigationBarHidden: Bool? {
         get { return associatedObjectForKey(&AssociationKey.preferredNavigationBarHidden) as? Bool }
-        set { associateAssignObject(newValue, forKey: &AssociationKey.preferredNavigationBarHidden) }
+        set { associate(assignObject: newValue, forKey: &AssociationKey.preferredNavigationBarHidden) }
     }
     
     public func setNeedsNavigationBarAppearanceUpdate() {
         if let preferredNavigationBarHidden = preferredNavigationBarHidden {
-            setNavigationBarHidden(preferredNavigationBarHidden, animated: false)
+            setNavigationBar(hidden: preferredNavigationBarHidden, animated: false)
         }
     }
 }
@@ -321,10 +321,10 @@ extension UIViewController: UIGestureRecognizerDelegate {
 public extension UIBarButtonItem {
     private var barButtonItemActionHandlerWrapper: ClosureDecorator<(UIBarButtonItem, Any?)>! {
         get { return associatedObjectForKey(&AssociationKey.barButtonItemActionHandlerWrapper) as? ClosureDecorator<(UIBarButtonItem, Any?)> }
-        set { associateRetainObject(newValue, forKey: &AssociationKey.barButtonItemActionHandlerWrapper) }
+        set { associate(retainObject: newValue, forKey: &AssociationKey.barButtonItemActionHandlerWrapper) }
     }
     
-    public class func barButtonItemWithTitle(title: String?, actionHandler: ((UIBarButtonItem, Any?) -> ())?) -> UIBarButtonItem {
+    public class func barButtonItem(withTitle title: String?, actionHandler: ((UIBarButtonItem, Any?) -> ())?) -> UIBarButtonItem {
         let barButtonItem = UIBarButtonItem(title: title, style: .Plain, target: self, action: #selector(UIBarButtonItem.performActionHandler(_:)))
         
         if let actionHandler = actionHandler {
@@ -334,7 +334,7 @@ public extension UIBarButtonItem {
         return barButtonItem
     }
     
-    public class func barButtonItemWithImage(image: UIImage?, actionHandler: ((UIBarButtonItem, Any?) -> ())?) -> UIBarButtonItem {
+    public class func barButtonItem(withImage image: UIImage?, actionHandler: ((UIBarButtonItem, Any?) -> ())?) -> UIBarButtonItem {
         let barButtonItem = UIBarButtonItem(image: image, style: .Plain, target: self, action: #selector(UIBarButtonItem.performActionHandler(_:)))
         
         if let actionHandler = actionHandler {
@@ -351,19 +351,19 @@ public extension UIBarButtonItem {
 }
 
 public extension UIViewController {
-    public func showRightBarButtonItemWithImage(image: UIImage?, actionHandler: ((UIBarButtonItem, Any?) -> ())?) {
-        navigationItem.rightBarButtonItem = UIBarButtonItem.barButtonItemWithImage(image, actionHandler: actionHandler)
+    public func showRightBarButtonItem(withImage image: UIImage?, actionHandler: ((UIBarButtonItem, Any?) -> ())?) {
+        navigationItem.rightBarButtonItem = UIBarButtonItem.barButtonItem(withImage: image, actionHandler: actionHandler)
     }
     
-    public func showRightBarButtonItemWithTitle(title: String?, actionHandler: ((UIBarButtonItem, Any?) -> ())?) {
-        navigationItem.rightBarButtonItem = UIBarButtonItem.barButtonItemWithTitle(title, actionHandler: actionHandler)
+    public func showRightBarButtonItem(withTitle title: String?, actionHandler: ((UIBarButtonItem, Any?) -> ())?) {
+        navigationItem.rightBarButtonItem = UIBarButtonItem.barButtonItem(withTitle: title, actionHandler: actionHandler)
     }
     
-    public func showLeftBarButtonItemWithImage(image: UIImage?, actionHandler: ((UIBarButtonItem, Any?) -> ())?) {
-        navigationItem.leftBarButtonItem = UIBarButtonItem.barButtonItemWithImage(image, actionHandler: actionHandler)
+    public func showLeftBarButtonItem(withImage image: UIImage?, actionHandler: ((UIBarButtonItem, Any?) -> ())?) {
+        navigationItem.leftBarButtonItem = UIBarButtonItem.barButtonItem(withImage: image, actionHandler: actionHandler)
     }
     
-    public func showLeftBarButtonItemWithTitle(title: String?, actionHandler: ((UIBarButtonItem, Any?) -> ())?) {
-        navigationItem.leftBarButtonItem = UIBarButtonItem.barButtonItemWithTitle(title, actionHandler: actionHandler)
+    public func showLeftBarButtonItem(withTitle title: String?, actionHandler: ((UIBarButtonItem, Any?) -> ())?) {
+        navigationItem.leftBarButtonItem = UIBarButtonItem.barButtonItem(withTitle: title, actionHandler: actionHandler)
     }
 }

@@ -47,7 +47,7 @@ private struct AssociationKey {
 private extension UIGestureRecognizer {
     private var gestureRecognizerWrapper: ClosureDecorator<(UIView, UIGestureRecognizer)> {
         get { return associatedObjectForKey(&AssociationKey.gestureRecognizerWrapper) as! ClosureDecorator<(UIView, UIGestureRecognizer)> }
-        set { associateRetainObject(newValue, forKey: &AssociationKey.gestureRecognizerWrapper) }
+        set { associate(retainObject: newValue, forKey: &AssociationKey.gestureRecognizerWrapper) }
     }
 }
 
@@ -128,7 +128,7 @@ public extension UIGestureRecognizerFunctionProtocol where Self: UIView {
         let tapGestureRecognizer = UITapGestureRecognizer(target: trampoline, action: NSSelectorFromString("action:"))
         checkRequireGestureRecognizerToFailForSingleTapGesureRecognizer(tapGestureRecognizer)
         addGestureRecognizer(tapGestureRecognizer)
-        associateRetainObject(trampoline, forKey: &AssociationKey.singleTapGestureRecognizer)
+        associate(retainObject: trampoline, forKey: &AssociationKey.singleTapGestureRecognizer)
     }
 
     /// Dobule tap action closure func.
@@ -141,7 +141,7 @@ public extension UIGestureRecognizerFunctionProtocol where Self: UIView {
         doubleTapGesureRecognizer.numberOfTapsRequired = 2
         checkRequireGestureRecognizerToFailForDoubleTapGesureRecognizer(doubleTapGesureRecognizer)
         addGestureRecognizer(doubleTapGesureRecognizer)
-        associateRetainObject(trampoline, forKey: &AssociationKey.doubleTapGestureRecognizer)
+        associate(retainObject: trampoline, forKey: &AssociationKey.doubleTapGestureRecognizer)
     }
 
     /// Long press action closure func.
@@ -151,7 +151,7 @@ public extension UIGestureRecognizerFunctionProtocol where Self: UIView {
         let trampoline = ActionTrampoline(action: action)
         let longPressGesureRecognizer = UILongPressGestureRecognizer(target: trampoline, action: NSSelectorFromString("action:"))
         addGestureRecognizer(longPressGesureRecognizer)
-        associateRetainObject(trampoline, forKey: &AssociationKey.longPressGestureRecognizer)
+        associate(retainObject: trampoline, forKey: &AssociationKey.longPressGestureRecognizer)
     }
 }
 
@@ -247,7 +247,7 @@ public extension UIView {
     
     /// Setup rounding corners radius
     /// **Note**: Before you invoke this method, ensure `self` already have correct frame.
-    public func setRoundingCorners(corners: UIRectCorner, radius: CGFloat) {
+    public func setRounding(corners corners: UIRectCorner, radius: CGFloat) {
         let cornRadiusLayer = CAShapeLayer()
         let path = UIBezierPath(roundedRect: bounds, byRoundingCorners: corners, cornerRadii: CGSizeMake(radius, 0))
         cornRadiusLayer.path = path.CGPath
@@ -502,7 +502,7 @@ public extension UIView {
 // MARK: - Blur
 
 public extension UIView {
-    public func addBlurEffectView(lightStyle: Bool = true, useAutolayout: Bool = true) -> UIView {
+    public func addBlurEffectView(lightStyle lightStyle: Bool = true, useAutolayout: Bool = true) -> UIView {
         var blurView: UIView!
         if NSProcessInfo().isOperatingSystemAtLeastVersion(NSOperatingSystemVersion(majorVersion: 8, minorVersion: 0, patchVersion: 0)) {
             let visualView = UIVisualEffectView(frame: bounds)
@@ -530,7 +530,6 @@ public extension UIView {
 
 public extension UIView {
     public func startActivityIndicatorViewAnimating(onCenter center: CGPoint? = nil, yShift: CGFloat = 0, color: UIColor = UIColor.lightGrayColor()) {
-
         if let activityIndicatorView = activityIndicatorView {
             activityIndicatorView.color = color
             activityIndicatorView.center = center ?? correspondingCenterForYShift(yShift)
@@ -562,7 +561,7 @@ public extension UIView {
     
     private var activityIndicatorView: UIActivityIndicatorView! {
         get { return associatedObjectForKey(&AssociationKey.activityIndicatorView) as? UIActivityIndicatorView }
-        set { associateAssignObject(newValue, forKey: &AssociationKey.activityIndicatorView) }
+        set { associate(assignObject: newValue, forKey: &AssociationKey.activityIndicatorView) }
     }
     
     private func correspondingCenterForYShift(yShift: CGFloat) -> CGPoint {
@@ -575,7 +574,7 @@ public extension UIView {
 public extension UIView {
     private var executeConainerView: UIView? {
         get { return associatedObjectForKey(&AssociationKey.executeConainerView) as? UIView }
-        set { associateAssignObject(newValue, forKey: &AssociationKey.executeConainerView) }
+        set { associate(assignObject: newValue, forKey: &AssociationKey.executeConainerView) }
     }
     
     public func startExecute(backgroundColor backgroundColor: UIColor = UIColor.clearColor(), indicatorColor: UIColor = UIColor.lightGrayColor()) {
@@ -614,7 +613,7 @@ public extension UIView {
 public extension UIView {
     private var arcIndicatorLayer: CAShapeLayer! {
         get { return associatedObjectForKey(&AssociationKey.arcIndicatorLayer) as? CAShapeLayer }
-        set { associateAssignObject(newValue, forKey: &AssociationKey.arcIndicatorLayer) }
+        set { associate(assignObject: newValue, forKey: &AssociationKey.arcIndicatorLayer) }
     }
     private var stokeAnimationKey: String { return "stokeAnimation" }
     

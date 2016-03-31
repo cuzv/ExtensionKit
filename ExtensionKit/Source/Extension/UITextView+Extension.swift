@@ -37,7 +37,7 @@ private struct AssociationKey {
 private extension UITextView {
     private var textViewTextObserver: TextObserver {
         get { return associatedObjectForKey(&AssociationKey.textViewTextObserver) as! TextObserver }
-        set { associateRetainObject(newValue, forKey: &AssociationKey.textViewTextObserver) }
+        set { associate(retainObject: newValue, forKey: &AssociationKey.textViewTextObserver) }
     }
 }
 

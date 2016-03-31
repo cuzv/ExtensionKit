@@ -31,7 +31,7 @@ import Foundation
 public extension NSObject {
     /// Sets an associated value for a given object using a weak reference to the associated object.
     /// **Note**: the `key` underlying type must be String.
-    public func associateAssignObject(object: AnyObject!, forKey key: UnsafePointer<Void>) {
+    public func associate(assignObject object: AnyObject!, forKey key: UnsafePointer<Void>) {
         let strKey: String = convertUnsafePointerToSwiftType(key)
         willChangeValueForKey(strKey)
         objc_setAssociatedObject(self, key, object, .OBJC_ASSOCIATION_ASSIGN)
@@ -40,7 +40,7 @@ public extension NSObject {
 
     /// Sets an associated value for a given object using a strong reference to the associated object.
     /// **Note**: the `key` underlying type must be String.
-    public func associateRetainObject(object: AnyObject!, forKey key: UnsafePointer<Void>) {
+    public func associate(retainObject object: AnyObject!, forKey key: UnsafePointer<Void>) {
         let strKey: String = convertUnsafePointerToSwiftType(key)
         willChangeValueForKey(strKey)
         objc_setAssociatedObject(self, key, object, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -49,7 +49,7 @@ public extension NSObject {
 
     /// Sets an associated value for a given object using a copied reference to the associated object.
     /// **Note**: the `key` underlying type must be String.
-    public func associateCopyObject(object: AnyObject!, forKey key: UnsafePointer<Void>) {
+    public func associate(copyObject object: AnyObject!, forKey key: UnsafePointer<Void>) {
         let strKey: String = convertUnsafePointerToSwiftType(key)
         willChangeValueForKey(strKey)
         objc_setAssociatedObject(self, key, object, .OBJC_ASSOCIATION_COPY_NONATOMIC)

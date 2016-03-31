@@ -55,56 +55,56 @@ public protocol UIControlActionFunctionProtocol {}
 extension UIControl: UIControlActionFunctionProtocol {}
 
 public extension UIControlActionFunctionProtocol where Self: UIControl {
-    public func addControlEvents(events: UIControlEvents, handler: Self -> ()) {
+    public func add(controlEvents events: UIControlEvents, handler: Self -> ()) {
         let trampoline = ActionTrampoline(action: handler)
         addTarget(trampoline, action: NSSelectorFromString("action:"), forControlEvents: events)
-        associateObject(trampoline, forEvents: events)
+        associate(object: trampoline, forEvents: events)
     }
     
-    private func associateObject(object: AnyObject, forEvents events: UIControlEvents) {
+    private func associate(object object: AnyObject, forEvents events: UIControlEvents) {
         if events == .TouchDown {
-            associateRetainObject(object, forKey: &AssociationKey.touchDownHandlerWrapper)
+            associate(retainObject: object, forKey: &AssociationKey.touchDownHandlerWrapper)
         } else if events == .TouchDownRepeat {
-            associateRetainObject(object, forKey: &AssociationKey.touchDownRepeatHandlerWrapper)
+            associate(retainObject: object, forKey: &AssociationKey.touchDownRepeatHandlerWrapper)
         } else if events == .TouchDragInside {
-            associateRetainObject(object, forKey: &AssociationKey.touchDragInsideHandlerWrapper)
+            associate(retainObject: object, forKey: &AssociationKey.touchDragInsideHandlerWrapper)
         } else if events == .TouchDragOutside {
-            associateRetainObject(object, forKey: &AssociationKey.touchDragOutsideHandlerWrapper)
+            associate(retainObject: object, forKey: &AssociationKey.touchDragOutsideHandlerWrapper)
         } else if events == .TouchDragEnter {
-            associateRetainObject(object, forKey: &AssociationKey.touchDragEnterHandlerWrapper)
+            associate(retainObject: object, forKey: &AssociationKey.touchDragEnterHandlerWrapper)
         } else if events == .TouchDragExit {
-            associateRetainObject(object, forKey: &AssociationKey.touchDragExitHandlerWrapper)
+            associate(retainObject: object, forKey: &AssociationKey.touchDragExitHandlerWrapper)
         } else if events == .TouchUpInside {
-            associateRetainObject(object, forKey: &AssociationKey.touchUpInsideHandlerWrapper)
+            associate(retainObject: object, forKey: &AssociationKey.touchUpInsideHandlerWrapper)
         } else if events == .TouchUpOutside {
-            associateRetainObject(object, forKey: &AssociationKey.touchUpOutsideHandlerWrapper)
+            associate(retainObject: object, forKey: &AssociationKey.touchUpOutsideHandlerWrapper)
         } else if events == .TouchCancel {
-            associateRetainObject(object, forKey: &AssociationKey.touchCancelHandlerWrapper)
+            associate(retainObject: object, forKey: &AssociationKey.touchCancelHandlerWrapper)
         } else if events == .ValueChanged {
-            associateRetainObject(object, forKey: &AssociationKey.valueChangedHandlerWrapper)
+            associate(retainObject: object, forKey: &AssociationKey.valueChangedHandlerWrapper)
         } else if events == .EditingDidBegin {
-            associateRetainObject(object, forKey: &AssociationKey.editingDidBeginHandlerWrapper)
+            associate(retainObject: object, forKey: &AssociationKey.editingDidBeginHandlerWrapper)
         } else if events == .EditingChanged {
-            associateRetainObject(object, forKey: &AssociationKey.editingChangedHandlerWrapper)
+            associate(retainObject: object, forKey: &AssociationKey.editingChangedHandlerWrapper)
         } else if events == .EditingDidEnd {
-            associateRetainObject(object, forKey: &AssociationKey.editingDidEndHandlerWrapper)
+            associate(retainObject: object, forKey: &AssociationKey.editingDidEndHandlerWrapper)
         } else if events == .AllTouchEvents {
-            associateRetainObject(object, forKey: &AssociationKey.allTouchEventsHandlerWrapper)
+            associate(retainObject: object, forKey: &AssociationKey.allTouchEventsHandlerWrapper)
         } else if events == .EditingDidEndOnExit {
-            associateRetainObject(object, forKey: &AssociationKey.editingDidEndOnExitHandlerWrapper)
+            associate(retainObject: object, forKey: &AssociationKey.editingDidEndOnExitHandlerWrapper)
         } else if events == .AllEditingEvents {
-            associateRetainObject(object, forKey: &AssociationKey.allEditingEventsHandlerWrapper)
+            associate(retainObject: object, forKey: &AssociationKey.allEditingEventsHandlerWrapper)
         } else if events == .ApplicationReserved {
-            associateRetainObject(object, forKey: &AssociationKey.applicationReservedHandlerWrapper)
+            associate(retainObject: object, forKey: &AssociationKey.applicationReservedHandlerWrapper)
         } else if events == .SystemReserved {
-            associateRetainObject(object, forKey: &AssociationKey.systemReservedHandlerWrapper)
+            associate(retainObject: object, forKey: &AssociationKey.systemReservedHandlerWrapper)
         } else if events == .AllEvents {
-            associateRetainObject(object, forKey: &AssociationKey.allEventsHandlerWrapper)
+            associate(retainObject: object, forKey: &AssociationKey.allEventsHandlerWrapper)
         }
         
         if #available(iOS 9.0, *) {
             if events == .PrimaryActionTriggered {
-                associateRetainObject(object, forKey: &AssociationKey.primaryActionTriggeredHandlerWrapper)
+                associate(retainObject: object, forKey: &AssociationKey.primaryActionTriggeredHandlerWrapper)
             }
         }
     }

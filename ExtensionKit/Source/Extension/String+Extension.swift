@@ -57,7 +57,7 @@ public extension String {
         return stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
     }
     
-    public func sizeWithFont(font: UIFont, preferredMaxLayoutWidth: CGFloat = UIScreen.width) -> CGSize {
+    public func size(withFont font: UIFont, preferredMaxLayoutWidth: CGFloat = UIScreen.width) -> CGSize {
         let str = self as NSString
         let options: NSStringDrawingOptions = [.UsesLineFragmentOrigin, .UsesFontLeading, .TruncatesLastVisibleLine]
         return str.boundingRectWithSize(CGSizeMake(preferredMaxLayoutWidth, CGFloat.max), options: options, attributes: [NSFontAttributeName: font], context: nil).size
@@ -67,19 +67,19 @@ public extension String {
         return substringWithRange(range)
     }
     
-    public func substringFromIndex(minIndex: Int, toIndex maxIndex: Int) -> String {
+    public func substring(fromIndex minIndex: Int, toIndex maxIndex: Int) -> String {
         let start = startIndex.advancedBy(minIndex)
         let end = startIndex.advancedBy(maxIndex, limit: endIndex)
         let range = Range<String.Index>(start ..< end)
         return substringWithRange(range)
     }
     
-    public func substringFromIndexAt(minIndex: Int) -> String {
+    public func substringFromIndex(minIndex: Int) -> String {
         let start = startIndex.advancedBy(minIndex)
         return substringFromIndex(start)
     }
     
-    public func substringToIndexAt(index: Int) -> String {
+    public func substringToIndex(index: Int) -> String {
         let end = startIndex.advancedBy(index, limit: endIndex)
         return substringToIndex(end)
     }

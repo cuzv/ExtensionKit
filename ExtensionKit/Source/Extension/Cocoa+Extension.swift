@@ -37,11 +37,11 @@ final public class ActionTrampoline<T>: NSObject {
     }
     
     @objc public func action(sender: AnyObject) {
-        // UIControl: addTarget(target: AnyObject?, action: Selector, forControlEvents controlEvents: UIControlEvents)
+        // UIControl: add(target: AnyObject?, action: Selector, forControlEvents controlEvents: UIControlEvents)
         if let sender = sender as? T {
             action(sender)
         }
-            // UIGestureRecognizer: addTarget(target: AnyObject, action: Selector)
+            // UIGestureRecognizer: add(target: AnyObject, action: Selector)
         else if let sender = sender as? UIGestureRecognizer {
             action(sender.view as! T)
         }

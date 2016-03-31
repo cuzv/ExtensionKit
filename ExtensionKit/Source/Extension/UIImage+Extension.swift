@@ -29,7 +29,7 @@ import UIKit
 // MARK: - Generate UIImage
 
 public extension UIImage {
-    public class func imageWithColor(color: UIColor, size: CGSize = CGSizeMake(1, 1)) -> UIImage {
+    public class func imageWith(color color: UIColor, size: CGSize = CGSizeMake(1, 1)) -> UIImage {
         UIGraphicsBeginImageContext(size)
         let context = UIGraphicsGetCurrentContext()
         CGContextSetFillColorWithColor(context, color.CGColor)
@@ -42,8 +42,8 @@ public extension UIImage {
     }
 }
 
-public func UIImageFromColor(color: UIColor, size: CGSize = CGSizeMake(1, 1)) -> UIImage {
-    return UIImage.imageWithColor(color, size: size)
+public func UIImageFrom(color color: UIColor, size: CGSize = CGSizeMake(1, 1)) -> UIImage {
+    return UIImage.imageWith(color: color, size: size)
 }
 
 // MARK: - Load image
