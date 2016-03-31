@@ -82,9 +82,14 @@ public extension UIColor {
         return UIColorFromHex("037AFF")
     }
     
-    public class var separatorColor: UIColor {
+    public class var separatorDefaultColor: UIColor {
         // 200, 199, 204, 100
         return UIColorFromHex("C8C7CC")
+    }
+    
+    public class var separatorDarkColor: UIColor {
+        // 69, 75, 65, 100
+        return UIColorFromHex("454b41")
     }
     
     /// Grouped table view background.
@@ -119,27 +124,3 @@ public extension UIColor {
         return UIColorFromHex("C8C8CD")
     }
 }
-
-// MARK: - Colors
-
-let CHXClearColor     = UIColor.clearColor()
-let CHXWhiteColor     = UIColor.whiteColor()
-let CHXBlackColor     = UIColor.blackColor()
-let CHXGrayColor      = UIColor.grayColor()
-let CHXDarkGrayColor  = UIColor.darkGrayColor()
-let CHXLightGrayColor = UIColor.lightGrayColor()
-let CHXRedColor       = UIColor.redColor()
-let CHXGreenColor     = UIColor.greenColor()
-let CHXBlueColor      = UIColor.blueColor()
-let CHXCyanColor      = UIColor.cyanColor()
-let CHXYellowColor    = UIColor.yellowColor()
-let CHXMagentaColor   = UIColor.magentaColor()
-let CHXOrangeColor    = UIColor.orangeColor()
-let CHXPurpleColor    = UIColor.purpleColor()
-let CHXBrownColor     = UIColor.brownColor()
-
-let CHXGroupedTableViewBackgroundColor = UIColor.groupedBackgroundColor
-let CHXSeparatorColor                  = UIColor.separatorColor
-let CHXImageBackgroundColor            = CHXGroupedTableViewBackgroundColor
-
-

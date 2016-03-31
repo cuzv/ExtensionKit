@@ -257,7 +257,7 @@ public extension UIView {
     /// Setup border width & color.
     public func setBorder(
         width width: CGFloat = 0.5,
-        color: UIColor = UIColor.separatorColor)
+        color: UIColor = UIColor.separatorDefaultColor)
     {
         layer.borderWidth = width
         layer.borderColor = color.CGColor
@@ -267,7 +267,7 @@ public extension UIView {
     /// **Note**: Before you invoke this method, ensure `self` already have correct frame.
     public func addDashBorder(
         width width: CGFloat = 0.5,
-        color: UIColor = UIColor.separatorColor,
+        color: UIColor = UIColor.separatorDefaultColor,
         lineDashPattern: [CGFloat] = [5, 5])
     {
         let boundLayer = CAShapeLayer()
@@ -284,7 +284,7 @@ public extension UIView {
     /// Add border line view using Autolayout.
     public func addBorderLine(
         width width: CGFloat = 0.5,
-        color: UIColor = UIColor.separatorColor,
+        color: UIColor = UIColor.separatorDefaultColor,
         rectEdge: UIRectEdge = .All,
         multiplier: CGFloat = 1)
     {
@@ -351,7 +351,7 @@ public extension UIView {
     /// **Note**: Before you invoke this method, ensure `self` already have correct frame.
     public func addDashBorderLine(
         width width: CGFloat = 0.5,
-        color: UIColor = UIColor.separatorColor,
+        color: UIColor = UIColor.separatorDefaultColor,
         rectEdge: UIRectEdge = .All,
         multiplier: CGFloat = 1,
         lineDashPattern: [CGFloat] = [5, 5])
