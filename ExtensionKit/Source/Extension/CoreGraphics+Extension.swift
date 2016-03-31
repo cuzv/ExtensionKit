@@ -39,8 +39,7 @@ public func FlipImageContextVertically(context: CGContextRef) {
     FlipContextVertically(context, size: UIGraphicsGetImageFromCurrentImageContext().size)
 }
 
-/// Query context for size and use screen scale
-/// to map from Quartz pixels to UIKit points
+/// Query context for size and use screen scale to map from Quartz pixels to UIKit points
 public func GetUIKitContextSize() -> CGSize {
     guard let context = UIGraphicsGetCurrentContext() else {
         return CGSizeZero
@@ -54,5 +53,81 @@ public func GetUIKitContextSize() -> CGSize {
     return CGSizeMake(
             size.width / scale,
             size.height / scale
+    )
+}
+
+public extension CGAffineTransform {
+    /// X scale from transform
+    public var xScale: CGFloat { return sqrt(a * a + c * c) }
+    
+    /// Y scale from transform
+    public var yScale: CGFloat { return sqrt(b * b + d * d) }
+    
+    /// Rotation in radians
+    public var rotation: CGFloat { return CGFloat(atan2f(Float(b), Float(a))) }
+}
+
+public extension CGRect {
+    public var integral: CGRect { return CGRectIntegral(self) }
+    public var center: CGPoint { return CGPointMake(CGRectGetMidX(self), CGRectGetMinY(self)) }
+    
+    /// Return a rect centered a source to a destination
+    public func centeringIn(destination: CGRect) -> CGRect {
+        let dx: CGFloat = CGRectGetMidX(destination) - CGRectGetMidX(self)
+        let dy: CGFloat = CGRectGetMidY(destination) - CGRectGetMidY(self)
+        return CGRectOffset(self, dx, dy)
+    }
+    
+    /// Return a rect fitting a source to a destination
+    public func fittingIn(destination: CGRect) -> CGRect {
+        let aspect = size.aspectScaleToFit(destination)
+        let targetSize = size.scale(aspect)
+        return MakeRect(center: destination.center, size: targetSize)
+    }
+    
+    /// Return a rect that fills the destination
+    public func fillingIn(destination: CGRect) -> CGRect {
+        let aspect = size.aspectScaleToFill(destination)
+        let targetSize = size.scale(aspect)
+        return MakeRect(center: destination.center, size: targetSize)
+    }
+}
+
+public extension CGSize {
+    public var ceilly: CGSize { return CGSizeMake(ceil(width), ceil(height)) }
+    public var floorly: CGSize { return CGSizeMake(floor(width), floor(height)) }
+    
+    /// Multiply the size components by the factor
+    public func scale(factor: CGFloat) -> CGSize {
+        return CGSizeMake(width * factor, height * factor)
+    }
+    
+    /// Calculate scale for fitting a size to a destination rect
+    public func aspectScaleToFit(fitRect: CGRect) -> CGFloat {
+        return min(fitRect.size.width / width, fitRect.size.height / height)
+    }
+    
+    // Calculate scale for filling a destination rect
+    public func aspectScaleToFill(fillRect: CGRect) -> CGFloat {
+        return max(fillRect.size.width / width, fillRect.size.height / height)
+    }
+}
+
+public extension CGFloat {
+    public var ceilly: CGFloat { return ceil(self) }
+    public var floorly: CGFloat { return floor(self) }
+}
+
+public func MakeRect(origin origin: CGPoint, size: CGSize) -> CGRect {
+    return CGRectMake(origin.x, origin.y, size.width, size.height)
+}
+
+public func MakeRect(center center: CGPoint, size: CGSize) -> CGRect {
+    let halfWidth = size.width / 2.0
+    let halfHeight = size.height / 2.0
+    return CGRectMake(center.x - halfWidth,
+                      center.y - halfHeight,
+                      size.width,
+                      size.height
     )
 }
