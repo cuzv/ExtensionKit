@@ -26,26 +26,6 @@
 
 import UIKit
 
-// MARK: - Generate UIImage
-
-public extension UIImage {
-    public class func imageWith(color color: UIColor, size: CGSize = CGSizeMake(1, 1)) -> UIImage {
-        UIGraphicsBeginImageContext(size)
-        let context = UIGraphicsGetCurrentContext()
-        CGContextSetFillColorWithColor(context, color.CGColor)
-        let rect = CGRectMake(0, 0, size.width, size.height)
-        CGContextFillRect(context, rect)
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        
-        return image
-    }
-}
-
-public func UIImageFrom(color color: UIColor, size: CGSize = CGSizeMake(1, 1)) -> UIImage {
-    return UIImage.imageWith(color: color, size: size)
-}
-
 // MARK: - Load image
 
 public extension UIImage {
@@ -90,22 +70,13 @@ public extension UIImage {
         return decompressedImage
     }
     
-    /// Scale image to target size.
-    public func scaleToSize(size: CGSize) -> UIImage {
-        UIGraphicsBeginImageContext(size)
-        drawInRect(CGRectMake(0, 0, size.width, size.height))
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return newImage
-    }
-    
     /// Compress image as possible to target size kb.
     public func compressAsPossible(toCapacity capacity: Int = 50, targetSize: CGSize = CGSizeMake(UIScreen.mainScreen().bounds.width, UIScreen.mainScreen().bounds.width)) -> NSData? {
         let currentRepresention = size.width * size.height
         let targetRepresention = targetSize.width * targetSize.height
         var scaledImage = self
         if currentRepresention > targetRepresention {
-            scaledImage = scaleToSize(targetSize)
+            scaledImage = buildThumbnail(targetSize: targetSize)
         }
         
         var compressionQuality: CGFloat = 0.5
@@ -136,6 +107,18 @@ public extension UIImage {
 // MARK: - Draw
 
 public extension UIImage {
+    public class func imageWith(color color: UIColor, size: CGSize = CGSizeMake(1, 1)) -> UIImage {
+        UIGraphicsBeginImageContext(size)
+        let context = UIGraphicsGetCurrentContext()
+        CGContextSetFillColorWithColor(context, color.CGColor)
+        let rect = CGRectMake(0, 0, size.width, size.height)
+        CGContextFillRect(context, rect)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return image
+    }
+    
     public func drawRectWithRoundedCorner(radius radius: CGFloat, _ sizetoFit: CGSize) -> UIImage {
         let rect = CGRect(origin: CGPoint(x: 0, y: 0), size: sizetoFit)
         
@@ -163,5 +146,62 @@ public extension UIImage {
         
         return image
     }
+    
+    public func buildThumbnail(targetSize targetSize: CGSize, useFitting: Bool = true) -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(targetSize, false, 0.0)
+        // Establish the output thumbnail rectangle
+        let targetRect = MakeRect(origin: CGPointZero, size: targetSize)
+        // Create the source image’s bounding rectangle
+        let naturalRect = MakeRect(origin: CGPointZero, size: size)
+        // Calculate fitting or filling destination rectangle 
+        // See Chapter 2 for a discussion on these functions 
+        let destinationRect = useFitting ? naturalRect.fittingIn(targetRect) : naturalRect.fillingIn(targetRect)
+        // Draw the new thumbnail
+        drawInRect(destinationRect)
+        // Retrieve and return the new image 
+        let thumbnail = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return thumbnail
+    }
+    
+    /// Extract image
+    public func extractingIn(subRect: CGRect) -> UIImage? {
+        if let imageRef = CGImageCreateWithImageInRect(CGImage, subRect) {
+            return UIImage(CGImage: imageRef)
+        }
+        return nil
+    }
+   
+    /// Watermarking
+    public func watermarking(text text: String, font: UIFont, color: UIColor = UIColor.whiteColor(), rotate: Double = M_PI_4 ) -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        let context = UIGraphicsGetCurrentContext()
+        
+        // Draw the original image into the context
+        let targetRect = MakeRect(size: size)
+        drawInRect(targetRect)
+        
+        // Rotate the context
+        let center = targetRect.center
+        CGContextTranslateCTM(context, center.x, center.y)
+        CGContextRotateCTM(context, CGFloat(rotate))
+        CGContextTranslateCTM(context, -center.x, -center.y)
+        
+        let stringSize = text.size(withFont: font, preferredMaxLayoutWidth: size.width)
+        let stringRect = MakeRect(size: stringSize).centeringIn(MakeRect(size: size))
+        
+        // Draw the string, using a blend mode
+        CGContextSetBlendMode(context, .Normal)
+        (text as NSString).drawInRect(stringRect, withAttributes: [NSForegroundColorAttributeName: color])
+        
+        // Retrieve the new image
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
+    }
+}
+
+public func UIImageFrom(color color: UIColor, size: CGSize = CGSizeMake(1, 1)) -> UIImage {
+    return UIImage.imageWith(color: color, size: size)
 }
 
