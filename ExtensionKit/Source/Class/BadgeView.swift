@@ -26,7 +26,7 @@
 
 import UIKit
 
-public class BadgeView: UIView {
+final public class BadgeView: UIView {
     private let fixedHeight: CGFloat = 18
     public var textColor: UIColor = UIColor.whiteColor()
     
