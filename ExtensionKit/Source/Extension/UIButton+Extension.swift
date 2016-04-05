@@ -136,9 +136,9 @@ public extension UIButton {
         guard let currentTitle = currentTitle as NSString? else { return }
         guard let titleLabel = titleLabel else { return }
         
-        let halfSpace = space / 2.0
-        let halfImageWidth = currentImage.size.width / 2.0
-        let halfImageHeight = currentImage.size.height / 2.0
+        let halfSpace = (space / 2.0).ceilly
+        let halfImageWidth = (currentImage.size.width / 2.0).ceilly
+        let halfImageHeight = (currentImage.size.height / 2.0).ceilly
         titleEdgeInsets = UIEdgeInsetsMake(
             halfImageHeight + halfSpace,
             -halfImageWidth,
@@ -146,9 +146,9 @@ public extension UIButton {
             halfImageWidth
         )
         
-        let titleBounds = currentTitle.sizeWithAttributes([NSFontAttributeName: titleLabel.font])
-        let halfEdgeWidth = titleBounds.width / 2.0
-        let halfEdgeHeight = titleBounds.height / 2.0
+        let titleBounds = currentTitle.sizeWithAttributes([NSFontAttributeName: titleLabel.font]).ceilly
+        let halfEdgeWidth = (titleBounds.width / 2.0).ceilly
+        let halfEdgeHeight = (titleBounds.height / 2.0).ceilly
         imageEdgeInsets = UIEdgeInsetsMake(
             -halfEdgeHeight - halfSpace,
             halfEdgeWidth,
@@ -164,9 +164,9 @@ public extension UIButton {
         guard let currentTitle = currentTitle as NSString? else { return }
         guard let titleLabel = titleLabel else { return }
         
-        let halfSpace = space / 2.0
-        let halfImageWidth = currentImage.size.width / 2.0
-        let halfImageHeight = currentImage.size.height / 2.0
+        let halfSpace = (space / 2.0).ceilly
+        let halfImageWidth = (currentImage.size.width / 2.0).ceilly
+        let halfImageHeight = (currentImage.size.height / 2.0).ceilly
         titleEdgeInsets = UIEdgeInsetsMake(
             -halfImageHeight - halfSpace,
             -halfImageWidth,
@@ -174,9 +174,9 @@ public extension UIButton {
             halfImageWidth
         )
         
-        let titleBounds = currentTitle.sizeWithAttributes([NSFontAttributeName: titleLabel.font])
-        let halfEdgeWidth = titleBounds.width / 2.0
-        let halfEdgeHeight = titleBounds.height / 2.0
+        let titleBounds = currentTitle.sizeWithAttributes([NSFontAttributeName: titleLabel.font]).ceilly
+        let halfEdgeWidth = (titleBounds.width / 2.0).ceilly
+        let halfEdgeHeight = (titleBounds.height / 2.0).ceilly
         imageEdgeInsets = UIEdgeInsetsMake(
             halfEdgeHeight + halfSpace,
             halfEdgeWidth,
@@ -188,7 +188,7 @@ public extension UIButton {
     /// Setup image position relate to title
     /// **NOTE**: Before invoke this methods you should setup and title image already
     public func setImageAlignmentToLeft(titleSpace space: CGFloat = 4.0) {
-        let halfSpace = space / 2.0
+        let halfSpace = (space / 2.0).ceilly
         
         titleEdgeInsets = UIEdgeInsetsMake(
             0,
@@ -211,9 +211,9 @@ public extension UIButton {
         guard let currentTitle = currentTitle as NSString? else { return }
         guard let titleLabel = titleLabel else { return }
         
-        let halfSpace = space / 2.0
-        let imageWidth = currentImage.size.width
-        let edgeWidth = currentTitle.sizeWithAttributes([NSFontAttributeName: titleLabel.font]).width
+        let halfSpace = (space / 2.0).ceilly
+        let imageWidth = currentImage.size.width.ceilly
+        let edgeWidth = currentTitle.sizeWithAttributes([NSFontAttributeName: titleLabel.font]).width.ceilly
         
         titleEdgeInsets = UIEdgeInsetsMake(
             0,
