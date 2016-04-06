@@ -147,6 +147,19 @@ public extension UIImage {
         return image
     }
     
+    func rendering(withColor color: UIColor, alpha: CGFloat = 1.0) -> UIImage {
+        UIGraphicsBeginImageContext(size)
+        
+        color.setFill()
+        let rect = CGRectMake(0, 0, size.width, size.height)
+        UIRectFill(rect)
+        drawInRect(rect, blendMode: .Overlay, alpha: alpha)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return image
+    }
+    
     public func buildThumbnail(targetSize targetSize: CGSize, useFitting: Bool = true) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(targetSize, false, 0.0)
         // Establish the output thumbnail rectangle
