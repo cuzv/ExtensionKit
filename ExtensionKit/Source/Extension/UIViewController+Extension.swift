@@ -224,8 +224,8 @@ extension UIViewController: UINavigationControllerDelegate, UIImagePickerControl
         picker.imagePickerCompletionHandlerWrapper.invoke((picker, nil))
         picker.dismiss()
     }
-    
-    public func imagePickerController(picker picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+
+    public func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         BackgroundThreadAsyncAction { () -> Void in
             if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
                 let newImage = image.orientationTo(.Up)
@@ -242,7 +242,7 @@ extension UIViewController: UINavigationControllerDelegate, UIImagePickerControl
         }
     }
     
-    public func imagePickerController(picker picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
+    public func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
         picker.imagePickerCompletionHandlerWrapper.invoke((picker, image))
         picker.dismiss()
     }

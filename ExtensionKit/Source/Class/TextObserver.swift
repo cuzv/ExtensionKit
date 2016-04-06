@@ -65,7 +65,7 @@ final public class TextObserver {
                     textField.text = text.substringToIndex(_self.maxLength)
                 }
                 
-                _self.actionHandler(_self.maxLength - textLenght)
+                _self.actionHandler(_self.maxLength - (textField.text ?? "").length)
             }
     }
     
@@ -85,7 +85,7 @@ final public class TextObserver {
                     textView.text = text.substringToIndex(_self.maxLength)
                 }
                 
-                _self.actionHandler(_self.maxLength - textLenght)
+                _self.actionHandler(_self.maxLength - (textView.text ?? "").length)
                 textView.scrollCursorToVisible()
             }
     }

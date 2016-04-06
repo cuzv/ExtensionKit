@@ -46,7 +46,7 @@ public extension String {
 
 public extension String {
     public var length: Int {
-        return lengthOfBytesUsingEncoding(NSUTF8StringEncoding)
+        return characters.count
     }
     
     public var isEmpty: Bool {
