@@ -45,11 +45,11 @@ public extension UIImage {
     }
 }
 
-public func UIImageFromFileFullName(fileName: String) -> UIImage? {
+public func UIImageMakeFileFullName(fileName: String) -> UIImage? {
     return UIImage.imageWithFileFullName(fileName)
 }
 
-public func UIImageFromFileName(fileName: String) -> UIImage? {
+public func UIImageMakeFileName(fileName: String) -> UIImage? {
     return UIImage.imageWithFileName(fileName)
 }
 
@@ -201,7 +201,7 @@ public extension UIImage {
     }
 }
 
-public func UIImageFrom(color color: UIColor, size: CGSize = CGSizeMake(1, 1)) -> UIImage {
+public func UIImageMake(color color: UIColor, size: CGSize = CGSizeMake(1, 1)) -> UIImage {
     return UIImage.imageWith(color: color, size: size)
 }
 
