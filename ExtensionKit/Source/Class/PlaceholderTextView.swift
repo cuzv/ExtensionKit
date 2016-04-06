@@ -36,7 +36,7 @@ final public class PlaceholderTextView: UITextView {
         label.backgroundColor = UIColor.clearColor()
         label.textColor = UIColor.placeholderColor
         label.font = UIFont.preferredFontForTextStyle(UIFontTextStyleFootnote)
-        label.lineBreakMode = .ByCharWrapping
+        label.lineBreakMode = .ByTruncatingTail
         label.numberOfLines = 0
         return label
     }()

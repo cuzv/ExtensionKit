@@ -34,7 +34,7 @@ final public class BadgeView: UIView {
         let label = UILabel()
         label.textColor = UIColor.whiteColor()
         label.font = UIFont.preferredFontForTextStyle(UIFontTextStyleFootnote)
-        label.lineBreakMode = .ByCharWrapping
+        label.lineBreakMode = .ByTruncatingTail
         label.textAlignment = .Center
         label.backgroundColor = self.backgroundColor
         return label

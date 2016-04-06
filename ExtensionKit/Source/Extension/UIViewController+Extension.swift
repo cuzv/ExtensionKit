@@ -296,6 +296,7 @@ public extension UIViewController {
 
 extension UIViewController: UIGestureRecognizerDelegate {
     /// Set UINavigationBar hidden with `interactivePopGestureRecognizer` enabled.
+    /// Should invoke in `viewDidLoad`.
     public func setNavigationBar(hidden hidden: Bool, animated: Bool) {
         navigationController?.setNavigationBarHidden(hidden, animated: animated)
         // Enable slide-back
@@ -304,6 +305,7 @@ extension UIViewController: UIGestureRecognizerDelegate {
         preferredNavigationBarHidden = hidden
     }
     
+    /// Record the preferred navigation bar hidden status.
     public var preferredNavigationBarHidden: Bool? {
         get { return associatedObjectForKey(&AssociationKey.preferredNavigationBarHidden) as? Bool }
         set { associate(assignObject: newValue, forKey: &AssociationKey.preferredNavigationBarHidden) }
