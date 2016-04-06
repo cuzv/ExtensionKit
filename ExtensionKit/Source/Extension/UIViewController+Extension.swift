@@ -221,8 +221,8 @@ public extension UIViewController {
 
 extension UIViewController: UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     public func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        picker.imagePickerCompletionHandlerWrapper.invoke((picker, nil))
         picker.dismiss()
+        picker.imagePickerCompletionHandlerWrapper.invoke((picker, nil))
     }
 
     public func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
@@ -232,8 +232,8 @@ extension UIViewController: UINavigationControllerDelegate, UIImagePickerControl
                 if let imageData = newImage.compressAsPossible() {
                     let resultImage = UIImage(data: imageData, scale: UIScreen.scale_var)
                     UIThreadAsyncAction({ () -> Void in
-                        picker.imagePickerCompletionHandlerWrapper.invoke((picker, resultImage))
                         picker.dismiss()
+                        picker.imagePickerCompletionHandlerWrapper.invoke((picker, resultImage))
                     })
                     return
                 }
@@ -243,8 +243,8 @@ extension UIViewController: UINavigationControllerDelegate, UIImagePickerControl
     }
     
     public func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
-        picker.imagePickerCompletionHandlerWrapper.invoke((picker, image))
         picker.dismiss()
+        picker.imagePickerCompletionHandlerWrapper.invoke((picker, image))
     }
 }
 

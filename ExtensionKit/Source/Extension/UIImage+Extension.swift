@@ -205,3 +205,16 @@ public func UIImageMake(color color: UIColor, size: CGSize = CGSizeMake(1, 1)) -
     return UIImage.imageWith(color: color, size: size)
 }
 
+@available(iOS 8.0, *)
+public func UIImageIsQRCode(image: UIImage) -> Bool {
+    if let CIImage = CIImage(image: image) {
+        let detector = CIDetector(ofType: CIDetectorTypeQRCode, context: nil,
+                                  options: [CIDetectorAccuracy : CIDetectorAccuracyHigh])
+        let features = detector.featuresInImage(CIImage)
+        if let first = features.first as? CIQRCodeFeature {
+            return first.messageString.length > 0
+        }
+    }
+
+    return false
+}
