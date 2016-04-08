@@ -50,6 +50,13 @@ public func merge<Value, Error: ErrorType>(producers: [SignalProducer<Value, Err
     return SignalProducer<SignalProducer<Value, Error>, Error>(values: producers).flatten(.Merge)
 }
 
+extension NSObject {
+    /// In common use: SignalProducer.takeUntil(rac_willDeinitProducer)
+    public var rac_willDeinitProducer: SignalProducer<(), NoError> {
+        return rac_willDeallocSignal().toSignalProducer().ignoreError().map { _ in () }
+    }
+}
+
 // MARK: - Signal
 
 public func merge<Value, Error: ErrorType>(signals: [Signal<Value, Error>]) -> Signal<Value, Error> {
@@ -230,6 +237,7 @@ public extension UITextView {
         return lazyAssociatedProperty(host: self, key: &AssociationKey.text) {
             NSNotificationCenter.defaultCenter()
                 .rac_notifications(UITextViewTextDidChangeNotification, object: self)
+                .takeUntil(self.rac_willDeinitProducer)
                 .startWithNext({ [weak self] (notification) -> () in
                 self?.changed()
             })

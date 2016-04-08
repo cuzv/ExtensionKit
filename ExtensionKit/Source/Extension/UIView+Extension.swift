@@ -53,7 +53,7 @@ private extension UIGestureRecognizer {
 
 public extension UIView {
     /// Single tap action closure func.
-    /// **Note**: You should invoke `longPressAction:` or `doubleTapAction` first if you need.
+    /// **Note**: You should invoke `longPressAction:` or `doubleTapsAction` first if you need.
     public func tapAction(action: ((UIView, UIGestureRecognizer?) -> ())) {
         userInteractionEnabled = true
         
@@ -65,7 +65,7 @@ public extension UIView {
     
     /// Dobule tap action closure func.
     /// **Note**: You should invoke `longPressAction:` first if you need.
-    public func doubleTapAction(action: (UIView, UIGestureRecognizer?) -> ()) {
+    public func doubleTapsAction(action: (UIView, UIGestureRecognizer?) -> ()) {
         userInteractionEnabled = true
         
         let doubleTapGesureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIView.handleGestureRecognizerAction(_:)))
@@ -120,7 +120,7 @@ extension UIView: UIGestureRecognizerFunctionProtocol {}
 
 public extension UIGestureRecognizerFunctionProtocol where Self: UIView {
     /// Single tap action closure func.
-    /// **Note**: You should invoke `longPressAction:` or `doubleTapAction` first if you need.
+    /// **Note**: You should invoke `longPressAction:` or `tripleTapsAction` first if you need.
     public func tapAction(action: ((Self) -> ())) {
         userInteractionEnabled = true
         
@@ -131,14 +131,40 @@ public extension UIGestureRecognizerFunctionProtocol where Self: UIView {
         associate(retainObject: trampoline, forKey: &AssociationKey.singleTapGestureRecognizer)
     }
 
-    /// Dobule tap action closure func.
-    /// **Note**: You should invoke `longPressAction:` first if you need.
-    public func doubleTapAction(action: (Self) -> ()) {
+    /// Dobule taps action closure func.
+    /// **Note**: You should invoke `longPressAction:` or `tripleTapsAction` first if you need.
+    public func doubleTapsAction(action: (Self) -> ()) {
         userInteractionEnabled = true
 
         let trampoline = ActionTrampoline(action: action)
         let doubleTapGesureRecognizer = UITapGestureRecognizer(target: trampoline, action: NSSelectorFromString("action:"))
         doubleTapGesureRecognizer.numberOfTapsRequired = 2
+        checkRequireGestureRecognizerToFailForDoubleTapGesureRecognizer(doubleTapGesureRecognizer)
+        addGestureRecognizer(doubleTapGesureRecognizer)
+        associate(retainObject: trampoline, forKey: &AssociationKey.doubleTapGestureRecognizer)
+    }
+    
+    /// Triple taps action closure func.
+    /// **Note**: You should invoke `longPressAction:` or `tripleTapsAction` first if you need.
+    public func tripleTapsAction(action: (Self) -> ()) {
+        userInteractionEnabled = true
+        
+        let trampoline = ActionTrampoline(action: action)
+        let doubleTapGesureRecognizer = UITapGestureRecognizer(target: trampoline, action: NSSelectorFromString("action:"))
+        doubleTapGesureRecognizer.numberOfTapsRequired = 3
+        checkRequireGestureRecognizerToFailForDoubleTapGesureRecognizer(doubleTapGesureRecognizer)
+        addGestureRecognizer(doubleTapGesureRecognizer)
+        associate(retainObject: trampoline, forKey: &AssociationKey.doubleTapGestureRecognizer)
+    }
+    
+    /// Multiple tap action closure func.
+    /// **Note**: You should invoke `longPressAction:` or `tripleTapsAction` first if you need.
+    public func multipleTaps(numberOfTapsRequired taps: Int, action: (Self) -> ()) {
+        userInteractionEnabled = true
+        
+        let trampoline = ActionTrampoline(action: action)
+        let doubleTapGesureRecognizer = UITapGestureRecognizer(target: trampoline, action: NSSelectorFromString("action:"))
+        doubleTapGesureRecognizer.numberOfTapsRequired = taps
         checkRequireGestureRecognizerToFailForDoubleTapGesureRecognizer(doubleTapGesureRecognizer)
         addGestureRecognizer(doubleTapGesureRecognizer)
         associate(retainObject: trampoline, forKey: &AssociationKey.doubleTapGestureRecognizer)
