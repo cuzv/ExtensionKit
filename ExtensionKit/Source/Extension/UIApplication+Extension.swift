@@ -21,6 +21,12 @@ public extension UIApplication {
         }
     }
     
+    public class func openURLPath(urlPath: String) {
+        if let URL = NSURL(string: urlPath) {
+            UIApplication.openURL(URL)
+        }
+    }
+    
     public class func makePhone(phoneNumber: String) {
         if let URL = NSURL(string: "telprompt:\(phoneNumber)") {
             UIApplication.openURL(URL)
@@ -33,7 +39,7 @@ public extension UIApplication {
         }
     }
     
-    public class func mailTo(email: String) {
+    public class func emailTo(email: String) {
         if let URL = NSURL(string: "mailto:\(email)") {
             UIApplication.openURL(URL)
         }
@@ -82,7 +88,7 @@ public func doSendMessageTo(phoneNumber: String) {
 }
 
 public func doMailTo(email: String) {
-    UIApplication.mailTo(email)
+    UIApplication.emailTo(email)
 }
 
 public func doChatToQQ(qq: String) {
