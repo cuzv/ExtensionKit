@@ -35,27 +35,31 @@ final public class SegmentedToggleControl: UIControl {
     private var buttons: [UIButton] = []
     private let normalTextColor: UIColor
     private let selectedTextColor: UIColor
+    
     private var font: UIFont!
-    private var animated: Bool = true
-    
-    public var rac_index: MutableProperty<Int> = MutableProperty(0)
-    
+    private var lastSelectedIndex = 0
+    private var firstTime: Bool = true
+
     public var selectedSegmentIndex: Int = 0 {
         didSet {
-            animated = false
             selectedSegmentIndex = selectedSegmentIndex >= items.count ? items.count - 1 : selectedSegmentIndex
             rac_index.value = selectedSegmentIndex
             updateAppearance()
-            animated = true
         }
     }
+    public var rac_index: MutableProperty<Int> = MutableProperty(0)
+    public var autoComputeLineWidth: Bool = true
     
     let lineView: UIView = {
         let view = UIView()
         return view
     }()
     
-    public init(items: [String], normalTextColor: UIColor = UIColor.blackColor(), selectedTextColor: UIColor = UIColor.tintColor) {
+    public init(
+        items: [String],
+        normalTextColor: UIColor = UIColor.blackColor(),
+        selectedTextColor: UIColor = UIColor.tintColor)
+    {
         if items.count < 2 {
             fatalError("items.count can not less 2.")
         }
@@ -91,6 +95,21 @@ final public class SegmentedToggleControl: UIControl {
             return size
         } else {
             return CGSizeMake(60, 44)
+        }
+    }
+
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        if !autoComputeLineWidth && firstTime {
+            lineView.snp_remakeConstraints(closure: { (make) -> Void in
+                make.width.equalTo(lineViewWidthForIndex(selectedSegmentIndex))
+                make.height.equalTo(1)
+                make.bottom.equalTo(self)
+                let currentButton = buttons[selectedSegmentIndex]
+                make.centerX.equalTo(currentButton)
+            })
+            firstTime = false
         }
     }
 }
@@ -177,7 +196,7 @@ public extension SegmentedToggleControl {
             make.centerX.equalTo(currentButton)
         })
         
-        let duration: NSTimeInterval = animated ? fabs(Double(selectedSegmentIndex - index)) * 0.1 : 0
+        let duration: NSTimeInterval = fabs(Double(lastSelectedIndex - index)) * 0.1
         if duration <= 0 {
             setNeedsLayout()
             layoutIfNeeded()
@@ -187,10 +206,16 @@ public extension SegmentedToggleControl {
                 self.layoutIfNeeded()
             })
         }
+        
+        lastSelectedIndex = selectedSegmentIndex
     }
     
     private func lineViewWidthForIndex(index: Int) -> CGFloat {
-        return items[index].size(withFont: font).width
+        if autoComputeLineWidth {
+            return items[index].size(withFont: font).width
+        } else {
+            return (CGRectGetWidth(bounds) / CGFloat(items.count)).ceilly
+        }
     }
 }
 
