@@ -26,6 +26,7 @@
 
 import UIKit
 import SnapKit
+import ReactiveCocoa
 
 // MARK: - SegmentedToggleControl
 
@@ -35,15 +36,16 @@ final public class SegmentedToggleControl: UIControl {
     private let normalTextColor: UIColor
     private let selectedTextColor: UIColor
     private var font: UIFont!
-    private var currentSelectedIndex = 0
     private var animated: Bool = true
     
-    public var selectedSegmentIndex: Int {
-        get { return currentSelectedIndex }
-        set {
+    public var rac_index: MutableProperty<Int> = MutableProperty(0)
+    
+    public var selectedSegmentIndex: Int = 0 {
+        didSet {
             animated = false
-            let index = newValue >= items.count ? items.count - 1 : newValue
-            hanleClickAction(buttons[index])
+            selectedSegmentIndex = selectedSegmentIndex >= items.count ? items.count - 1 : selectedSegmentIndex
+            rac_index.value = selectedSegmentIndex
+            updateAppearance()
             animated = true
         }
     }
@@ -145,7 +147,8 @@ public extension SegmentedToggleControl {
         }
     }
     
-    internal func hanleClickAction(sender: UIButton) {
+    private func updateAppearance() {
+        let sender  = buttons[selectedSegmentIndex]
         // toggle selected button
         buttons.forEach { (button) -> () in
             button.selected = false
@@ -156,10 +159,13 @@ public extension SegmentedToggleControl {
         if let index = buttons.indexOf(sender) {
             remakeLineViewConstraintsForIndex(index)
         }
-        currentSelectedIndex = sender.tag
         
         // Send action
         sendActionsForControlEvents(.ValueChanged)
+    }
+    
+    internal func hanleClickAction(sender: UIButton) {
+        selectedSegmentIndex = sender.tag
     }
     
     private func remakeLineViewConstraintsForIndex(index: Int) {
@@ -171,7 +177,7 @@ public extension SegmentedToggleControl {
             make.centerX.equalTo(currentButton)
         })
         
-        let duration: NSTimeInterval = animated ? fabs(Double(currentSelectedIndex - index)) * 0.1 : 0
+        let duration: NSTimeInterval = animated ? fabs(Double(selectedSegmentIndex - index)) * 0.1 : 0
         if duration <= 0 {
             setNeedsLayout()
             layoutIfNeeded()

@@ -136,10 +136,11 @@ private struct AssociationKey {
     private static var text: String    = "rac_text"
     private static var image: String   = "rac_image"
     private static var enabled: String = "rac_enabled"
+    private static var index: String = "rac_index"
 }
 
 /// Lazily creates a gettable associated property via the given factory.
-private func lazyAssociatedProperty<T: AnyObject>(
+internal func lazyAssociatedProperty<T: AnyObject>(
     host host: AnyObject,
     key: UnsafePointer<Void>,
     factory: ()->T) -> T
@@ -200,6 +201,24 @@ public extension UILabel {
     }
 }
 
+public extension UISegmentedControl {
+    public var rac_index: MutableProperty<Int> {
+        return lazyAssociatedProperty(host: self, key: &AssociationKey.index) {
+            self.addTarget(self, action: #selector(UITextField.changed), forControlEvents: .ValueChanged)
+            
+            let property = MutableProperty<Int>(0)
+            property.producer.startWithNext{ newValue in
+                self.selectedSegmentIndex = newValue
+            }
+            return property
+        }
+    }
+    
+    internal func changed() {
+        rac_index.value = selectedSegmentIndex
+    }
+}
+
 public extension UITextField {
     public func rac_textSignalProducer() -> SignalProducer<String, NoError> {
         return rac_textSignal().toSignalProducer()
@@ -209,7 +228,7 @@ public extension UITextField {
     
     public var rac_text: MutableProperty<String> {
         return lazyAssociatedProperty(host: self, key: &AssociationKey.text) {
-            self.addTarget(self, action: #selector(UITextField.changed), forControlEvents: UIControlEvents.EditingChanged)
+            self.addTarget(self, action: #selector(UITextField.changed), forControlEvents: .EditingChanged)
             
             let property = MutableProperty<String>(self.text ?? "")
             property.producer
