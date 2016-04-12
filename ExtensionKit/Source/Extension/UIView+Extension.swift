@@ -227,7 +227,7 @@ public extension UIView {
         set { frame = CGRectMake(minX, newValue - height / 2, width, height) }
     }
     
-    @IBInspectable public var maXY: CGFloat {
+    @IBInspectable public var maxY: CGFloat {
         get { return minY + height }
         set { frame = CGRectMake(minX, newValue - height, width, height) }
     }
