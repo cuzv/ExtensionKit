@@ -32,7 +32,6 @@ private struct AssociationKey {
     private static var alertActionIndex: String = "alertActionIndex"
     private static var imagePickerCompletionHandlerWrapper = "imagePickerCompletionHandlerWrapper"
     private static var barButtonItemActionHandlerWrapper: String = "barButtonItemActionHandlerWrapper"
-    private static var preferredNavigationBarHidden: String = "preferredNavigationBarHidden"
 }
 
 // MARK: - Present UIAlertController
@@ -302,19 +301,6 @@ extension UIViewController: UIGestureRecognizerDelegate {
         // Enable slide-back
         navigationController?.interactivePopGestureRecognizer?.enabled = true
         navigationController?.interactivePopGestureRecognizer?.delegate = self
-        preferredNavigationBarHidden = hidden
-    }
-    
-    /// Record the preferred navigation bar hidden status.
-    public var preferredNavigationBarHidden: Bool? {
-        get { return associatedObjectForKey(&AssociationKey.preferredNavigationBarHidden) as? Bool }
-        set { associate(assignObject: newValue, forKey: &AssociationKey.preferredNavigationBarHidden) }
-    }
-    
-    public func setNeedsNavigationBarAppearanceUpdate() {
-        if let preferredNavigationBarHidden = preferredNavigationBarHidden {
-            setNavigationBar(hidden: preferredNavigationBarHidden, animated: false)
-        }
     }
 }
 
