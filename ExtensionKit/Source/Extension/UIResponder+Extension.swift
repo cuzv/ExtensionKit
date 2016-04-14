@@ -23,6 +23,6 @@ public extension UIResponder {
     }
 
     public func sendAction(action: Selector) -> Bool {
-        return doSendAction(action, fromSender: self)
+        return doSend(action: action, fromSender: self)
     }
 }

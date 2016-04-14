@@ -39,9 +39,7 @@ final public class TextObserver {
         self.actionHandler = actionHandler
     }
     
-    deinit {
-        debugPrint("\(__FILE__):\(__LINE__):\(self.dynamicType):\(__FUNCTION__)")
-        
+    deinit {        
         if let textFieldObserver = textFieldObserver {
             NSNotificationCenter.defaultCenter().removeObserver(textFieldObserver)
         }
@@ -64,10 +62,10 @@ final public class TextObserver {
                 
                 let textLenght = text.length
                 if textLenght > _self.maxLength && nil == textField.markedTextRange {
-                    textField.text = text.substringToIndexAt(_self.maxLength)
+                    textField.text = text.substringToIndex(_self.maxLength)
                 }
                 
-                _self.actionHandler(_self.maxLength - textLenght)
+                _self.actionHandler(_self.maxLength - (textField.text ?? "").length)
             }
     }
     
@@ -84,10 +82,10 @@ final public class TextObserver {
                 
                 let textLenght = text.length
                 if textLenght > _self.maxLength && nil == textView.markedTextRange {
-                    textView.text = text.substringToIndexAt(_self.maxLength)
+                    textView.text = text.substringToIndex(_self.maxLength)
                 }
                 
-                _self.actionHandler(_self.maxLength - textLenght)
+                _self.actionHandler(_self.maxLength - (textView.text ?? "").length)
                 textView.scrollCursorToVisible()
             }
     }

@@ -44,7 +44,7 @@ public extension NSUserDefaults {
         }
     }
     
-    private func setter(key: String, _ value: AnyObject?) {
+    private func setter(key key: String, _ value: AnyObject?) {
         self[key] = value
         synchronize()
     }
@@ -55,9 +55,9 @@ public extension NSUserDefaults {
     }
     
     /// Archive object to NSData to save.
-    public func archiveObject(object: AnyObject?, forKey key: String) {
+    public func archive(object object: AnyObject?, forKey key: String) {
         if let value = object {
-            setter(key, NSKeyedArchiver.archivedDataWithRootObject(value))
+            setter(key: key, NSKeyedArchiver.archivedDataWithRootObject(value))
         } else {
             removeObjectForKey(key)
         }

@@ -1,9 +1,9 @@
 //
-//  UIDevice+Extension.swift
+//  UIImageView+Extension.swift
 //  ExtensionKit
 //
-//  Created by Moch Xiao on 12/31/15.
-//  Copyright © @2015 Moch Xiao (https://github.com/cuzv).
+//  Created by Moch Xiao on 3/10/16.
+//  Copyright © @2016 Moch Xiao (https://github.com/cuzv).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -26,32 +26,10 @@
 
 import UIKit
 
-public extension UIDevice {
-    private static let _currentDevice = UIDevice.currentDevice()
-    
-    public class var sysVersion: String {
-        return _currentDevice.systemVersion
-    }
-    
-    public class var majorVersion: Int {
-        return Int(UIDevice.sysVersion.componentsSeparatedByString(".").first!)!
-    }
-
-    private static let _iOS7Plus = Float(UIDevice.sysVersion) >= 7.0
-    public class var iOS7Plus: Bool {
-        return _iOS7Plus
-    }
-
-    private static let _iOS8Plus = Float(UIDevice.sysVersion) >= 8.0
-    public class var iOS8Plus: Bool {
-        return _iOS8Plus
-    }
-    
-    private static func deviceOrientation(result: (UIDeviceOrientation) -> ()) {
-        if !_currentDevice.generatesDeviceOrientationNotifications {
-            _currentDevice.beginGeneratingDeviceOrientationNotifications()
-        }
-        result(_currentDevice.orientation)
-        _currentDevice.endGeneratingDeviceOrientationNotifications()
+public extension UIImageView {
+    /// Draw corner for image
+    public func addCornerWithRadius(radius: CGFloat) {
+        image = image?.drawRectWithRoundedCorner(radius: radius, bounds.size)
     }
 }
+

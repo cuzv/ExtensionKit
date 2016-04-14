@@ -21,6 +21,12 @@ public extension UIApplication {
         }
     }
     
+    public class func openURLPath(urlPath: String) {
+        if let URL = NSURL(string: urlPath) {
+            UIApplication.openURL(URL)
+        }
+    }
+    
     public class func makePhone(phoneNumber: String) {
         if let URL = NSURL(string: "telprompt:\(phoneNumber)") {
             UIApplication.openURL(URL)
@@ -33,8 +39,14 @@ public extension UIApplication {
         }
     }
     
-    public class func mailTo(email: String) {
+    public class func emailTo(email: String) {
         if let URL = NSURL(string: "mailto:\(email)") {
+            UIApplication.openURL(URL)
+        }
+    }
+    
+    public class func chatToQQ(qq: String) {
+        if let URL = NSURL(string: "mqq://im/chat?chat_type=wpa&uin=\(qq)&version=1&src_type=iOS") {
             UIApplication.openURL(URL)
         }
     }
@@ -47,7 +59,7 @@ public extension UIApplication {
         _sharedApplication.applicationIconBadgeNumber = badgeNumber
     }
     
-    public class func sendAction(action: Selector, fromSender sender: AnyObject?) -> Bool {
+    public class func send(action action: Selector, fromSender sender: AnyObject?) -> Bool {
         // Get the target in the responder chain
         var target = sender
         
@@ -76,11 +88,15 @@ public func doSendMessageTo(phoneNumber: String) {
 }
 
 public func doMailTo(email: String) {
-    UIApplication.mailTo(email)
+    UIApplication.emailTo(email)
 }
 
-public func doSendAction(action: Selector, fromSender sender: AnyObject?) -> Bool {
-    return UIApplication.sendAction(action, fromSender: sender)
+public func doChatToQQ(qq: String) {
+    UIApplication.chatToQQ(qq)
+}
+
+public func doSend(action action: Selector, fromSender sender: AnyObject?) -> Bool {
+    return UIApplication.send(action: action, fromSender: sender)
 }
 
 // MARK: - Properties

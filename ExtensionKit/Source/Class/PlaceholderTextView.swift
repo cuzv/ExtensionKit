@@ -36,7 +36,7 @@ final public class PlaceholderTextView: UITextView {
         label.backgroundColor = UIColor.clearColor()
         label.textColor = UIColor.placeholderColor
         label.font = UIFont.preferredFontForTextStyle(UIFontTextStyleFootnote)
-        label.lineBreakMode = .ByCharWrapping
+        label.lineBreakMode = .ByTruncatingTail
         label.numberOfLines = 0
         return label
     }()
@@ -88,7 +88,7 @@ public extension PlaceholderTextView {
     }
     
     private func updatePlaceholderLabelFrame() {
-        if let size = placeholderLabel.text?.sizeWithFont(placeholderLabel.font, preferredMaxLayoutWidth: CGRectGetWidth(bounds) - 10) {
+        if let size = placeholderLabel.text?.size(withFont: placeholderLabel.font, preferredMaxLayoutWidth: CGRectGetWidth(bounds) - 10) {
             placeholderLabel.frame = CGRectMake(5, 4, size.width + 10, size.height + 8)
         }
     }

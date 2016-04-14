@@ -26,6 +26,7 @@
 
 import UIKit
 import SnapKit
+import ReactiveCocoa
 
 // MARK: - SegmentedToggleControl
 
@@ -34,26 +35,31 @@ final public class SegmentedToggleControl: UIControl {
     private var buttons: [UIButton] = []
     private let normalTextColor: UIColor
     private let selectedTextColor: UIColor
-    private var font: UIFont!
-    private var currentSelectedIndex = 0
-    private var animated: Bool = true
     
-    public var selectedSegmentIndex: Int {
-        get { return currentSelectedIndex }
-        set {
-            animated = false
-            let index = newValue >= items.count ? items.count - 1 : newValue
-            hanleClickAction(buttons[index])
-            animated = true
+    private var font: UIFont!
+    private var lastSelectedIndex = 0
+    private var firstTime: Bool = true
+
+    public var selectedSegmentIndex: Int = 0 {
+        didSet {
+            selectedSegmentIndex = selectedSegmentIndex >= items.count ? items.count - 1 : selectedSegmentIndex
+            rac_index.value = selectedSegmentIndex
+            updateAppearance()
         }
     }
+    public var rac_index: MutableProperty<Int> = MutableProperty(0)
+    public var autoComputeLineWidth: Bool = true
     
     let lineView: UIView = {
         let view = UIView()
         return view
     }()
     
-    public init(items: [String], normalTextColor: UIColor = UIColor.blackColor(), selectedTextColor: UIColor = UIColor.tintColor) {
+    public init(
+        items: [String],
+        normalTextColor: UIColor = UIColor.blackColor(),
+        selectedTextColor: UIColor = UIColor.tintColor)
+    {
         if items.count < 2 {
             fatalError("items.count can not less 2.")
         }
@@ -83,12 +89,27 @@ final public class SegmentedToggleControl: UIControl {
             return "\(str1)\(str2)"
         }
         if let font = font {
-            var size = str.sizeWithFont(font)
+            var size = str.size(withFont: font)
             size.width += CGFloat(items.count * 12)
             size.height = size.height >= 44 ? size.height : 44
             return size
         } else {
             return CGSizeMake(60, 44)
+        }
+    }
+
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        if !autoComputeLineWidth && firstTime {
+            lineView.snp_remakeConstraints(closure: { (make) -> Void in
+                make.width.equalTo(lineViewWidthForIndex(selectedSegmentIndex))
+                make.height.equalTo(1)
+                make.bottom.equalTo(self)
+                let currentButton = buttons[selectedSegmentIndex]
+                make.centerX.equalTo(currentButton)
+            })
+            firstTime = false
         }
     }
 }
@@ -101,7 +122,7 @@ public extension SegmentedToggleControl {
             // Make button
             let button = UIButton(type: .System)
             button.tag = i
-            button.addTarget(self, action: "hanleClickAction:", forControlEvents: .TouchUpInside)
+            button.addTarget(self, action: #selector(SegmentedToggleControl.hanleClickAction(_:)), forControlEvents: .TouchUpInside)
             button.title = items[i]
             button.setTitleColor(normalTextColor, forState: .Normal)
             button.setTitleColor(selectedTextColor, forState: .Selected)
@@ -145,7 +166,8 @@ public extension SegmentedToggleControl {
         }
     }
     
-    internal func hanleClickAction(sender: UIButton) {
+    private func updateAppearance() {
+        let sender  = buttons[selectedSegmentIndex]
         // toggle selected button
         buttons.forEach { (button) -> () in
             button.selected = false
@@ -156,10 +178,13 @@ public extension SegmentedToggleControl {
         if let index = buttons.indexOf(sender) {
             remakeLineViewConstraintsForIndex(index)
         }
-        currentSelectedIndex = sender.tag
         
         // Send action
         sendActionsForControlEvents(.ValueChanged)
+    }
+    
+    internal func hanleClickAction(sender: UIButton) {
+        selectedSegmentIndex = sender.tag
     }
     
     private func remakeLineViewConstraintsForIndex(index: Int) {
@@ -171,7 +196,7 @@ public extension SegmentedToggleControl {
             make.centerX.equalTo(currentButton)
         })
         
-        let duration: NSTimeInterval = animated ? fabs(Double(currentSelectedIndex - index)) * 0.1 : 0
+        let duration: NSTimeInterval = fabs(Double(lastSelectedIndex - index)) * 0.1
         if duration <= 0 {
             setNeedsLayout()
             layoutIfNeeded()
@@ -181,16 +206,22 @@ public extension SegmentedToggleControl {
                 self.layoutIfNeeded()
             })
         }
+        
+        lastSelectedIndex = selectedSegmentIndex
     }
     
     private func lineViewWidthForIndex(index: Int) -> CGFloat {
-        return items[index].sizeWithFont(font).width
+        if autoComputeLineWidth {
+            return items[index].size(withFont: font).width
+        } else {
+            return (CGRectGetWidth(bounds) / CGFloat(items.count)).ceilly
+        }
     }
 }
 
 public extension SegmentedToggleControl {
     /// can only have image or title, not both. must be 0..#segments - 1 (or ignored). default is nil
-    public func setTitle(title: String, forSegmentAtIndex segment: Int) {
+    public func set(title title: String, forSegmentAtIndex segment: Int) {
         if items.count <= segment {
             debugPrint("Index beyound the boundary.")
             return
@@ -200,7 +231,7 @@ public extension SegmentedToggleControl {
         button.title = title
         button.image = nil
         
-        items.replaceElementAtIndex(segment, withElement: title)
+        items.replaceElementAt(index: segment, withElement: title)
         remakeLineViewConstraintsForIndex(segment)
     }
     
@@ -213,7 +244,7 @@ public extension SegmentedToggleControl {
     }
 
     /// can only have image or title, not both. must be 0..#segments - 1 (or ignored). default is nil
-    public func setImage(image: UIImage, forSegmentAtIndex segment: Int) {
+    public func set(image image: UIImage, forSegmentAtIndex segment: Int) {
         if items.count <= segment {
             debugPrint("Index beyound the boundary.")
             return
@@ -230,6 +261,5 @@ public extension SegmentedToggleControl {
         }
         
         return buttons[segment].image
-
     }
 }

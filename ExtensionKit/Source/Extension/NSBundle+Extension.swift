@@ -30,10 +30,14 @@ public extension NSBundle {
     private static let _mainBundle = NSBundle.mainBundle()
     
     public class var build: String {
-        return _mainBundle.infoDictionary!["CFBundleVersion"] as! String
+        return (_mainBundle.infoDictionary?["CFBundleVersion"] ?? "") as! String
     }
     
     public class var ver: String {
-        return _mainBundle.infoDictionary!["CFBundleShortVersionString"] as! String
+        return (_mainBundle.infoDictionary?["CFBundleShortVersionString"] ?? "") as! String
+    }
+    
+    public class var displayName: String {
+        return (_mainBundle.infoDictionary?["CFBundleDisplayName"] ?? "") as! String
     }
 }

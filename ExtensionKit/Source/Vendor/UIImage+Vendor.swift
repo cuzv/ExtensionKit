@@ -71,34 +71,34 @@ public extension UIImage {
 
 public extension UIImageView {
     /// Set a crop resize image With a URLPath, a optional placeholder image.
-    public func setCropResizeImageWithURLPath(URLPath: String!, placeholderImage: UIImage? = nil) {
-        setImageWithURLPath(URLPath, placeholderImage: placeholderImage) {
+    public func setCropResizeImage(withURLPath URLPath: String!, placeholderImage: UIImage? = nil) {
+        setImage(withURLPath: URLPath, placeholderImage: placeholderImage) {
             $0?.cropResize($1)
         }
     }
     
     /// Set a clip resize image With a URLPath, a optional placeholder image.
-    public func setClipResizeImageWithURLPath(URLPath: String!, placeholderImage: UIImage? = nil) {
-        setImageWithURLPath(URLPath, placeholderImage: placeholderImage) {
+    public func setClipResizeImage(withURLPath URLPath: String!, placeholderImage: UIImage? = nil) {
+        setImage(withURLPath: URLPath, placeholderImage: placeholderImage) {
             $0?.clipResize($1)
         }
     }
     
     /// Set a clip resize image With a URLPath, a optional placeholder image.
-    public func setScaleResizeImageWithURLPath(URLPath: String!, placeholderImage: UIImage? = nil) {
-        setImageWithURLPath(URLPath, placeholderImage: placeholderImage) {
+    public func setScaleResizeImage(withURLPath URLPath: String!, placeholderImage: UIImage? = nil) {
+        setImage(withURLPath: URLPath, placeholderImage: placeholderImage) {
             $0?.scaleResize($1)
         }
     }
     
     /// Set ellipse image with a URLPath, a optional placeholder image, optional border width, optional border color.
-    public func setEllipseImageWithURLPath(
-        URLPath: String!,
+    public func setEllipseImage(
+        withURLPath URLPath: String!,
         placeholderImage: UIImage? = nil,
         borderWidth: CGFloat = 0,
         borderColor: UIColor = UIColor.whiteColor())
     {
-        setImageWithURLPath(URLPath, placeholderImage: placeholderImage) {
+        setImage(withURLPath: URLPath, placeholderImage: placeholderImage) {
             [weak self] (image, error, imageURL) -> Void in
             
             guard let this = self else { return }
@@ -107,14 +107,14 @@ public extension UIImageView {
     }
     
     /// Set rounded image with a URLPath, a optional placeholder image, optional corner radius, optional border width, optional border color.
-    public func setRoundedImageWithURLPath(
-        URLPath: String!,
+    public func setRoundedImage(
+        withURLPath URLPath: String!,
         placeholderImage: UIImage? = nil,
         cornerRadius: CGFloat = 5,
         borderWidth: CGFloat = 0,
         borderColor: UIColor = UIColor.whiteColor())
     {
-        setImageWithURLPath(URLPath, placeholderImage: placeholderImage) {
+        setImage(withURLPath: URLPath, placeholderImage: placeholderImage) {
             [weak self] (image, error, imageURL) -> Void in
             
             guard let this = self else { return }
@@ -123,12 +123,12 @@ public extension UIImageView {
     }
     
     /// Set image with a URLPath, a optional placeholder image, an custom image mask.
-    public func setImageWithURLPath(
-        URLPath: String!,
+    public func setImage(
+        withURLPath URLPath: String!,
         placeholderImage: UIImage? = nil,
         maskImage: UIImage)
     {
-        setImageWithURLPath(URLPath, placeholderImage: placeholderImage) {
+        setImage(withURLPath: URLPath, placeholderImage: placeholderImage) {
             [weak self] (image, error, imageURL) -> Void in
             
             guard let this = self else { return }
@@ -139,12 +139,12 @@ public extension UIImageView {
     // MARK: -
     
     /// Set an image with a URLPath, a placeholder image, a reduceSize closure.
-    public func setImageWithURLPath(
-        URLPath: String!,
+    public func setImage(
+        withURLPath URLPath: String!,
         placeholderImage: UIImage? = nil,
         reduceSize: (image: UIImage?, size: CGSize) -> UIImage?)
     {
-        setImageWithURLPath(URLPath, placeholderImage: placeholderImage) {
+        setImage(withURLPath: URLPath, placeholderImage: placeholderImage) {
             [weak self] (image, error, imageURL) -> Void in
             
             guard let this = self else { return }
@@ -153,8 +153,8 @@ public extension UIImageView {
     }
     
     /// Set an image with a URLPath, a placeholder image, progressBlock, completion handler.
-    public func setImageWithURLPath(
-        URLPath: String!,
+    public func setImage(
+        withURLPath URLPath: String!,
         placeholderImage: UIImage? = nil,
         progressBlock: ((receivedSize: Int64, totalSize: Int64) -> Void)? = nil,
         completionHandler: ((image: UIImage?, error: NSError?, imageURL: NSURL?) -> Void)? = nil)

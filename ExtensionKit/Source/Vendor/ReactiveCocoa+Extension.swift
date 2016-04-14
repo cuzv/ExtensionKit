@@ -26,6 +26,8 @@
 
 import UIKit
 import ReactiveCocoa
+import enum Result.NoError
+
 import Redes
 
 // MARK: - SignalProducer
@@ -42,10 +44,21 @@ public extension SignalProducer {
     public func skipOnce() -> SignalProducer<Value, Error> {
         return skip(1)
     }
+    
+    public func filterNil() -> SignalProducer<Value, Error> {
+        return filter { $0 != nil}
+    }
 }
 
 public func merge<Value, Error: ErrorType>(producers: [SignalProducer<Value, Error>]) -> SignalProducer<Value, Error> {
     return SignalProducer<SignalProducer<Value, Error>, Error>(values: producers).flatten(.Merge)
+}
+
+extension NSObject {
+    /// In common use: SignalProducer.takeUntil(rac_willDeinitProducer)
+    public var rac_willDeinitProducer: SignalProducer<(), NoError> {
+        return rac_willDeallocSignal().toSignalProducer().ignoreError().map { _ in () }
+    }
 }
 
 // MARK: - Signal
@@ -72,12 +85,12 @@ public func mergeActionsExecuting<Input, Output>(actions: [ReactiveCocoa.Action<
 
 // MARK: - Timer
 
-final public class CountDownTimerWrapper {
+final public class CountdownTimer {
     private let startTime: NSDate
     private let interval: NSTimeInterval
     private let duration: NSTimeInterval
-    private var next: ((NSTimeInterval) -> ())? = nil
-    private var completion: (() -> ())? = nil
+    private var next: ((NSTimeInterval) -> ())
+    private var completion: (() -> ())
     
     private var disposable: Disposable?
     
@@ -85,8 +98,8 @@ final public class CountDownTimerWrapper {
         startTime: NSDate = NSDate(),
         interval: NSTimeInterval = 1,
         duration: NSTimeInterval = 60,
-        next: ((NSTimeInterval) -> ())? = nil,
-        completion: (() -> ())? = nil)
+        next: ((NSTimeInterval) -> ()),
+        completion: (() -> ()))
     {
         self.startTime = startTime
         self.interval = interval
@@ -95,49 +108,27 @@ final public class CountDownTimerWrapper {
         self.completion = completion
     }
     
-    private func dispose() {
-        disposable?.dispose()
-    }
-    
     public func start() {
-        disposable = {
-            timer(interval, onScheduler: QueueScheduler.mainQueueScheduler)
-                .on(disposed: { [weak self] in
-                        self?.completion?()
-                    },
-                    next: { [weak self] in
-                        guard let _self = self else { return }
-                        
-                        let overTimeInterval = $0.timeIntervalSinceDate(_self.startTime)
-                        let leftTimeInterval = fabs(ceil(_self.duration - overTimeInterval))
-                        _self.next?(leftTimeInterval)
-                        if leftTimeInterval <= 0 {
-                            _self.dispose()
-                        }
-                    })
-                .start()
-            }()
+        disposable = timer(interval, onScheduler: QueueScheduler.mainQueueScheduler).on(
+            disposed: {
+                self.completion()
+            },
+            next: {
+                let overTimeInterval = $0.timeIntervalSinceDate(self.startTime)
+                let leftTimeInterval = fabs(ceil(self.duration - overTimeInterval))
+                self.next(leftTimeInterval)
+                if leftTimeInterval <= 0 {
+                    self.disposable?.dispose()
+                }
+            }
+        ).start()
     }
     
+#if DEBUG
     deinit {
-        debugPrint("CountDownTimerWrapper: \(__FUNCTION__)")
+        debugPrint("\(#file):\(#line):\(self.dynamicType):\(#function)")
     }
-}
-
-public func countDownTimerAction(
-    startTime: NSDate = NSDate(),
-    interval: NSTimeInterval = 1,
-    duration: NSTimeInterval = 60,
-    next: ((NSTimeInterval) -> ())? = nil,
-    completion: (() -> ())? = nil)
-{
-    CountDownTimerWrapper(
-        startTime: startTime,
-        interval: interval,
-        duration: duration,
-        next: next,
-        completion: completion
-    ).start()
+#endif
 }
 
 // MARK: - MutableProperty
@@ -149,11 +140,12 @@ private struct AssociationKey {
     private static var text: String    = "rac_text"
     private static var image: String   = "rac_image"
     private static var enabled: String = "rac_enabled"
+    private static var index: String = "rac_index"
 }
 
 /// Lazily creates a gettable associated property via the given factory.
-private func lazyAssociatedProperty<T: AnyObject>(
-    host: AnyObject,
+internal func lazyAssociatedProperty<T: AnyObject>(
+    host host: AnyObject,
     key: UnsafePointer<Void>,
     factory: ()->T) -> T
 {
@@ -165,17 +157,15 @@ private func lazyAssociatedProperty<T: AnyObject>(
 }
 
 private func lazyMutableProperty<T>(
-    host: AnyObject,
+    host host: AnyObject,
     key: UnsafePointer<Void>,
     setter: T -> (),
     getter: () -> T) -> MutableProperty<T>
 {
-    return lazyAssociatedProperty(host, key: key) {
+    return lazyAssociatedProperty(host: host, key: key) {
         let property = MutableProperty<T>(getter())
-        property.producer
-            .startWithNext {
-                newValue in
-                setter(newValue)
+        property.producer.startWithNext { newValue in
+            setter(newValue)
         }
         
         return property
@@ -185,7 +175,7 @@ private func lazyMutableProperty<T>(
 public extension UIView {
     public var rac_alpha: MutableProperty<CGFloat> {
         return lazyMutableProperty(
-            self,
+            host: self,
             key: &AssociationKey.alpha,
             setter: { self.alpha = $0 },
             getter: { self.alpha  }
@@ -194,7 +184,7 @@ public extension UIView {
     
     public var rac_hidden: MutableProperty<Bool> {
         return lazyMutableProperty(
-            self,
+            host: self,
             key: &AssociationKey.hidden,
             setter: { self.hidden = $0 },
             getter: { self.hidden  }
@@ -205,11 +195,29 @@ public extension UIView {
 public extension UILabel {
     public var rac_text: MutableProperty<String> {
         return lazyMutableProperty(
-            self,
+            host: self,
             key: &AssociationKey.text,
             setter: { self.text = $0 },
             getter: { self.text ?? "" }
         )
+    }
+}
+
+public extension UISegmentedControl {
+    public var rac_index: MutableProperty<Int> {
+        return lazyAssociatedProperty(host: self, key: &AssociationKey.index) {
+            self.addTarget(self, action: #selector(UITextField.changed), forControlEvents: .ValueChanged)
+            
+            let property = MutableProperty<Int>(0)
+            property.producer.startWithNext{ newValue in
+                self.selectedSegmentIndex = newValue
+            }
+            return property
+        }
+    }
+    
+    dynamic internal func changed() {
+        rac_index.value = selectedSegmentIndex
     }
 }
 
@@ -221,58 +229,76 @@ public extension UITextField {
     }
     
     public var rac_text: MutableProperty<String> {
-        return lazyAssociatedProperty(self, key: &AssociationKey.text) {
-            self.addTarget(self, action: "changed", forControlEvents: UIControlEvents.EditingChanged)
+        return lazyAssociatedProperty(host: self, key: &AssociationKey.text) {
+            self.addTarget(self, action: #selector(UITextField.changed), forControlEvents: .EditingChanged)
             
             let property = MutableProperty<String>(self.text ?? "")
-            property.producer
-                .startWithNext {
-                    newValue in
-                    self.text = newValue
+            property.producer.startWithNext { newValue in
+                self.text = newValue
             }
             return property
         }
     }
     
-    internal func changed() {
+    dynamic internal func changed() {
         rac_text.value = text ?? ""
     }
 }
 
 public extension UITextView {
     public func rac_textSignalProducer() -> SignalProducer<String, NoError> {
-        return rac_textSignal().toSignalProducer()
-            .map { $0 as! String }
-            .ignoreError()
+        return rac_textSignal().toSignalProducer().map{ $0 as! String }.ignoreError()
     }
     
     public var rac_text: MutableProperty<String> {
-        return lazyAssociatedProperty(self, key: &AssociationKey.text) {
+        return lazyAssociatedProperty(host: self, key: &AssociationKey.text) {
             NSNotificationCenter.defaultCenter()
                 .rac_notifications(UITextViewTextDidChangeNotification, object: self)
+                .takeUntil(self.rac_willDeinitProducer)
                 .startWithNext({ [weak self] (notification) -> () in
-                self?.changed()
-            })
+                    self?.changed()
+                })
             
             let property = MutableProperty<String>(self.text ?? "")
-            property.producer
-                .startWithNext {
-                    newValue in
-                    self.text = newValue
+            property.producer.startWithNext { newValue in
+                self.text = newValue
             }
             return property
         }
     }
     
-    internal func changed() {
+    dynamic internal func changed() {
         rac_text.value = text ?? ""
     }
+}
+
+public extension UISearchBar {
+    public var rac_text: MutableProperty<String> {
+        return lazyAssociatedProperty(host: self, key: &AssociationKey.text) {
+            self.rac_signalForSelector(NSSelectorFromString("searchBar:textDidChange:"), fromProtocol: NSProtocolFromString("UISearchBarDelegate"))
+                .toSignalProducer()
+                .startWithNext{ [weak self] (obj) -> () in
+                    self?.changed()
+                }
+            
+            let property = MutableProperty<String>(self.text ?? "")
+            property.producer.startWithNext { newValue in
+                self.text = newValue
+            }
+            return property
+        }
+    }
+    
+    dynamic internal func changed() {
+        rac_text.value = text ?? ""
+    }
+    
 }
 
 public extension UIImageView {
     public var rac_image: MutableProperty<UIImage?> {
         return lazyMutableProperty(
-            self,
+            host: self,
             key: &AssociationKey.image,
             setter: { self.image = $0 },
             getter: { self.image }
@@ -283,7 +309,7 @@ public extension UIImageView {
 public extension UIButton {
     public var rac_enabled: MutableProperty<Bool> {
         return lazyMutableProperty(
-            self,
+            host: self,
             key: &AssociationKey.enabled,
             setter: { self.enabled = $0 },
             getter: { self.enabled }
@@ -348,7 +374,7 @@ public extension Action {
 // MARK: - CocoaAction
 
 public extension UIControl {
-    public func addTarget(target: CocoaAction, forControlEvents events: UIControlEvents = .TouchUpInside) {
+    public func addCocoaAction(target target: CocoaAction, forControlEvents events: UIControlEvents = .TouchUpInside) {
         addTarget(target, action: CocoaAction.selector, forControlEvents: events)
     }
 }

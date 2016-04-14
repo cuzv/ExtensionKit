@@ -33,9 +33,9 @@ public func objectIsType<T>(object: Any, someObjectOfType: T.Type) -> Bool {
 
 /// Log func.
 public func log<T>(message: T,
-    file: String = __FILE__,
-    method: String = __FUNCTION__,
-    line: Int = __LINE__)
+    file: String = #file,
+    method: String = #function,
+    line: Int = #line)
 {
     debugPrint("\((file as NSString).lastPathComponent)[\(line)], \(method): \(message)")
 }
@@ -102,7 +102,7 @@ public func UIThreadAsyncAction(block: dispatch_block_t) {
     dispatch_async(dispatch_get_main_queue(), block)
 }
 
-public func BackendThreadAsyncAction(block: dispatch_block_t) {
+public func BackgroundThreadAsyncAction(block: dispatch_block_t) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), block)
 }
 
@@ -117,7 +117,7 @@ public func synchronized(lock: AnyObject, closure: () -> ()) {
 // MARK: - Method swizzle
 
 /// Should be placed in dispatch_once
-public func swizzleInstanceMethodForClass(cls: AnyClass, originalSelector: Selector, overrideSelector: Selector) {
+public func swizzleInstanceMethod(forClass cls: AnyClass, originalSelector: Selector, overrideSelector: Selector) {
     let originalMethod = class_getInstanceMethod(cls, originalSelector)
     let overrideMethod = class_getInstanceMethod(cls, overrideSelector)
     
@@ -129,7 +129,7 @@ public func swizzleInstanceMethodForClass(cls: AnyClass, originalSelector: Selec
 }
 
 /// Should be placed in dispatch_once
-public func swizzleClassMethodForClass(cls: AnyClass, originalSelector: Selector, overrideSelector: Selector) {
+public func swizzleClassMethod(forClass cls: AnyClass, originalSelector: Selector, overrideSelector: Selector) {
     let originalMethod = class_getClassMethod(cls, originalSelector)
     let overrideMethod = class_getClassMethod(cls, overrideSelector)
     

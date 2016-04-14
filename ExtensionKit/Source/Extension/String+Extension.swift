@@ -46,7 +46,7 @@ public extension String {
 
 public extension String {
     public var length: Int {
-        return lengthOfBytesUsingEncoding(NSUTF8StringEncoding)
+        return characters.count
     }
     
     public var isEmpty: Bool {
@@ -57,7 +57,7 @@ public extension String {
         return stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
     }
     
-    public func sizeWithFont(font: UIFont, preferredMaxLayoutWidth: CGFloat = UIScreen.width) -> CGSize {
+    public func size(withFont font: UIFont, preferredMaxLayoutWidth: CGFloat = UIScreen.width) -> CGSize {
         let str = self as NSString
         let options: NSStringDrawingOptions = [.UsesLineFragmentOrigin, .UsesFontLeading, .TruncatesLastVisibleLine]
         return str.boundingRectWithSize(CGSizeMake(preferredMaxLayoutWidth, CGFloat.max), options: options, attributes: [NSFontAttributeName: font], context: nil).size
@@ -67,19 +67,19 @@ public extension String {
         return substringWithRange(range)
     }
     
-    public func substringFromIndex(minIndex: Int, toIndex maxIndex: Int) -> String {
+    public func substring(fromIndex minIndex: Int, toIndex maxIndex: Int) -> String {
         let start = startIndex.advancedBy(minIndex)
         let end = startIndex.advancedBy(maxIndex, limit: endIndex)
-        let range = Range<String.Index>(start: start, end: end)
+        let range = Range<String.Index>(start ..< end)
         return substringWithRange(range)
     }
     
-    public func substringFromIndexAt(minIndex: Int) -> String {
+    public func substringFromIndex(minIndex: Int) -> String {
         let start = startIndex.advancedBy(minIndex)
         return substringFromIndex(start)
     }
     
-    public func substringToIndexAt(index: Int) -> String {
+    public func substringToIndex(index: Int) -> String {
         let end = startIndex.advancedBy(index, limit: endIndex)
         return substringToIndex(end)
     }
@@ -204,8 +204,8 @@ class HashBase {
         var msgLength = tmpMessage.length
         var counter = 0
         while msgLength % len != (len - 8) {
-            counter++
-            msgLength++
+            counter += 1
+            msgLength += 1
         }
         let bufZeros = UnsafeMutablePointer<UInt8>(calloc(counter, sizeof(UInt8)))
         tmpMessage.appendBytes(bufZeros, length: counter)
@@ -260,8 +260,14 @@ class MD5 : HashBase {
         // Process the message in successive 512-bit chunks:
         let chunkSizeBytes = 512 / 8 // 64
         var leftMessageBytes = tmpMessage.length
-        for (var i = 0; i < tmpMessage.length; i = i + chunkSizeBytes, leftMessageBytes -= chunkSizeBytes) {
-            let chunk = tmpMessage.subdataWithRange(NSRange(location: i, length: min(chunkSizeBytes,leftMessageBytes)))
+        
+        var realIndex = 0
+        for index in 0 ..< tmpMessage.length {
+            if index != realIndex {
+                continue
+            }
+            
+            let chunk = tmpMessage.subdataWithRange(NSRange(location: index, length: min(chunkSizeBytes,leftMessageBytes)))
             
             // break chunk into sixteen 32-bit words M[j], 0 ≤ j ≤ 15
             var M:[UInt32] = [UInt32](count: 16, repeatedValue: 0)
@@ -312,6 +318,9 @@ class MD5 : HashBase {
             hh[1] = hh[1] &+ B
             hh[2] = hh[2] &+ C
             hh[3] = hh[3] &+ D
+            
+            leftMessageBytes -= chunkSizeBytes
+            realIndex = index + chunkSizeBytes
         }
         
         let buf: NSMutableData = NSMutableData()
