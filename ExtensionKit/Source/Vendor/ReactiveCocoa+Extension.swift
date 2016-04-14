@@ -44,6 +44,10 @@ public extension SignalProducer {
     public func skipOnce() -> SignalProducer<Value, Error> {
         return skip(1)
     }
+    
+    public func filterNil() -> SignalProducer<Value, Error> {
+        return filter { $0 != nil}
+    }
 }
 
 public func merge<Value, Error: ErrorType>(producers: [SignalProducer<Value, Error>]) -> SignalProducer<Value, Error> {
@@ -160,10 +164,8 @@ private func lazyMutableProperty<T>(
 {
     return lazyAssociatedProperty(host: host, key: key) {
         let property = MutableProperty<T>(getter())
-        property.producer
-            .startWithNext {
-                newValue in
-                setter(newValue)
+        property.producer.startWithNext { newValue in
+            setter(newValue)
         }
         
         return property
@@ -214,7 +216,7 @@ public extension UISegmentedControl {
         }
     }
     
-    internal func changed() {
+    dynamic internal func changed() {
         rac_index.value = selectedSegmentIndex
     }
 }
@@ -231,25 +233,21 @@ public extension UITextField {
             self.addTarget(self, action: #selector(UITextField.changed), forControlEvents: .EditingChanged)
             
             let property = MutableProperty<String>(self.text ?? "")
-            property.producer
-                .startWithNext {
-                    newValue in
-                    self.text = newValue
+            property.producer.startWithNext { newValue in
+                self.text = newValue
             }
             return property
         }
     }
     
-    internal func changed() {
+    dynamic internal func changed() {
         rac_text.value = text ?? ""
     }
 }
 
 public extension UITextView {
     public func rac_textSignalProducer() -> SignalProducer<String, NoError> {
-        return rac_textSignal().toSignalProducer()
-            .map { $0 as! String }
-            .ignoreError()
+        return rac_textSignal().toSignalProducer().map{ $0 as! String }.ignoreError()
     }
     
     public var rac_text: MutableProperty<String> {
@@ -258,22 +256,43 @@ public extension UITextView {
                 .rac_notifications(UITextViewTextDidChangeNotification, object: self)
                 .takeUntil(self.rac_willDeinitProducer)
                 .startWithNext({ [weak self] (notification) -> () in
-                self?.changed()
-            })
+                    self?.changed()
+                })
             
             let property = MutableProperty<String>(self.text ?? "")
-            property.producer
-                .startWithNext {
-                    newValue in
-                    self.text = newValue
+            property.producer.startWithNext { newValue in
+                self.text = newValue
             }
             return property
         }
     }
     
-    internal func changed() {
+    dynamic internal func changed() {
         rac_text.value = text ?? ""
     }
+}
+
+public extension UISearchBar {
+    public var rac_text: MutableProperty<String> {
+        return lazyAssociatedProperty(host: self, key: &AssociationKey.text) {
+            self.rac_signalForSelector(NSSelectorFromString("searchBar:textDidChange:"), fromProtocol: NSProtocolFromString("UISearchBarDelegate"))
+                .toSignalProducer()
+                .startWithNext{ [weak self] (obj) -> () in
+                    self?.changed()
+                }
+            
+            let property = MutableProperty<String>(self.text ?? "")
+            property.producer.startWithNext { newValue in
+                self.text = newValue
+            }
+            return property
+        }
+    }
+    
+    dynamic internal func changed() {
+        rac_text.value = text ?? ""
+    }
+    
 }
 
 public extension UIImageView {
