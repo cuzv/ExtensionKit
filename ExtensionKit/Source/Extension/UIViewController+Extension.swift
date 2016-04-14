@@ -282,6 +282,14 @@ public extension UIViewController {
         presentingViewController?.dismissViewControllerAnimated(animated, completion: completion)
     }
     
+    public func dismissToTop(animated animated: Bool = true, completion: (() -> Void)? = nil) {
+        var presentedViewController = self
+        while let presentingViewController = presentedViewController.presentingViewController {
+            presentedViewController = presentingViewController
+        }
+        presentedViewController.dismissViewControllerAnimated(animated, completion: completion)
+    }
+    
     public func addSubViewController(viewController: UIViewController) {
         viewController.willMoveToParentViewController(self)
         addChildViewController(viewController)
