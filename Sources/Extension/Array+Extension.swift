@@ -1,6 +1,6 @@
 //
 //  Array+Extension.swift
-//  TinyCoordinator
+//  ExtensionKit
 //
 //  Created by Moch Xiao on 1/7/16.
 //  Copyright © @2016 Moch Xiao (https://github.com/cuzv).

@@ -26,6 +26,7 @@
 
 import Foundation
 import CoreGraphics
+import UIKit
 
 /// Flip context by supplying the size
 public func FlipContextVertically(context: CGContextRef, size: CGSize) {
