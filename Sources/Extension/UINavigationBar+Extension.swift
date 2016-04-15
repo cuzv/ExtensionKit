@@ -60,7 +60,7 @@ public extension UINavigationBar {
         return nil
     }
     
-    /// Remoe the hairline view.
+    /// Remove the hairline view.
     public func removeHairline() {
         guard let hairline = hairline else { return }
         hairline.removeFromSuperview()

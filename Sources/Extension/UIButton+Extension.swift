@@ -130,7 +130,7 @@ public extension UIButton {
     }
     
     /// Setup image position relate to title
-    /// **NOTE**: Before invoke this methods you should setup and title image already
+    /// **NOTE**: Before invoke this methods you should setup title and image already
     public func setImageAlignmentToTop(titleSpace space: CGFloat = 4.0) {
         guard let currentImage = currentImage else { return }
         guard let currentTitle = currentTitle as NSString? else { return }
@@ -158,7 +158,7 @@ public extension UIButton {
     }
     
     /// Setup image position relate to title
-    /// **NOTE**: Before invoke this methods you should setup and title image already
+    /// **NOTE**: Before invoke this methods you should setup title and image already
     public func setImageAlignmentToBottom(titleSpace space: CGFloat = 4.0) {
         guard let currentImage = currentImage else { return }
         guard let currentTitle = currentTitle as NSString? else { return }
@@ -186,7 +186,7 @@ public extension UIButton {
     }
     
     /// Setup image position relate to title
-    /// **NOTE**: Before invoke this methods you should setup and title image already
+    /// **NOTE**: Before invoke this methods you should setup title and image already
     public func setImageAlignmentToLeft(titleSpace space: CGFloat = 4.0) {
         let halfSpace = (space / 2.0).ceilly
         
@@ -205,7 +205,7 @@ public extension UIButton {
     }
     
     /// Setup image position relate to title
-    /// **NOTE**: Before invoke this methods you should setup and title image already
+    /// **NOTE**: Before invoke this methods you should setup title and image already
     public func setImageAlignmentToRight(titleSpace space: CGFloat = 4.0) {
         guard let currentImage = currentImage else { return }
         guard let currentTitle = currentTitle as NSString? else { return }
