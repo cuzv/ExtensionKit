@@ -28,25 +28,6 @@ import UIKit
 
 // MARK: - Fonts
 
-let CHXFontHeadLine      = UIFont.headline
-let CHXFontBody          = UIFont.body
-let CHXFontSubheadline   = UIFont.subheadline
-let CHXFontFootnote      = UIFont.footnote
-let CHXFontCaption1      = UIFont.caption1
-let CHXFontCaption2      = UIFont.caption2
-
-let CHXFontOfSize17Blod  = CHXFontHeadLine
-let CHXFontOfSize17      = CHXFontBody
-let CHXFontOfSize15      = CHXFontSubheadline
-let CHXFontOfSize13      = CHXFontFootnote
-let CHXFontOfSize12      = CHXFontCaption1
-let CHXFontOfSize11      = CHXFontCaption2
-
-let CHXFontOfFixedSize14 = UIFont.size14Fixed
-let CHXFontOfFixedSize10 = UIFont.size10Fixed
-let CHXFontOfFixedSize9  = UIFont.size9Fixed
-let CHXFontOfFixedSize8  = UIFont.size8Fixed
-
 public extension UIFont {
     public class var size8Fixed: UIFont {
         return UIFont.systemFontOfSize(8.0)
