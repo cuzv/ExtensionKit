@@ -58,3 +58,6 @@ extension UICollectionReusableView: LazyLoadImagesData {
     public func lazilySetupData(data: AnyObject!) {}
 }
 
+public func +(lhs: UIEdgeInsets, rhs: UIEdgeInsets) -> UIEdgeInsets {
+    return UIEdgeInsetsMake(lhs.top + rhs.top, lhs.left + rhs.left, lhs.bottom + rhs.bottom, lhs.right + rhs.right)
+}
