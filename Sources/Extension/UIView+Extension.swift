@@ -721,3 +721,19 @@ public extension UIView {
         layer.addAnimation(animation, forKey: shakeAnimationKey)
     }
 }
+
+// MARK: - Snapshot
+
+public extension UIView {
+    public var snapshot: UIImage? {
+        UIGraphicsBeginImageContextWithOptions(bounds.size, opaque, 0)
+        if let content = UIGraphicsGetCurrentContext() {
+            layer.renderInContext(content)
+        } else {
+            return nil
+        }
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+       return image
+    }
+}
