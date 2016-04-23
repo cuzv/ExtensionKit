@@ -48,6 +48,7 @@
 		4603E2C11CC07EE40030EDA0 /* UITextView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E2991CC07EE40030EDA0 /* UITextView+Extension.swift */; };
 		4603E2C21CC07EE40030EDA0 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E29A1CC07EE40030EDA0 /* UIView+Extension.swift */; };
 		4603E2C31CC07EE40030EDA0 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E29B1CC07EE40030EDA0 /* UIViewController+Extension.swift */; };
+		4631CE291CCB9F6700CFCBCD /* CustomHeightNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4631CE281CCB9F6700CFCBCD /* CustomHeightNavigationBar.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -94,6 +95,7 @@
 		4603E2991CC07EE40030EDA0 /* UITextView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITextView+Extension.swift"; sourceTree = "<group>"; };
 		4603E29A1CC07EE40030EDA0 /* UIView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		4603E29B1CC07EE40030EDA0 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
+		4631CE281CCB9F6700CFCBCD /* CustomHeightNavigationBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomHeightNavigationBar.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,6 +147,7 @@
 				4603E2781CC07EE40030EDA0 /* PlaceholderTextView.swift */,
 				4603E2791CC07EE40030EDA0 /* TextObserver.swift */,
 				4603E27A1CC07EE40030EDA0 /* TouchesButton.swift */,
+				4631CE281CCB9F6700CFCBCD /* CustomHeightNavigationBar.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -271,6 +274,7 @@
 				4603E29F1CC07EE40030EDA0 /* PaddingLabel.swift in Sources */,
 				4603E29D1CC07EE40030EDA0 /* DashLineView.swift in Sources */,
 				4603E2B91CC07EE40030EDA0 /* UIKit+Extension.swift in Sources */,
+				4631CE291CCB9F6700CFCBCD /* CustomHeightNavigationBar.swift in Sources */,
 				4603E2BB1CC07EE40030EDA0 /* UINavigationBar+Extension.swift in Sources */,
 				4603E2A41CC07EE40030EDA0 /* Array+Extension.swift in Sources */,
 				4603E2AB1CC07EE40030EDA0 /* NSData+Extension.swift in Sources */,
@@ -456,6 +460,7 @@
 				4603E2711CC07E990030EDA0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
