@@ -282,7 +282,7 @@ public extension UIView {
     
     /// Setup border width & color.
     public func setBorder(
-        width width: CGFloat = 0.5,
+        width width: CGFloat = 1.0 / UIScreen.mainScreen().scale,
         color: UIColor = UIColor.separatorDefaultColor)
     {
         layer.borderWidth = width
@@ -292,7 +292,7 @@ public extension UIView {
     /// Add dash border wiht width & color & lineDashPattern.
     /// **Note**: Before you invoke this method, ensure `self` already have correct frame.
     public func addDashBorder(
-        width width: CGFloat = 0.5,
+        width width: CGFloat = 1.0 / UIScreen.mainScreen().scale,
         color: UIColor = UIColor.separatorDefaultColor,
         lineDashPattern: [CGFloat] = [5, 5])
     {
@@ -309,10 +309,10 @@ public extension UIView {
     
     /// Add border line view using Autolayout.
     public func addBorderLine(
-        width width: CGFloat = 0.5,
+        width width: CGFloat = 1.0 / UIScreen.mainScreen().scale,
         color: UIColor = UIColor.separatorDefaultColor,
         rectEdge: UIRectEdge = .All,
-        multiplier: CGFloat = 1)
+        multiplier: CGFloat = 1.0)
     {
         func addLineViewConstraint(
             edgeLayoutAttribute edgeLayoutAttribute: NSLayoutAttribute,
@@ -376,7 +376,7 @@ public extension UIView {
     /// Add border line view using CAShapeLayer.
     /// **Note**: Before you invoke this method, ensure `self` already have correct frame.
     public func addDashBorderLine(
-        width width: CGFloat = 0.5,
+        width width: CGFloat = 1.0 / UIScreen.mainScreen().scale,
         color: UIColor = UIColor.separatorDefaultColor,
         rectEdge: UIRectEdge = .All,
         multiplier: CGFloat = 1,
@@ -452,7 +452,7 @@ public extension UIView {
     // See: https://github.com/bestswifter/MySampleCode/blob/master/CornerRadius%2FCornerRadius%2FKtCorner.swift
     public func addCorner(
         radius radius: CGFloat,
-        borderWidth: CGFloat = 1,
+        borderWidth: CGFloat = 1.0 / UIScreen.mainScreen().scale,
         backgroundColor: UIColor = UIColor.clearColor(),
         borderColor: UIColor = UIColor.blackColor())
     {
@@ -528,19 +528,17 @@ public extension UIView {
 // MARK: - Blur
 
 public extension UIView {
-    public func addBlurEffectView(lightStyle lightStyle: Bool = true, useAutolayout: Bool = true) -> UIView {
-        var blurView: UIView!
-        if NSProcessInfo().isOperatingSystemAtLeastVersion(NSOperatingSystemVersion(majorVersion: 8, minorVersion: 0, patchVersion: 0)) {
-            let visualView = UIVisualEffectView(frame: bounds)
-            visualView.effect = UIBlurEffect(style: lightStyle ? .Light : .Dark)
-            blurView = visualView
-        } else {
-            let visualView = UIToolbar(frame: bounds)
-            visualView.barStyle = lightStyle ? .Default : .Black
-            visualView.translucent = true
-            blurView = visualView
-        }
-        
+    @available(iOS 8.0, *)
+    public class func blurEffect(style style: UIBlurEffectStyle = .ExtraLight) -> UIView {
+        let blurView = UIVisualEffectView(frame: CGRectZero)
+        blurView.effect = UIBlurEffect(style: style)
+        return blurView
+    }
+    
+    @available(iOS 8.0, *)
+    public func addBlurEffectView(style style: UIBlurEffectStyle = .ExtraLight, useAutolayout: Bool = true) -> UIView {
+        let blurView = UIView.blurEffect(style: style)
+        blurView.frame = bounds
         addSubview(blurView)
         if useAutolayout {
             blurView.translatesAutoresizingMaskIntoConstraints = false
@@ -549,6 +547,26 @@ public extension UIView {
         }
         
         return blurView
+    }
+    
+    @available(iOS 6.0, *)
+    public class func speclEffect(style style: UIBarStyle = .Default) -> UIView {
+        let speclEffectView = UIToolbar(frame: CGRectZero)
+        speclEffectView.barStyle = style
+        speclEffectView.translucent = true
+        return speclEffectView
+    }
+    
+    @available(iOS 6.0, *)
+    public func addSpeclEffectView(style style: UIBarStyle = .Default, useAutolayout: Bool = true) -> UIView {
+        let speclEffectView = UIView.speclEffect(style: style)
+        speclEffectView.frame = bounds
+        if useAutolayout {
+            speclEffectView.translatesAutoresizingMaskIntoConstraints = false
+            addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("|[speclEffectView]|", options: NSLayoutFormatOptions.DirectionLeadingToTrailing, metrics: nil, views: ["speclEffectView": speclEffectView]))
+            addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[speclEffectView]|", options: NSLayoutFormatOptions.DirectionLeadingToTrailing, metrics: nil, views: ["speclEffectView": speclEffectView]))
+        }
+        return speclEffectView
     }
 }
 
