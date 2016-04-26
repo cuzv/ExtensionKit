@@ -73,3 +73,42 @@ public extension Int {
         return String(self)
     }
 }
+
+// MARK: - Time & Date
+
+public extension Double {
+    var formattedDate: String {
+        let formatter = NSDateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        let date = NSDate(timeIntervalSince1970: self)
+        return formatter.stringFromDate(date)
+    }
+    
+    var formattedTime: String {
+        let formatter = NSDateFormatter()
+        formatter.dateFormat = "HH:mm"
+        let date = NSDate(timeIntervalSince1970: self)
+        return formatter.stringFromDate(date)
+    }
+
+    var formattedDateTime: String {
+        let formatter = NSDateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm"
+        let date = NSDate(timeIntervalSince1970: self)
+        return formatter.stringFromDate(date)
+    }
+}
+
+public extension Int {
+    var formattedDate: String {
+        return Double(self).formattedDate
+    }
+
+    var formattedTime: String {
+        return Double(self).formattedTime
+    }
+    
+    var formattedDateTime: String {
+        return Double(self).formattedDateTime
+    }
+}
