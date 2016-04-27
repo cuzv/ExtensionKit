@@ -28,15 +28,19 @@ import Foundation
 
 public extension NSError {
     public class func errorWithMessage(message: String) -> NSError {
-        return NSError(domain: "com.foobar.microshop", code: 999, userInfo: [NSLocalizedDescriptionKey: message, NSLocalizedFailureReasonErrorKey: message])
+        return NSError(domain: "com.mochxiao.error.maker", code: 999, userInfo: [NSLocalizedDescriptionKey: message, NSLocalizedFailureReasonErrorKey: message])
     }
     
     public class func defaultError() -> NSError {
         let message = "Default error."
-        return NSError(domain: "com.foobar.microshop", code: 1000, userInfo: [NSLocalizedDescriptionKey: message, NSLocalizedFailureReasonErrorKey: message])
+        return NSError(domain: defaultErrorDomain, code: defaultErrorCode, userInfo: [NSLocalizedDescriptionKey: message, NSLocalizedFailureReasonErrorKey: message])
     }
+    
+    public static var defaultErrorDomain: String { return "com.mochxiao.error.default" }
+    public static var defaultErrorCode: Int { return 1024 }
 }
 
 public func NSErrorFromMessage(message: String) -> NSError {
     return NSError.errorWithMessage(message)
 }
+
