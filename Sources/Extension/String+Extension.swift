@@ -50,10 +50,10 @@ public extension String {
     }
     
     public var isEmpty: Bool {
-        return 0 == trimedString.length
+        return 0 == trimed.length
     }
     
-    public var trimedString: String {
+    public var trimed: String {
         return stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
     }
     
