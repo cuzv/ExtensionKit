@@ -83,14 +83,14 @@ public extension CGRect {
     public func fittingIn(destination: CGRect) -> CGRect {
         let aspect = size.aspectScaleToFit(destination)
         let targetSize = size.scale(aspect)
-        return MakeRect(center: destination.center, size: targetSize)
+        return CGRectFrom(center: destination.center, size: targetSize)
     }
     
     /// Return a rect that fills the destination
     public func fillingIn(destination: CGRect) -> CGRect {
         let aspect = size.aspectScaleToFill(destination)
         let targetSize = size.scale(aspect)
-        return MakeRect(center: destination.center, size: targetSize)
+        return CGRectFrom(center: destination.center, size: targetSize)
     }
 }
 
@@ -119,11 +119,11 @@ public extension CGFloat {
     public var floorly: CGFloat { return floor(self) }
 }
 
-public func MakeRect(origin origin: CGPoint = CGPointZero, size: CGSize) -> CGRect {
+public func CGRectFrom(origin origin: CGPoint = CGPointZero, size: CGSize) -> CGRect {
     return CGRectMake(origin.x, origin.y, size.width, size.height)
 }
 
-public func MakeRect(center center: CGPoint, size: CGSize) -> CGRect {
+public func CGRectFrom(center center: CGPoint, size: CGSize) -> CGRect {
     let halfWidth = size.width / 2.0
     let halfHeight = size.height / 2.0
     return CGRectMake(center.x - halfWidth,
@@ -131,29 +131,4 @@ public func MakeRect(center center: CGPoint, size: CGSize) -> CGRect {
                       size.width,
                       size.height
     )
-}
-
-public func BytesFromRGBImage(sourceImage: UIImage) -> NSData? {
-    // Establish color space
-    guard let colorSpace = CGColorSpaceCreateDeviceRGB() else { return nil }
-    
-    // Establish context
-    let width: Int = Int(sourceImage.size.width)
-    let height: Int = Int(sourceImage.size.height)
-    guard let context = CGBitmapContextCreate(
-        nil,
-        width,
-        height,
-        8,
-        width * 4,
-        colorSpace,
-        CGImageAlphaInfo.PremultipliedFirst.rawValue
-    ) else { return nil }
-    
-    // Draw source into context bytes
-    let rect = MakeRect(size: sourceImage.size)
-    CGContextDrawImage(context, rect, sourceImage.CGImage)
-    
-    // Create NSData from bytes
-    return NSData(bytes: CGBitmapContextGetData(context), length: (width * height * 4))
 }

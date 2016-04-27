@@ -30,7 +30,7 @@ import UIKit
 
 public extension UIImage {
     /// Load bundle image with file full name
-    public class func imageWithFileFullName(fileName: String) -> UIImage? {
+    public class func imageWithFullFileName(fileName: String) -> UIImage? {
         if let filePath = NSBundle.mainBundle().pathForResource(fileName, ofType: "") {
             return UIImage(contentsOfFile: filePath)
         }
@@ -41,15 +41,15 @@ public extension UIImage {
     /// Load bundle image with file name
     public class func imageWithFileName(fileName: String) -> UIImage? {
         let fileFullName = "\(fileName)@\(UIScreen.width > 750 ? 3 : 2)x.png"
-        return imageWithFileFullName(fileFullName)
+        return imageWithFullFileName(fileFullName)
     }
 }
 
-public func UIImageMakeFileFullName(fileName: String) -> UIImage? {
-    return UIImage.imageWithFileFullName(fileName)
+public func UIImageFromFullFileName(fileName: String) -> UIImage? {
+    return UIImage.imageWithFullFileName(fileName)
 }
 
-public func UIImageMakeFileName(fileName: String) -> UIImage? {
+public func UIImageFromFileName(fileName: String) -> UIImage? {
     return UIImage.imageWithFileName(fileName)
 }
 
@@ -101,6 +101,31 @@ public extension UIImage {
     
         debugPrint("Cannot complete action.")
         return self
+    }
+    
+    public var bytes: NSData? {
+        // Establish color space
+        guard let colorSpace = CGColorSpaceCreateDeviceRGB() else { return nil }
+        
+        // Establish context
+        let width: Int = Int(size.width)
+        let height: Int = Int(size.height)
+        guard let context = CGBitmapContextCreate(
+            nil,
+            width,
+            height,
+            8,
+            width * 4,
+            colorSpace,
+            CGImageAlphaInfo.PremultipliedFirst.rawValue
+            ) else { return nil }
+        
+        // Draw source into context bytes
+        let rect = CGRectFrom(size: size)
+        CGContextDrawImage(context, rect, CGImage)
+        
+        // Create NSData from bytes
+        return NSData(bytes: CGBitmapContextGetData(context), length: (width * height * 4))
     }
 }
 
@@ -163,9 +188,9 @@ public extension UIImage {
     public func buildThumbnail(targetSize targetSize: CGSize, useFitting: Bool = true) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(targetSize, false, 0.0)
         // Establish the output thumbnail rectangle
-        let targetRect = MakeRect(origin: CGPointZero, size: targetSize)
+        let targetRect = CGRectFrom(origin: CGPointZero, size: targetSize)
         // Create the source image’s bounding rectangle
-        let naturalRect = MakeRect(origin: CGPointZero, size: size)
+        let naturalRect = CGRectFrom(origin: CGPointZero, size: size)
         // Calculate fitting or filling destination rectangle 
         // See Chapter 2 for a discussion on these functions 
         let destinationRect = useFitting ? naturalRect.fittingIn(targetRect) : naturalRect.fillingIn(targetRect)
@@ -191,7 +216,7 @@ public extension UIImage {
         let context = UIGraphicsGetCurrentContext()
         
         // Draw the original image into the context
-        let targetRect = MakeRect(size: size)
+        let targetRect = CGRectFrom(size: size)
         drawInRect(targetRect)
         
         // Rotate the context
@@ -201,7 +226,7 @@ public extension UIImage {
         CGContextTranslateCTM(context, -center.x, -center.y)
         
         let stringSize = text.size(withFont: font, preferredMaxLayoutWidth: size.width)
-        let stringRect = MakeRect(size: stringSize).centeringIn(MakeRect(size: size))
+        let stringRect = CGRectFrom(size: stringSize).centeringIn(CGRectFrom(size: size))
         
         // Draw the string, using a blend mode
         CGContextSetBlendMode(context, .Normal)
@@ -214,7 +239,7 @@ public extension UIImage {
     }
 }
 
-public func UIImageMake(color color: UIColor, size: CGSize = CGSizeMake(1, 1)) -> UIImage {
+public func UIImageFrom(color color: UIColor, size: CGSize = CGSizeMake(1, 1)) -> UIImage {
     return UIImage.imageWith(color: color, size: size)
 }
 

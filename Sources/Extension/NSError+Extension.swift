@@ -31,16 +31,15 @@ public extension NSError {
         return NSError(domain: "com.mochxiao.error.maker", code: 999, userInfo: [NSLocalizedDescriptionKey: message, NSLocalizedFailureReasonErrorKey: message])
     }
     
-    public class func defaultError() -> NSError {
-        let message = "Default error."
-        return NSError(domain: defaultErrorDomain, code: defaultErrorCode, userInfo: [NSLocalizedDescriptionKey: message, NSLocalizedFailureReasonErrorKey: message])
+    public class func empty() -> NSError {
+        return NSError(domain: emptyErrorDomain, code: emptyErrorCode, userInfo: nil)
     }
     
-    public static var defaultErrorDomain: String { return "com.mochxiao.error.default" }
-    public static var defaultErrorCode: Int { return 1024 }
+    public static var emptyErrorDomain: String { return "com.mochxiao.error.default" }
+    public static var emptyErrorCode: Int { return 1024 }
 }
 
-public func NSErrorFromMessage(message: String) -> NSError {
+public func NSErrorFrom(message: String) -> NSError {
     return NSError.errorWithMessage(message)
 }
 

@@ -39,9 +39,9 @@ public extension NSData {
 }
 
 /// Generate JSON data from a Foundation object
-public func NSDataFromJSONObject(object: AnyObject) -> NSData? {
+public func NSDataFrom(JSONObject: AnyObject) -> NSData? {
     do {
-        return try NSJSONSerialization.dataWithJSONObject(object, options: NSJSONWritingOptions.PrettyPrinted)
+        return try NSJSONSerialization.dataWithJSONObject(JSONObject, options: NSJSONWritingOptions.PrettyPrinted)
     } catch let error as NSError {
         debugPrint("Serialized JSON string failed with error: \(error)")
         return nil
