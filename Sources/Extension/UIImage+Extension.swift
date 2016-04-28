@@ -29,28 +29,32 @@ import UIKit
 // MARK: - Load image
 
 public extension UIImage {
-    /// Load bundle image with file full name
-    public class func imageWithFullFileName(fileName: String) -> UIImage? {
-        if let filePath = NSBundle.mainBundle().pathForResource(fileName, ofType: "") {
+    /// Load bundle image with file name
+    public class func imageWithFileName(fileName: String, ofType: String = "png") -> UIImage? {
+        func pathForResource(fileName: String, ofType: String) -> String? {
+            return NSBundle.mainBundle().pathForResource(fileName, ofType: ofType)
+        }
+        
+        if UIScreen.width > 750 {
+            if let filePath = pathForResource("\(fileName)@3x", ofType: ofType) {
+                return UIImage(contentsOfFile: filePath)
+            }
+        }
+        
+        if let filePath = pathForResource("\(fileName)@2x", ofType: ofType) {
+            return UIImage(contentsOfFile: filePath)
+        }
+        
+        if let filePath = pathForResource(fileName, ofType: ofType) {
             return UIImage(contentsOfFile: filePath)
         }
         
         return nil
     }
-    
-    /// Load bundle image with file name
-    public class func imageWithFileName(fileName: String) -> UIImage? {
-        let fileFullName = "\(fileName)@\(UIScreen.width > 750 ? 3 : 2)x.png"
-        return imageWithFullFileName(fileFullName)
-    }
 }
 
-public func UIImageFromFullFileName(fileName: String) -> UIImage? {
-    return UIImage.imageWithFullFileName(fileName)
-}
-
-public func UIImageFromFileName(fileName: String) -> UIImage? {
-    return UIImage.imageWithFileName(fileName)
+public func UIImageFromFileName(fileName: String, ofType: String = "png") -> UIImage? {
+    return UIImage.imageWithFileName(fileName, ofType: ofType)
 }
 
 // MARK: - Compress & Decompress
