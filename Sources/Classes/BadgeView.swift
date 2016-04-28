@@ -66,6 +66,7 @@ final public class BadgeView: UIView {
     }
     
     public override func drawRect(rect: CGRect) {
+        badgeLabel.backgroundColor = backgroundColor
         layer.cornerRadius = fixedHeight / 2
         layer.masksToBounds = true
         layer.shouldRasterize = true
