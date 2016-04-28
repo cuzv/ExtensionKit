@@ -30,13 +30,12 @@ final public class BadgeView: UIView {
     private let fixedHeight: CGFloat = 18
     public var textColor: UIColor = UIColor.whiteColor()
     
-    lazy var badgeLabel: UILabel = {
+    let badgeLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor.whiteColor()
         label.font = UIFont.preferredFontForTextStyle(UIFontTextStyleFootnote)
         label.lineBreakMode = .ByTruncatingTail
         label.textAlignment = .Center
-        label.backgroundColor = self.backgroundColor
         return label
     }()
     
@@ -74,6 +73,7 @@ final public class BadgeView: UIView {
         badgeLabel.backgroundColor?.setFill()
         UIRectFill(rect)
         badgeLabel.drawTextInRect(rect)
+
     }
 }
 
