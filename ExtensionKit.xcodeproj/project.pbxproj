@@ -49,6 +49,7 @@
 		4603E2C21CC07EE40030EDA0 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E29A1CC07EE40030EDA0 /* UIView+Extension.swift */; };
 		4603E2C31CC07EE40030EDA0 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E29B1CC07EE40030EDA0 /* UIViewController+Extension.swift */; };
 		4631CE291CCB9F6700CFCBCD /* CustomHeightNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4631CE281CCB9F6700CFCBCD /* CustomHeightNavigationBar.swift */; };
+		468E95B01CD37606007D39AA /* UITableView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468E95AF1CD37606007D39AA /* UITableView+Extension.swift */; };
 		468F230A1CCC6DF100C0D1FD /* DefaultReflectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468F23091CCC6DF100C0D1FD /* DefaultReflectable.swift */; };
 		468F230C1CCC775C00C0D1FD /* Nostalgia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468F230B1CCC775C00C0D1FD /* Nostalgia.swift */; };
 /* End PBXBuildFile section */
@@ -98,6 +99,7 @@
 		4603E29A1CC07EE40030EDA0 /* UIView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		4603E29B1CC07EE40030EDA0 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		4631CE281CCB9F6700CFCBCD /* CustomHeightNavigationBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomHeightNavigationBar.swift; sourceTree = "<group>"; };
+		468E95AF1CD37606007D39AA /* UITableView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableView+Extension.swift"; sourceTree = "<group>"; };
 		468F23091CCC6DF100C0D1FD /* DefaultReflectable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultReflectable.swift; sourceTree = "<group>"; };
 		468F230B1CCC775C00C0D1FD /* Nostalgia.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Nostalgia.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -193,6 +195,7 @@
 				4603E2991CC07EE40030EDA0 /* UITextView+Extension.swift */,
 				4603E29A1CC07EE40030EDA0 /* UIView+Extension.swift */,
 				4603E29B1CC07EE40030EDA0 /* UIViewController+Extension.swift */,
+				468E95AF1CD37606007D39AA /* UITableView+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -294,6 +297,7 @@
 				4603E2AB1CC07EE40030EDA0 /* NSData+Extension.swift in Sources */,
 				4603E2C31CC07EE40030EDA0 /* UIViewController+Extension.swift in Sources */,
 				4603E2B61CC07EE40030EDA0 /* UIFont+Extension.swift in Sources */,
+				468E95B01CD37606007D39AA /* UITableView+Extension.swift in Sources */,
 				4603E2B41CC07EE40030EDA0 /* UIControl+Extension.swift in Sources */,
 				4603E2A81CC07EE40030EDA0 /* Dictionary+Extension.swift in Sources */,
 				4603E2AF1CC07EE40030EDA0 /* Number+Extension.swift in Sources */,
