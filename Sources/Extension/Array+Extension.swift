@@ -69,4 +69,49 @@ public extension Array {
         }
         return output.joinWithSeparator("\n")
     }
+    
+    public var second: Element? {
+        if count > 1 { return self[1] }
+        return nil
+    }
+    
+    public var third: Element? {
+        if count > 2 { return self[2] }
+        return nil
+    }
+    
+    public var fourth: Element? {
+        if count > 3 { return self[3] }
+        return nil
+    }
+    
+    public var fifthly: Element? {
+        if count > 4 { return self[4] }
+        return nil
+    }
+    
+    public var sixth: Element? {
+        if count > 5 { return self[5] }
+        return nil
+    }
+    
+    public var seventh: Element? {
+        if count > 6 { return self[6] }
+        return nil
+    }
+    
+    public var eighth: Element? {
+        if count > 7 { return self[7] }
+        return nil
+    }
+    
+    public var ninth: Element? {
+        if count > 8 { return self[8] }
+        return nil
+    }
+    
+    public var tenth: Element? {
+        if count > 9 { return self[9] }
+        return nil
+    }
 }
