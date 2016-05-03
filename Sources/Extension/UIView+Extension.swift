@@ -207,7 +207,17 @@ public extension UIView {
         set { frame = CGRectMake(newValue, minY, width, height) }
     }
     
+    @IBInspectable public var left: CGFloat {
+        get { return frame.origin.x }
+        set { frame = CGRectMake(newValue, minY, width, height) }
+    }
+    
     @IBInspectable public var midX: CGFloat {
+        get { return CGRectGetMidX(frame) }
+        set { frame = CGRectMake(newValue - width / 2, minY, width, height) }
+    }
+    
+    @IBInspectable public var centerX: CGFloat {
         get { return CGRectGetMidX(frame) }
         set { frame = CGRectMake(newValue - width / 2, minY, width, height) }
     }
@@ -217,7 +227,17 @@ public extension UIView {
         set { frame = CGRectMake(newValue - width, minY, width, height) }
     }
     
+    @IBInspectable public var right: CGFloat {
+        get { return minX + width }
+        set { frame = CGRectMake(newValue - width, minY, width, height) }
+    }
+    
     @IBInspectable public var minY: CGFloat {
+        get { return frame.origin.y }
+        set { frame = CGRectMake(minX, newValue, width, height) }
+    }
+    
+    @IBInspectable public var top: CGFloat {
         get { return frame.origin.y }
         set { frame = CGRectMake(minX, newValue, width, height) }
     }
@@ -227,7 +247,17 @@ public extension UIView {
         set { frame = CGRectMake(minX, newValue - height / 2, width, height) }
     }
     
+    @IBInspectable public var centerY: CGFloat {
+        get { return CGRectGetMidY(frame) }
+        set { frame = CGRectMake(minX, newValue - height / 2, width, height) }
+    }
+    
     @IBInspectable public var maxY: CGFloat {
+        get { return minY + height }
+        set { frame = CGRectMake(minX, newValue - height, width, height) }
+    }
+    
+    @IBInspectable public var bottom: CGFloat {
         get { return minY + height }
         set { frame = CGRectMake(minX, newValue - height, width, height) }
     }
