@@ -336,6 +336,15 @@ public extension UIBarButtonItem {
         if let actionHandler = actionHandler {
             barButtonItem.barButtonItemActionHandlerWrapper = ClosureDecorator(actionHandler)
         }
+
+        return barButtonItem
+    }
+    
+    public class func barButtonItem(withSystemItem item: UIBarButtonSystemItem, actionHandler: ((UIBarButtonItem, Any?) -> ())?) -> UIBarButtonItem {
+        let barButtonItem = UIBarButtonItem(barButtonSystemItem: item, target: self, action: #selector(UIBarButtonItem.performActionHandler(_:)))
+        if let actionHandler = actionHandler {
+            barButtonItem.barButtonItemActionHandlerWrapper = ClosureDecorator(actionHandler)
+        }
         
         return barButtonItem
     }
@@ -355,11 +364,19 @@ public extension UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem.barButtonItem(withTitle: title, actionHandler: actionHandler)
     }
     
+    public func showRightBarButtonItem(withSystemItem item: UIBarButtonSystemItem, actionHandler: ((UIBarButtonItem, Any?) -> ())?) {
+        navigationItem.rightBarButtonItem = UIBarButtonItem.barButtonItem(withSystemItem: item, actionHandler: actionHandler)
+    }
+    
     public func showLeftBarButtonItem(withImage image: UIImage?, actionHandler: ((UIBarButtonItem, Any?) -> ())?) {
         navigationItem.leftBarButtonItem = UIBarButtonItem.barButtonItem(withImage: image, actionHandler: actionHandler)
     }
     
     public func showLeftBarButtonItem(withTitle title: String?, actionHandler: ((UIBarButtonItem, Any?) -> ())?) {
         navigationItem.leftBarButtonItem = UIBarButtonItem.barButtonItem(withTitle: title, actionHandler: actionHandler)
+    }
+    
+    public func showLeftBarButtonItem(withSystemItem item: UIBarButtonSystemItem, actionHandler: ((UIBarButtonItem, Any?) -> ())?) {
+        navigationItem.leftBarButtonItem = UIBarButtonItem.barButtonItem(withSystemItem: item, actionHandler: actionHandler)
     }
 }
