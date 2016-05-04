@@ -303,11 +303,30 @@ public extension UIView {
     
     /// Setup rounding corners radius
     /// **Note**: Before you invoke this method, ensure `self` already have correct frame.
-    public func setRounding(corners corners: UIRectCorner, radius: CGFloat) {
-        let cornRadiusLayer = CAShapeLayer()
-        let path = UIBezierPath(roundedRect: bounds, byRoundingCorners: corners, cornerRadii: CGSizeMake(radius, 0))
-        cornRadiusLayer.path = path.CGPath
-        layer.mask = cornRadiusLayer
+    public func setRoundingCorners(
+        corners corners: UIRectCorner = .AllCorners,
+        radius: CGFloat = 3,
+        fillColor: UIColor = UIColor.whiteColor(),
+        strokeColor: UIColor = UIColor.clearColor(),
+        stockLineWidth: CGFloat = 1.0 / UIScreen.mainScreen().scale)
+    {
+        precondition(!CGSizeEqualToSize(frame.size, CGSize.zero), "Could not set rounding corners on zero size view.")
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+            let backImage = UIImageFrom(
+                color: fillColor,
+                size: self.frame.size,
+                roundingCorners: corners,
+                radius: radius,
+                strokeColor: strokeColor,
+                stockLineWidth: stockLineWidth
+            )
+            
+            dispatch_async(dispatch_get_main_queue()) {
+                self.backgroundColor = UIColor.clearColor()
+                self.layer.contents = backImage.CGImage
+            }
+        }
     }
     
     /// Setup border width & color.
