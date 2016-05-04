@@ -305,10 +305,10 @@ public extension UIView {
     /// **Note**: Before you invoke this method, ensure `self` already have correct frame.
     public func setRoundingCorners(
         corners corners: UIRectCorner = .AllCorners,
-        radius: CGFloat = 3,
-        fillColor: UIColor = UIColor.whiteColor(),
-        strokeColor: UIColor = UIColor.clearColor(),
-        stockLineWidth: CGFloat = 1.0 / UIScreen.mainScreen().scale)
+                radius: CGFloat = 3,
+                fillColor: UIColor = UIColor.whiteColor(),
+                strokeColor: UIColor = UIColor.clearColor(),
+                stockLineWidth: CGFloat = 1.0 / UIScreen.mainScreen().scale)
     {
         precondition(!CGSizeEqualToSize(frame.size, CGSize.zero), "Could not set rounding corners on zero size view.")
         
