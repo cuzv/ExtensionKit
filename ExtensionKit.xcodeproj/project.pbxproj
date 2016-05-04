@@ -49,6 +49,7 @@
 		4603E2C31CC07EE40030EDA0 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E29B1CC07EE40030EDA0 /* UIViewController+Extension.swift */; };
 		4631CE291CCB9F6700CFCBCD /* CustomHeightNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4631CE281CCB9F6700CFCBCD /* CustomHeightNavigationBar.swift */; };
 		466B95671CD9DE2B001507F3 /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 466B95661CD9DE2B001507F3 /* UIImageView+Extension.swift */; };
+		468578361CDA410000906ABA /* CGD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468578351CDA410000906ABA /* CGD.swift */; };
 		468E95B01CD37606007D39AA /* UITableView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468E95AF1CD37606007D39AA /* UITableView+Extension.swift */; };
 		468F230A1CCC6DF100C0D1FD /* DefaultReflectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468F23091CCC6DF100C0D1FD /* DefaultReflectable.swift */; };
 		468F230C1CCC775C00C0D1FD /* Nostalgia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468F230B1CCC775C00C0D1FD /* Nostalgia.swift */; };
@@ -100,6 +101,7 @@
 		4603E29B1CC07EE40030EDA0 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		4631CE281CCB9F6700CFCBCD /* CustomHeightNavigationBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomHeightNavigationBar.swift; sourceTree = "<group>"; };
 		466B95661CD9DE2B001507F3 /* UIImageView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extension.swift"; sourceTree = "<group>"; };
+		468578351CDA410000906ABA /* CGD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGD.swift; sourceTree = "<group>"; };
 		468E95AF1CD37606007D39AA /* UITableView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableView+Extension.swift"; sourceTree = "<group>"; };
 		468F23091CCC6DF100C0D1FD /* DefaultReflectable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultReflectable.swift; sourceTree = "<group>"; };
 		468F230B1CCC775C00C0D1FD /* Nostalgia.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Nostalgia.swift; sourceTree = "<group>"; };
@@ -159,6 +161,7 @@
 				4631CE281CCB9F6700CFCBCD /* CustomHeightNavigationBar.swift */,
 				468F230B1CCC775C00C0D1FD /* Nostalgia.swift */,
 				46CFE5701CD5BAC40098C995 /* Observable.swift */,
+				468578351CDA410000906ABA /* CGD.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -327,6 +330,7 @@
 				4603E29E1CC07EE40030EDA0 /* NoPasteTextField.swift in Sources */,
 				4603E2A71CC07EE40030EDA0 /* CoreGraphics+Extension.swift in Sources */,
 				4603E2A01CC07EE40030EDA0 /* PaddingTextField.swift in Sources */,
+				468578361CDA410000906ABA /* CGD.swift in Sources */,
 				4603E2AE1CC07EE40030EDA0 /* NSUserDefaults+Extension.swift in Sources */,
 				4603E2A61CC07EE40030EDA0 /* Cocoa+Extension.swift in Sources */,
 				4603E2BA1CC07EE40030EDA0 /* UILabel+Extension.swift in Sources */,
