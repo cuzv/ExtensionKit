@@ -2,8 +2,8 @@
 //  UIImageView+Extension.swift
 //  ExtensionKit
 //
-//  Created by Moch Xiao on 3/10/16.
-//  Copyright © @2016 Moch Xiao (https://github.com/cuzv).
+//  Created by Moch Xiao on 5/4/16.
+//  Copyright © 2016 Moch Xiao (http://mochxiao.com).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -27,9 +27,27 @@
 import UIKit
 
 public extension UIImageView {
-    /// Draw corner for image
-    public func addCornerWithRadius(radius: CGFloat) {
-        image = image?.drawRectWithRoundedCorner(radius: radius, bounds.size)
+    /// Setup rounding corners radius
+    /// **Note**: Before you invoke this method, ensure `self` already have correct frame and image.
+    public override func setRoundingCorners(
+        corners corners: UIRectCorner = .AllCorners,
+        radius: CGFloat = 3,
+        strokeColor: UIColor = UIColor.clearColor(),
+        stockLineWidth: CGFloat = 1.0 / UIScreen.mainScreen().scale)
+    {
+        precondition(!CGSizeEqualToSize(frame.size, CGSize.zero), "Could not set rounding corners on zero size view.")
+        guard let _image = image else { return }
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+            let scale = max(_image.size.width / self.frame.size.width, _image.size.height / self.frame.size.height)
+            let relatedRadius = scale * radius
+            let relatedStockLineWidth = scale * stockLineWidth
+            
+            let newImage = _image.imageWith(roundingCorners: corners, radius: relatedRadius, strokeColor: strokeColor, stockLineWidth: relatedStockLineWidth)
+            dispatch_async(dispatch_get_main_queue()) {
+                self.backgroundColor = UIColor.clearColor()
+                self.image = newImage
+            }
+        }
     }
 }
-

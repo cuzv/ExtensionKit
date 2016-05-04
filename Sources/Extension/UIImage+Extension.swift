@@ -136,35 +136,65 @@ public extension UIImage {
 // MARK: - Draw
 
 public extension UIImage {
-    public class func imageWith(color color: UIColor, size: CGSize = CGSizeMake(1, 1)) -> UIImage {
-        UIGraphicsBeginImageContext(size)
-        let context = UIGraphicsGetCurrentContext()
-        CGContextSetFillColorWithColor(context, color.CGColor)
-        let rect = CGRectMake(0, 0, size.width, size.height)
-        CGContextFillRect(context, rect)
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
+    public class func imageWith(
+        color color: UIColor,
+        size: CGSize = CGSizeMake(1, 1),
+        roundingCorners: UIRectCorner = .AllCorners,
+        radius: CGFloat = 0,
+        strokeColor: UIColor = UIColor.clearColor(),
+        stockLineWidth: CGFloat = 1.0 / UIScreen.mainScreen().scale
+    ) -> UIImage
+    {
+        let rect = CGRect(origin: CGPoint(x: 0, y: 0), size: size)
+        UIGraphicsBeginImageContextWithOptions(rect.size, false, 0)
         
-        return image
+        guard let context = UIGraphicsGetCurrentContext() else { fatalError() }
+        
+        CGContextSetFillColorWithColor(context, color.CGColor)
+        CGContextSetLineWidth(context, stockLineWidth)
+        CGContextSetStrokeColorWithColor(context, strokeColor.CGColor)
+        
+        let roundedRect = CGRectMake(stockLineWidth, stockLineWidth, rect.width - stockLineWidth * 2, rect.height - stockLineWidth * 2)
+        let path = UIBezierPath(roundedRect: roundedRect, byRoundingCorners: roundingCorners, cornerRadii: CGSize(width: radius, height: radius))
+        CGContextAddPath(context, path.CGPath)
+        
+        CGContextDrawPath(context, .FillStroke)
+        
+        let output = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return output
     }
     
-    public func drawRectWithRoundedCorner(radius radius: CGFloat, _ sizetoFit: CGSize) -> UIImage {
-        let rect = CGRect(origin: CGPoint(x: 0, y: 0), size: sizetoFit)
+    public func imageWith(
+        roundingCorners corners: UIRectCorner = .AllCorners,
+        radius: CGFloat = 0,
+        strokeColor: UIColor = UIColor.clearColor(),
+        stockLineWidth: CGFloat = 1.0 / UIScreen.mainScreen().scale
+    ) -> UIImage
+    {
+        let rect = CGRect(origin: CGPoint(x: 0, y: 0), size: size)
         
-        UIGraphicsBeginImageContextWithOptions(rect.size, false, UIScreen.mainScreen().scale)
-        CGContextAddPath(UIGraphicsGetCurrentContext(),
-            UIBezierPath(roundedRect: rect, byRoundingCorners: UIRectCorner.AllCorners,
-                cornerRadii: CGSize(width: radius, height: radius)).CGPath)
-        CGContextClip(UIGraphicsGetCurrentContext())
+        UIGraphicsBeginImageContextWithOptions(rect.size, false, 0)
+        guard let context = UIGraphicsGetCurrentContext() else { fatalError() }
         
+        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        CGContextAddPath(context, path.CGPath)
+        
+        CGContextClip(context)
         drawInRect(rect)
-        CGContextDrawPath(UIGraphicsGetCurrentContext(), .FillStroke)
+        
+        CGContextSetLineWidth(context, stockLineWidth)
+        CGContextSetStrokeColorWithColor(context, strokeColor.CGColor)
+        let roundedRect = CGRectMake(stockLineWidth, stockLineWidth, rect.width - stockLineWidth * 2, rect.height - stockLineWidth * 2)
+        let roundedPath = UIBezierPath(roundedRect: roundedRect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        roundedPath.stroke()
+        
         let output = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
         return output
     }
-    
+
     public func imgeWithAlpha(alpha: CGFloat) -> UIImage {
         UIGraphicsBeginImageContext(size)
         
@@ -243,8 +273,15 @@ public extension UIImage {
     }
 }
 
-public func UIImageFrom(color color: UIColor, size: CGSize = CGSizeMake(1, 1)) -> UIImage {
-    return UIImage.imageWith(color: color, size: size)
+public func UIImageFrom(
+    color color: UIColor,
+    size: CGSize = CGSizeMake(1, 1),
+    roundingCorners: UIRectCorner = .AllCorners,
+    radius: CGFloat = 0,
+    strokeColor: UIColor = UIColor.clearColor(),
+    stockLineWidth: CGFloat = 1.0 / UIScreen.mainScreen().scale) -> UIImage
+{
+    return UIImage.imageWith(color: color, size: size, roundingCorners: roundingCorners, radius: radius, strokeColor: strokeColor, stockLineWidth: stockLineWidth)
 }
 
 @available(iOS 8.0, *)
