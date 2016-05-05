@@ -26,6 +26,13 @@
 
 import UIKit
 
+// MARK: - AssociationKey
+
+private struct AssociationKey {
+    private static var isIndicatorAnimating: String = "UIButton_isIndicatorAnimating"
+    private static var context: String = "UIButton_animation_context"
+}
+
 // MARK: - Property for state
 
 @IBDesignable
@@ -227,5 +234,168 @@ public extension UIButton {
             0,
             -edgeWidth - halfSpace
         )
+    }
+}
+
+// MARK: - Animation
+
+private class _ButtonAnimationUIActivityIndicatorView: UIActivityIndicatorView {}
+
+public extension UIButton {
+    private var _isIndicatorAnimating: Bool? {
+        get { return associatedObjectForKey(&AssociationKey.isIndicatorAnimating) as? Bool }
+        set { associate(retainObject: newValue, forKey: &AssociationKey.isIndicatorAnimating) }
+    }
+    
+    private var context: [String: AnyObject] {
+        get { return associatedObjectForKey(&AssociationKey.context) as! [String: AnyObject] }
+        set { associate(retainObject: newValue, forKey: &AssociationKey.context) }
+    }
+    
+    public func startIndicatorAnimating() {
+        if isIndicatorAnimating {
+            return
+        }
+        
+        // 保存上下文
+        context = _context()
+        // 清除之前的设置
+        _clearProperties()
+        // 添加动画
+        _addAnimation()
+    }
+    
+    public func stopIndicatorAnimating() {
+        if !isIndicatorAnimating {
+            return
+        }
+        
+        // 移除动画
+        _removeAnimation()
+        // 恢复之前设置的属性
+        _recoverProperties()
+        // 清除上下文
+        context = [:]
+    }
+    
+    public var isIndicatorAnimating: Bool {
+        if let _isIndicatorAnimating = _isIndicatorAnimating {
+            return _isIndicatorAnimating
+        }
+        return false
+    }
+    
+    private func _context() -> [String: AnyObject] {
+        var context: [String: AnyObject] = [String: AnyObject]()
+        
+        if let normalimage = imageForState(.Normal) {
+            context["normalimage"] = normalimage
+        }
+        if let highlightedImage = imageForState(.Highlighted) {
+            context["highlightedImage"] = highlightedImage
+        }
+        if let selectedImage = imageForState(.Selected) {
+            context["selectedImage"] = selectedImage
+        }
+        
+        if let normalBackgroundImage = backgroundImageForState(.Normal) {
+            context["normalBackgroundImage"] = normalBackgroundImage
+        }
+        if let highlightedBackgroundImage = backgroundImageForState(.Highlighted) {
+            context["highlightedBackgroundImage"] = highlightedBackgroundImage
+        }
+        if let selectedBackgroundImage = backgroundImageForState(.Selected) {
+            context["selectedBackgroundImage"] = selectedBackgroundImage
+        }
+        
+        if let normalTitle = titleForState(.Normal) {
+            context["normalTitle"] = normalTitle
+        }
+        if let highlightedTitle = titleForState(.Highlighted) {
+            context["highlightedTitle"] = highlightedTitle
+        }
+        if let selectedTitle = titleForState(.Selected) {
+            context["selectedTitle"] = selectedTitle
+        }
+        
+        if let backgroundColor = backgroundColor {
+            context["backgroundColor"] = backgroundColor
+        }
+        return context
+    }
+    
+    private func _clearProperties() {
+        setImage(nil, forState: .Normal)
+        setImage(nil, forState: .Highlighted)
+        setImage(nil, forState: .Selected)
+        
+        setBackgroundImage(nil, forState: .Normal)
+        setBackgroundImage(nil, forState: .Highlighted)
+        setBackgroundImage(nil, forState: .Selected)
+        
+        setTitle(nil, forState: .Normal)
+        setTitle(nil, forState: .Highlighted)
+        setTitle(nil, forState: .Selected)
+        
+        backgroundColor = nil
+    }
+    
+    private func _addAnimation() {
+        let indicator = _ButtonAnimationUIActivityIndicatorView(activityIndicatorStyle: .Gray)
+        let length = floor(CGRectGetHeight(bounds) * 0.8)
+        indicator.bounds = CGRectMake(0, 0, length, length)
+        indicator.center = CGPointMake(CGRectGetMidX(bounds), CGRectGetMidY(bounds))
+        indicator.backgroundColor = UIColor.clearColor()
+        indicator.startAnimating()
+        addSubview(indicator)
+        _isIndicatorAnimating = true
+    }
+    
+    private func _removeAnimation() {
+        for sub in subviews {
+            if sub.isMemberOfClass(_ButtonAnimationUIActivityIndicatorView.self) {
+                let indicator = sub as! _ButtonAnimationUIActivityIndicatorView
+                indicator.stopAnimating()
+                indicator.removeFromSuperview()
+                _isIndicatorAnimating = false
+                return
+            }
+        }
+    }
+    
+    private func _recoverProperties() {
+        if let normalimage = context["normalimage"] as? UIImage {
+            setImage(normalimage, forState: .Normal)
+        }
+        if let highlightedImage = context["highlightedImage"] as? UIImage {
+            setImage(highlightedImage, forState: .Highlighted)
+        }
+        if let selectedImage = context["selectedImage"] as? UIImage {
+            setImage(selectedImage, forState: .Highlighted)
+        }
+        
+        if let normalBackgroundImage = context["normalBackgroundImage"] as? UIImage {
+            setBackgroundImage(normalBackgroundImage, forState: .Normal)
+        }
+        if let highlightedBackgroundImage = context["highlightedBackgroundImage"] as? UIImage {
+            setBackgroundImage(highlightedBackgroundImage, forState: .Highlighted)
+        }
+        if let selectedBackgroundImage = context["selectedBackgroundImage"] as? UIImage {
+            setBackgroundImage(selectedBackgroundImage, forState: .Selected)
+        }
+        
+        if let normalTitle = context["normalTitle"] as? String {
+            setTitle(normalTitle, forState: .Normal)
+        }
+        if let highlightedTitle = context["highlightedTitle"] as? String {
+            setTitle(highlightedTitle, forState: .Highlighted)
+        }
+        if let selectedTitle = context["selectedTitle"] as? String {
+            setTitle(selectedTitle, forState: .Selected)
+        }
+        
+        if let bgColor = context["backgroundColor"] as? UIColor {
+            backgroundColor = bgColor
+        }
     }
 }
