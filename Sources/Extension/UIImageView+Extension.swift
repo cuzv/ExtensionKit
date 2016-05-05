@@ -36,7 +36,13 @@ public extension UIImageView {
         strokeColor: UIColor = UIColor.clearColor(),
         stockLineWidth: CGFloat = 1.0 / UIScreen.mainScreen().scale)
     {
-        precondition(!CGSizeEqualToSize(frame.size, CGSize.zero), "Could not set rounding corners on zero size view.")
+        if CGSizeEqualToSize(frame.size, CGSize.zero) {
+            debugPrint("Could not set rounding corners on zero size view.")
+            return
+        }
+        if nil != layer.contents {
+            return
+        }
         guard let _image = image else { return }
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
