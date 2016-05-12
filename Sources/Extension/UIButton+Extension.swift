@@ -398,4 +398,47 @@ public extension UIButton {
             backgroundColor = bgColor
         }
     }
+    
+    public func performToggleSelectStateImageAnimation() {
+        guard let normalImage = imageForState(.Normal) else { return }
+        guard let selectedImage = imageForState(.Selected) else { return }
+        guard let _imageView = imageView else { return }
+        
+        // Clear image
+        {
+            setImage(nil, forState: .Normal)
+            setImage(nil, forState: .Selected)
+        }()
+        
+        let animatedImageView = UIImageView(image: selected ? selectedImage : normalImage)
+        animatedImageView.frame = _imageView.frame
+        addSubview(animatedImageView)
+        
+        let recover = {
+            UIView.animateWithDuration(0.2, delay: 0, options: [.BeginFromCurrentState, .CurveEaseInOut], animations: {
+                animatedImageView.transform = CGAffineTransformIdentity
+            }, completion: { (finished: Bool) in
+                self.setImage(normalImage, forState: .Normal)
+                self.setImage(selectedImage, forState: .Selected)
+                self.selected = !self.selected
+                animatedImageView.removeFromSuperview()
+            })
+        }
+        
+        let zoomOut = {
+            animatedImageView.image = !self.selected ? selectedImage : normalImage
+            UIView.animateWithDuration(0.2, delay: 0, options: [.BeginFromCurrentState, .CurveEaseInOut], animations: {
+                animatedImageView.transform = CGAffineTransformMakeScale(0.9, 0.9)
+            }, completion: { (finished: Bool) in
+                recover()
+            })
+        }
+        
+        // Start with zoom in
+        UIView.animateWithDuration(0.2, delay: 0, options: [.BeginFromCurrentState, .CurveEaseInOut], animations: {
+            animatedImageView.transform = CGAffineTransformMakeScale(1.7, 1.7)
+        }, completion: { (finished: Bool) in
+            zoomOut()
+        })
+    }
 }
