@@ -99,10 +99,18 @@ public func cancel(task: Task?) {
 }
 
 public func UIThreadAsyncAction(block: dispatch_block_t) {
+    if NSThread.isMainThread() {
+        block()
+        return
+    }
     dispatch_async(dispatch_get_main_queue(), block)
 }
 
 public func BackgroundThreadAsyncAction(block: dispatch_block_t) {
+    if !NSThread.isMainThread() {
+        block()
+        return
+    }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), block)
 }
 
