@@ -14,6 +14,7 @@ private let concurrent_queue_label = "com.mochxiao.queue.concurrent"
 private let isolation_queue_label = "com.mochxiao.isolation.queue"
 
 public class AsyncSerialWorker {
+    public init() {}
     private let serialQueue = dispatch_queue_create(serial_queue_label, DISPATCH_QUEUE_SERIAL)
     
     public func enqueueWork(work: (() -> ()) -> ()) {
