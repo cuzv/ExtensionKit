@@ -257,6 +257,8 @@ public extension UIButton {
             return
         }
         
+        enabled = false
+        
         // 保存上下文
         context = _context()
         // 清除之前的设置
@@ -276,6 +278,8 @@ public extension UIButton {
         _recoverProperties()
         // 清除上下文
         context = [:]
+        
+        enabled = true
     }
     
     public var isIndicatorAnimating: Bool {
