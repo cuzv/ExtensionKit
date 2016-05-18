@@ -320,7 +320,7 @@ public extension UIBarButtonItem {
         set { associate(retainObject: newValue, forKey: &AssociationKey.barButtonItemActionHandlerWrapper) }
     }
     
-    public class func barButtonItem(withTitle title: String?, actionHandler: ((UIBarButtonItem, Any?) -> ())?) -> UIBarButtonItem {
+    public class func barButtonItem(withTitle title: String, actionHandler: ((UIBarButtonItem, Any?) -> ())?) -> UIBarButtonItem {
         let barButtonItem = UIBarButtonItem(title: title, style: .Plain, target: self, action: #selector(UIBarButtonItem.performActionHandler(_:)))
         
         if let actionHandler = actionHandler {
@@ -331,7 +331,7 @@ public extension UIBarButtonItem {
     }
     
     public class func barButtonItem(withImage image: UIImage?, actionHandler: ((UIBarButtonItem, Any?) -> ())?) -> UIBarButtonItem {
-        let barButtonItem = UIBarButtonItem(image: image, style: .Plain, target: self, action: #selector(UIBarButtonItem.performActionHandler(_:)))
+        let barButtonItem = UIBarButtonItem(image: image?.originalImage, style: .Plain, target: self, action: #selector(UIBarButtonItem.performActionHandler(_:)))
         
         if let actionHandler = actionHandler {
             barButtonItem.barButtonItemActionHandlerWrapper = ClosureDecorator(actionHandler)
@@ -360,7 +360,7 @@ public extension UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem.barButtonItem(withImage: image, actionHandler: actionHandler)
     }
     
-    public func showRightBarButtonItem(withTitle title: String?, actionHandler: ((UIBarButtonItem, Any?) -> ())?) {
+    public func showRightBarButtonItem(withTitle title: String, actionHandler: ((UIBarButtonItem, Any?) -> ())?) {
         navigationItem.rightBarButtonItem = UIBarButtonItem.barButtonItem(withTitle: title, actionHandler: actionHandler)
     }
     
@@ -372,7 +372,7 @@ public extension UIViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem.barButtonItem(withImage: image, actionHandler: actionHandler)
     }
     
-    public func showLeftBarButtonItem(withTitle title: String?, actionHandler: ((UIBarButtonItem, Any?) -> ())?) {
+    public func showLeftBarButtonItem(withTitle title: String, actionHandler: ((UIBarButtonItem, Any?) -> ())?) {
         navigationItem.leftBarButtonItem = UIBarButtonItem.barButtonItem(withTitle: title, actionHandler: actionHandler)
     }
     
