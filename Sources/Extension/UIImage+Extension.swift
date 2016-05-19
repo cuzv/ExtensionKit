@@ -66,14 +66,14 @@ public extension UIImage {
     }
     
     /// Decompressed image.
-    public var decompressedImage: UIImage {
+    public var decompressed: UIImage {
         UIGraphicsBeginImageContextWithOptions(size, true, 0)
         drawAtPoint(CGPointZero)
         let decompressedImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return decompressedImage
     }
-    
+        
     /// Compress image as possible to target size kb.
     public func compressAsPossible(toCapacity capacity: Int = 50, targetSize: CGSize = CGSizeMake(UIScreen.mainScreen().bounds.width, UIScreen.mainScreen().bounds.width)) -> NSData? {
         let currentRepresention = size.width * size.height
@@ -206,7 +206,7 @@ public extension UIImage {
         return image
     }
     
-    func rendering(withColor color: UIColor, alpha: CGFloat = 1.0) -> UIImage {
+    public func rendering(withColor color: UIColor, alpha: CGFloat = 1.0) -> UIImage {
         UIGraphicsBeginImageContext(size)
         
         color.setFill()
