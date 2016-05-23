@@ -185,7 +185,7 @@ public extension UIGestureRecognizerFunctionProtocol where Self: UIView {
 
 public extension UIView {
     public var responderViewController: UIViewController? {
-        return responderOfClass(UIViewController.self) as? UIViewController
+        return responder(ofClass: UIViewController.self) as? UIViewController
     }
 }
 

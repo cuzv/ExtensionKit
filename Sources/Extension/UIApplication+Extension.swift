@@ -59,7 +59,7 @@ public extension UIApplication {
         _sharedApplication.applicationIconBadgeNumber = badgeNumber
     }
     
-    public class func send(action action: Selector, fromSender sender: AnyObject?) -> Bool {
+    public class func sendAction(action: Selector, fromSender sender: AnyObject?, forEvent event: UIEvent? = nil) -> Bool {
         // Get the target in the responder chain
         var target = sender
         
@@ -68,7 +68,7 @@ public extension UIApplication {
         }
         
         if let _target  = target {
-            return UIApplication.sharedApplication().sendAction(action, to: _target, from: sender, forEvent: nil)
+            return UIApplication.sharedApplication().sendAction(action, to: _target, from: sender, forEvent: event)
         }
         
         return false
@@ -95,8 +95,8 @@ public func doChatToQQ(qq: String) {
     UIApplication.chatToQQ(qq)
 }
 
-public func doSend(action action: Selector, fromSender sender: AnyObject?) -> Bool {
-    return UIApplication.send(action: action, fromSender: sender)
+public func doSendAction(action: Selector, fromSender sender: AnyObject?, forEvent event: UIEvent? = nil) -> Bool {
+    return UIApplication.sendAction(action, fromSender: sender, forEvent: event)
 }
 
 // MARK: - Properties
