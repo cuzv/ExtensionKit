@@ -270,6 +270,10 @@ public extension UIViewController {
         }
     }
     
+    public func presentViewController(viewControllerToPresent: UIViewController) {
+        presentViewController(viewControllerToPresent, animated: true, completion: nil)
+    }
+    
     public func presentTranslucentViewController(viewController viewController: UIViewController, modalTransitionStyle: UIModalTransitionStyle = .CoverVertical, animated flag: Bool = true, completion: (() -> Void)? = nil) {
         viewController.modalPresentationStyle = .Custom
         viewController.modalTransitionStyle = UIDevice.iOS8Plus ? modalTransitionStyle : .CrossDissolve
