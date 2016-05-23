@@ -142,8 +142,7 @@ public extension UIImage {
         roundingCorners: UIRectCorner = .AllCorners,
         radius: CGFloat = 0,
         strokeColor: UIColor = UIColor.clearColor(),
-        stockLineWidth: CGFloat = 1.0 / UIScreen.mainScreen().scale
-    ) -> UIImage
+        stockLineWidth: CGFloat = 0) -> UIImage
     {
         let rect = CGRect(origin: CGPoint(x: 0, y: 0), size: size)
         UIGraphicsBeginImageContextWithOptions(rect.size, false, 0)
@@ -279,7 +278,7 @@ public func UIImageFrom(
     roundingCorners: UIRectCorner = .AllCorners,
     radius: CGFloat = 0,
     strokeColor: UIColor = UIColor.clearColor(),
-    stockLineWidth: CGFloat = 1.0 / UIScreen.mainScreen().scale) -> UIImage
+    stockLineWidth: CGFloat = 0) -> UIImage
 {
     return UIImage.imageWith(color: color, size: size, roundingCorners: roundingCorners, radius: radius, strokeColor: strokeColor, stockLineWidth: stockLineWidth)
 }
