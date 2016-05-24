@@ -243,12 +243,12 @@ private class _ButtonAnimationUIActivityIndicatorView: UIActivityIndicatorView {
 
 public extension UIButton {
     private var _isIndicatorAnimating: Bool? {
-        get { return associatedObjectForKey(&AssociationKey.isIndicatorAnimating) as? Bool }
+        get { return associatedObject(forKey: &AssociationKey.isIndicatorAnimating) as? Bool }
         set { associate(retainObject: newValue, forKey: &AssociationKey.isIndicatorAnimating) }
     }
     
     private var context: [String: AnyObject] {
-        get { return associatedObjectForKey(&AssociationKey.context) as! [String: AnyObject] }
+        get { return associatedObject(forKey: &AssociationKey.context) as! [String: AnyObject] }
         set { associate(retainObject: newValue, forKey: &AssociationKey.context) }
     }
     

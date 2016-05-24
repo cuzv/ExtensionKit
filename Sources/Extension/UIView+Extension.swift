@@ -46,7 +46,7 @@ private struct AssociationKey {
 
 private extension UIGestureRecognizer {
     private var gestureRecognizerWrapper: ClosureDecorator<(UIView, UIGestureRecognizer)> {
-        get { return associatedObjectForKey(&AssociationKey.gestureRecognizerWrapper) as! ClosureDecorator<(UIView, UIGestureRecognizer)> }
+        get { return associatedObject(forKey: &AssociationKey.gestureRecognizerWrapper) as! ClosureDecorator<(UIView, UIGestureRecognizer)> }
         set { associate(retainObject: newValue, forKey: &AssociationKey.gestureRecognizerWrapper) }
     }
 }
@@ -659,7 +659,7 @@ public extension UIView {
     }
     
     private var activityIndicatorView: UIActivityIndicatorView! {
-        get { return associatedObjectForKey(&AssociationKey.activityIndicatorView) as? UIActivityIndicatorView }
+        get { return associatedObject(forKey: &AssociationKey.activityIndicatorView) as? UIActivityIndicatorView }
         set { associate(assignObject: newValue, forKey: &AssociationKey.activityIndicatorView) }
     }
     
@@ -672,7 +672,7 @@ public extension UIView {
 
 public extension UIView {
     private var executeConainerView: UIView? {
-        get { return associatedObjectForKey(&AssociationKey.executeConainerView) as? UIView }
+        get { return associatedObject(forKey: &AssociationKey.executeConainerView) as? UIView }
         set { associate(assignObject: newValue, forKey: &AssociationKey.executeConainerView) }
     }
     
@@ -711,7 +711,7 @@ public extension UIView {
 
 public extension UIView {
     private var arcIndicatorLayer: CAShapeLayer! {
-        get { return associatedObjectForKey(&AssociationKey.arcIndicatorLayer) as? CAShapeLayer }
+        get { return associatedObject(forKey: &AssociationKey.arcIndicatorLayer) as? CAShapeLayer }
         set { associate(assignObject: newValue, forKey: &AssociationKey.arcIndicatorLayer) }
     }
     private var stokeAnimationKey: String { return "stokeAnimation" }

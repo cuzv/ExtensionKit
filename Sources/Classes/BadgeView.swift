@@ -42,7 +42,7 @@ final public class BadgeView: UIView {
     public var badgeValue: String = "" {
         didSet {
             badgeLabel.text = badgeValue
-            var width: CGFloat = badgeValue.size(withFont: badgeLabel.font).width + fixedHeight / 2
+            var width: CGFloat = badgeValue.sizeFrom(font: badgeLabel.font).width + fixedHeight / 2
             if width < fixedHeight {
                 width = fixedHeight
             }
@@ -86,7 +86,7 @@ public extension UIView {
     }
     
     private var badgeView: BadgeView? {
-        get { return associatedObjectForKey(&AssociatedKey.badgeView) as? BadgeView }
+        get { return associatedObject(forKey: &AssociatedKey.badgeView) as? BadgeView }
         set { associate(assignObject: newValue, forKey: &AssociatedKey.badgeView) }
     }
     

@@ -88,7 +88,7 @@ public extension PlaceholderTextView {
     }
     
     private func updatePlaceholderLabelFrame() {
-        if let size = placeholderLabel.text?.size(withFont: placeholderLabel.font, preferredMaxLayoutWidth: CGRectGetWidth(bounds) - 10) {
+        if let size = placeholderLabel.text?.sizeFrom(font: placeholderLabel.font, preferredMaxLayoutWidth: CGRectGetWidth(bounds) - 10) {
             placeholderLabel.frame = CGRectMake(5, 4, size.width + 10, size.height + 8)
         }
     }

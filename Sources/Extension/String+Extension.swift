@@ -57,7 +57,7 @@ public extension String {
         return stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
     }
     
-    public func size(withFont font: UIFont, preferredMaxLayoutWidth: CGFloat = UIScreen.width) -> CGSize {
+    public func sizeFrom(font font: UIFont, preferredMaxLayoutWidth: CGFloat = UIScreen.width) -> CGSize {
         let str = self as NSString
         let options: NSStringDrawingOptions = [.UsesLineFragmentOrigin, .UsesFontLeading, .TruncatesLastVisibleLine]
         return str.boundingRectWithSize(CGSizeMake(preferredMaxLayoutWidth, CGFloat.max), options: options, attributes: [NSFontAttributeName: font], context: nil).size
@@ -74,12 +74,12 @@ public extension String {
         return substringWithRange(range)
     }
     
-    public func substringFromIndex(minIndex: Int) -> String {
+    public func substring(fromIndex minIndex: Int) -> String {
         let start = startIndex.advancedBy(minIndex)
         return substringFromIndex(start)
     }
     
-    public func substringToIndex(index: Int) -> String {
+    public func substring(toIndex index: Int) -> String {
         let end = startIndex.advancedBy(index, limit: endIndex)
         return substringToIndex(end)
     }
@@ -93,17 +93,17 @@ public extension String {
 
 public extension String {
     /// Convert string to double, shall not input cannot converted string.
-    public var doubleValue: Double {
+    public var double: Double {
         return Double(self)!
     }
     
     /// Convert string to Float, shall not input cannot converted string.
-    public var floatValue: Float {
+    public var float: Float {
         return Float(self)!
     }
     
     /// Convert string to Int, shall not input cannot converted string.
-    public var intValue: Int {
+    public var int: Int {
         return Int(self)!
     }
 }

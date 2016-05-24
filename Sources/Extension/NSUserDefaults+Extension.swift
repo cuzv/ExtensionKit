@@ -44,7 +44,7 @@ public extension NSUserDefaults {
         }
     }
     
-    private func setter(key key: String, _ value: AnyObject?) {
+    private func setter(key key: String, value: AnyObject?) {
         self[key] = value
         synchronize()
     }
@@ -57,20 +57,20 @@ public extension NSUserDefaults {
     /// Archive object to NSData to save.
     public func archive(object object: AnyObject?, forKey key: String) {
         if let value = object {
-            setter(key: key, NSKeyedArchiver.archivedDataWithRootObject(value))
+            setter(key: key, value: NSKeyedArchiver.archivedDataWithRootObject(value))
         } else {
             removeObjectForKey(key)
         }
     }
     
     /// Unarchive object for specific key.
-    public func unarchiveObjectForKey(key: String) -> AnyObject? {
+    public func unarchiveObject(forKey key: String) -> AnyObject? {
         return dataForKey(key).flatMap { NSKeyedUnarchiver.unarchiveObjectWithData($0) }
     }
     
     
     /// Get the Int value for key.
-    public func intValueForKey(key: String) -> Int? {
+    public func intValue(forKey key: String) -> Int? {
         if let value: Any? = self[key], let intValue = value as? Int {
             return intValue
         } else {
@@ -79,7 +79,7 @@ public extension NSUserDefaults {
     }
     
     /// Get the Double value for key.
-    public func doubleValueForKey(key: String) -> Double? {
+    public func doubleValue(forKey key: String) -> Double? {
         if let value: Any? = self[key], let doubleValue = value as? Double {
             return doubleValue
         } else {
@@ -88,7 +88,7 @@ public extension NSUserDefaults {
     }
     
     /// Get the Bool value for key.
-    public func boolValueForKey(key: String) -> Bool {
+    public func boolValue(forKey key: String) -> Bool {
         if let value: Any? = self["Key"], let boolValue = value as? Bool  {
             return boolValue
         } else {
@@ -97,7 +97,7 @@ public extension NSUserDefaults {
     }
     
     /// Get the NSURL value for key.
-    public func urlValueForKey(key: String) -> NSURL? {
+    public func urlValue(forKey  key: String) -> NSURL? {
         if let value: Any? = self[key], let urlValue = value as? NSURL {
             return urlValue
         } else {
@@ -106,7 +106,7 @@ public extension NSUserDefaults {
     }
     
     /// Get the NSObject value for key.
-    public func objectValueForKey(key: String) -> NSObject? {
+    public func objectValue(forKey key: String) -> NSObject? {
         if let value: Any? = self[key], let objectValue = value as? NSObject {
             return objectValue
         } else {

@@ -29,7 +29,7 @@ import CoreGraphics
 import UIKit
 
 /// Flip context by supplying the size
-public func FlipContextVertically(context: CGContextRef, size: CGSize) {
+public func FlipContextVertically(context: CGContextRef, _ size: CGSize) {
     CGContextSetTextMatrix(context, CGAffineTransformIdentity)
     CGContextTranslateCTM(context, 0, size.height)
     CGContextScaleCTM(context, 1.0, -1.0)
@@ -37,7 +37,7 @@ public func FlipContextVertically(context: CGContextRef, size: CGSize) {
 
 /// Flip context by retrieving image
 public func FlipImageContextVertically(context: CGContextRef) {
-    FlipContextVertically(context, size: UIGraphicsGetImageFromCurrentImageContext().size)
+    FlipContextVertically(context, UIGraphicsGetImageFromCurrentImageContext().size)
 }
 
 /// Query context for size and use screen scale to map from Quartz pixels to UIKit points

@@ -38,7 +38,7 @@ private struct AssociationKey {
 
 public extension UIAlertAction {
     private var alertActionIndex: Int? {
-        get { return associatedObjectForKey(&AssociationKey.alertActionIndex) as? Int }
+        get { return associatedObject(forKey: &AssociationKey.alertActionIndex) as? Int }
         set { associate(retainObject: newValue, forKey: &AssociationKey.alertActionIndex) }
     }
     
@@ -199,7 +199,7 @@ public func findLastPresentedViewController() -> UIViewController? {
 
 private extension UIImagePickerController {
     private var imagePickerCompletionHandlerWrapper: ClosureDecorator<(UIImagePickerController, UIImage?)> {
-        get { return associatedObjectForKey(&AssociationKey.imagePickerCompletionHandlerWrapper) as! ClosureDecorator<(UIImagePickerController, UIImage?)> }
+        get { return associatedObject(forKey: &AssociationKey.imagePickerCompletionHandlerWrapper) as! ClosureDecorator<(UIImagePickerController, UIImage?)> }
         set { associate(retainObject: newValue, forKey: &AssociationKey.imagePickerCompletionHandlerWrapper) }
     }
 }
@@ -254,7 +254,7 @@ public extension UIViewController {
         navigationController?.showViewController(viewController, sender: self)
     }
     
-    public func backToPreviousViewControllerAnimated(animated: Bool = true) {
+    public func backToPreviousViewController(animated animated: Bool = true) {
         if let presentingViewController = presentingViewController {
             presentingViewController.dismissViewControllerAnimated(animated, completion: nil)
         } else {
@@ -262,7 +262,7 @@ public extension UIViewController {
         }
     }
     
-    public func backToRootViewControllerAnimated(animated: Bool = true) {
+    public func backToRootViewController(animated animated: Bool = true) {
         if let presentingViewController = presentingViewController {
             presentingViewController.dismissViewControllerAnimated(animated, completion: nil)
         } else {
@@ -274,7 +274,7 @@ public extension UIViewController {
         presentViewController(viewControllerToPresent, animated: true, completion: nil)
     }
     
-    public func presentTranslucentViewController(viewController viewController: UIViewController, modalTransitionStyle: UIModalTransitionStyle = .CoverVertical, animated flag: Bool = true, completion: (() -> Void)? = nil) {
+    public func presentTranslucentViewController(viewController: UIViewController, modalTransitionStyle: UIModalTransitionStyle = .CoverVertical, animated flag: Bool = true, completion: (() -> Void)? = nil) {
         viewController.modalPresentationStyle = .Custom
         viewController.modalTransitionStyle = UIDevice.iOS8Plus ? modalTransitionStyle : .CrossDissolve
         // Very important
@@ -320,11 +320,11 @@ extension UIViewController: UIGestureRecognizerDelegate {
 
 public extension UIBarButtonItem {
     private var barButtonItemActionHandlerWrapper: ClosureDecorator<(UIBarButtonItem, Any?)>! {
-        get { return associatedObjectForKey(&AssociationKey.barButtonItemActionHandlerWrapper) as? ClosureDecorator<(UIBarButtonItem, Any?)> }
+        get { return associatedObject(forKey: &AssociationKey.barButtonItemActionHandlerWrapper) as? ClosureDecorator<(UIBarButtonItem, Any?)> }
         set { associate(retainObject: newValue, forKey: &AssociationKey.barButtonItemActionHandlerWrapper) }
     }
     
-    public class func barButtonItem(withTitle title: String, actionHandler: ((UIBarButtonItem, Any?) -> ())?) -> UIBarButtonItem {
+    public class func barButtonItemWith(title title: String, actionHandler: ((UIBarButtonItem, Any?) -> ())?) -> UIBarButtonItem {
         let barButtonItem = UIBarButtonItem(title: title, style: .Plain, target: self, action: #selector(UIBarButtonItem.performActionHandler(_:)))
         
         if let actionHandler = actionHandler {
@@ -334,7 +334,7 @@ public extension UIBarButtonItem {
         return barButtonItem
     }
     
-    public class func barButtonItem(withImage image: UIImage?, actionHandler: ((UIBarButtonItem, Any?) -> ())?) -> UIBarButtonItem {
+    public class func barButtonItemWith(image image: UIImage?, actionHandler: ((UIBarButtonItem, Any?) -> ())?) -> UIBarButtonItem {
         let barButtonItem = UIBarButtonItem(image: image?.originalImage, style: .Plain, target: self, action: #selector(UIBarButtonItem.performActionHandler(_:)))
         
         if let actionHandler = actionHandler {
@@ -344,7 +344,7 @@ public extension UIBarButtonItem {
         return barButtonItem
     }
     
-    public class func barButtonItem(withSystemItem item: UIBarButtonSystemItem, actionHandler: ((UIBarButtonItem, Any?) -> ())?) -> UIBarButtonItem {
+    public class func barButtonItemWith(systemItem item: UIBarButtonSystemItem, actionHandler: ((UIBarButtonItem, Any?) -> ())?) -> UIBarButtonItem {
         let barButtonItem = UIBarButtonItem(barButtonSystemItem: item, target: self, action: #selector(UIBarButtonItem.performActionHandler(_:)))
         if let actionHandler = actionHandler {
             barButtonItem.barButtonItemActionHandlerWrapper = ClosureDecorator(actionHandler)
@@ -361,26 +361,26 @@ public extension UIBarButtonItem {
 
 public extension UIViewController {
     public func showRightBarButtonItem(withImage image: UIImage?, actionHandler: ((UIBarButtonItem, Any?) -> ())?) {
-        navigationItem.rightBarButtonItem = UIBarButtonItem.barButtonItem(withImage: image, actionHandler: actionHandler)
+        navigationItem.rightBarButtonItem = UIBarButtonItem.barButtonItemWith(image: image, actionHandler: actionHandler)
     }
     
     public func showRightBarButtonItem(withTitle title: String, actionHandler: ((UIBarButtonItem, Any?) -> ())?) {
-        navigationItem.rightBarButtonItem = UIBarButtonItem.barButtonItem(withTitle: title, actionHandler: actionHandler)
+        navigationItem.rightBarButtonItem = UIBarButtonItem.barButtonItemWith(title: title, actionHandler: actionHandler)
     }
     
     public func showRightBarButtonItem(withSystemItem item: UIBarButtonSystemItem, actionHandler: ((UIBarButtonItem, Any?) -> ())?) {
-        navigationItem.rightBarButtonItem = UIBarButtonItem.barButtonItem(withSystemItem: item, actionHandler: actionHandler)
+        navigationItem.rightBarButtonItem = UIBarButtonItem.barButtonItemWith(systemItem: item, actionHandler: actionHandler)
     }
     
     public func showLeftBarButtonItem(withImage image: UIImage?, actionHandler: ((UIBarButtonItem, Any?) -> ())?) {
-        navigationItem.leftBarButtonItem = UIBarButtonItem.barButtonItem(withImage: image, actionHandler: actionHandler)
+        navigationItem.leftBarButtonItem = UIBarButtonItem.barButtonItemWith(image: image, actionHandler: actionHandler)
     }
     
     public func showLeftBarButtonItem(withTitle title: String, actionHandler: ((UIBarButtonItem, Any?) -> ())?) {
-        navigationItem.leftBarButtonItem = UIBarButtonItem.barButtonItem(withTitle: title, actionHandler: actionHandler)
+        navigationItem.leftBarButtonItem = UIBarButtonItem.barButtonItemWith(title: title, actionHandler: actionHandler)
     }
     
     public func showLeftBarButtonItem(withSystemItem item: UIBarButtonSystemItem, actionHandler: ((UIBarButtonItem, Any?) -> ())?) {
-        navigationItem.leftBarButtonItem = UIBarButtonItem.barButtonItem(withSystemItem: item, actionHandler: actionHandler)
+        navigationItem.leftBarButtonItem = UIBarButtonItem.barButtonItemWith(systemItem: item, actionHandler: actionHandler)
     }
 }

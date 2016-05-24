@@ -205,7 +205,7 @@ public extension UIImage {
         return image
     }
     
-    public func rendering(withColor color: UIColor, alpha: CGFloat = 1.0) -> UIImage {
+    public func rendering(color color: UIColor, alpha: CGFloat = 1.0) -> UIImage {
         UIGraphicsBeginImageContext(size)
         
         color.setFill()
@@ -258,7 +258,7 @@ public extension UIImage {
         CGContextRotateCTM(context, CGFloat(rotate))
         CGContextTranslateCTM(context, -center.x, -center.y)
         
-        let stringSize = text.size(withFont: font, preferredMaxLayoutWidth: size.width)
+        let stringSize = text.sizeFrom(font: font, preferredMaxLayoutWidth: size.width)
         let stringRect = CGRectFrom(size: stringSize).centeringIn(CGRectFrom(size: size))
         
         // Draw the string, using a blend mode

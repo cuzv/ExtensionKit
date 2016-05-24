@@ -58,7 +58,7 @@ public extension NSObject {
     
     /// Returns the value associated with a given object for a given key.
     /// **Note**: the `key` underlying type must be String.
-    public func associatedObjectForKey(key: UnsafePointer<Void>) -> AnyObject! {
+    public func associatedObject(forKey key: UnsafePointer<Void>) -> AnyObject! {
         return objc_getAssociatedObject(self, key)
     }
 }

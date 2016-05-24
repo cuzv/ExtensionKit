@@ -54,7 +54,7 @@ public func valueFrom(object: Any, forKey key: String) -> Any? {
 }
 
 /// Generate random number in range
-public func randomInRange(range: Range<Int>) -> Int {
+public func randomIn(range: Range<Int>) -> Int {
     let count = UInt32(range.endIndex - range.startIndex)
     return  Int(arc4random_uniform(count)) + range.startIndex
 }

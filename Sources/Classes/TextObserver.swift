@@ -62,7 +62,7 @@ final public class TextObserver {
                 
                 let textLenght = text.length
                 if textLenght > _self.maxLength && nil == textField.markedTextRange {
-                    textField.text = text.substringToIndex(_self.maxLength)
+                    textField.text = text.substring(toIndex: _self.maxLength)
                 }
                 
                 _self.actionHandler(_self.maxLength - (textField.text ?? "").length)
@@ -82,7 +82,7 @@ final public class TextObserver {
                 
                 let textLenght = text.length
                 if textLenght > _self.maxLength && nil == textView.markedTextRange {
-                    textView.text = text.substringToIndex(_self.maxLength)
+                    textView.text = text.substring(toIndex: _self.maxLength)
                 }
                 
                 _self.actionHandler(_self.maxLength - (textView.text ?? "").length)

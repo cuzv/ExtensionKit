@@ -28,11 +28,11 @@ public extension UIResponder {
 
     public func performAction(
         action: Selector,
-        withFirstArgument firstArgument: AnyObject! = nil,
-        withSecondArgument secondArgument: AnyObject! = nil) -> Unmanaged<AnyObject>!
+        _ firstArgument: AnyObject! = nil,
+        _ secondArgument: AnyObject! = nil) -> Unmanaged<AnyObject>!
     {
         var responder: UIResponder? = self
-        
+
         while let _responder = responder where !_responder.respondsToSelector(action) {
             responder = _responder.nextResponder()
         }

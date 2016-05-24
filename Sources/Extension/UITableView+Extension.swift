@@ -27,7 +27,7 @@
 import UIKit
 
 public extension UITableView {
-    public func scrollToTop(animated: Bool = true) {
+    public func scrollToTop(animated animated: Bool = true) {
         if let indexPath = indexPathForRowAtPoint(CGPointMake(CGRectGetMidX(bounds), 2)) where !isEmpty {
             scrollToRowAtIndexPath(indexPath, atScrollPosition: .Top, animated: animated)
         }

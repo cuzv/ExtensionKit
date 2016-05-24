@@ -28,9 +28,9 @@ import UIKit
 
 public extension UIColor {
     public class var random: UIColor {
-        let red   = CGFloat(randomInRange(0 ..< 255))
-        let green = CGFloat(randomInRange(0 ..< 255))
-        let blue  = CGFloat(randomInRange(0 ..< 255))
+        let red   = CGFloat(randomIn(0 ..< 255))
+        let green = CGFloat(randomIn(0 ..< 255))
+        let blue  = CGFloat(randomIn(0 ..< 255))
         return UIColor.colorWith(red, green: green, blue: blue)
     }
     
@@ -38,7 +38,7 @@ public extension UIColor {
         return UIColor(red: red / 255.0, green: green / 255.0, blue: blue / 255.0, alpha: alpha / 100)
     }
     
-    public class func colorWith(hex: String, alpha: CGFloat = 100) -> UIColor {
+    public class func colorWith(hex hex: String, alpha: CGFloat = 100) -> UIColor {
         // Convert hex string to an integer
         var hexint: UInt32 = 0
         
@@ -71,7 +71,7 @@ public func UIColorFrom(red red: CGFloat, green: CGFloat, blue: CGFloat, alpha: 
 }
 
 public func UIColorFrom(hex hex: String, alpha: CGFloat = 100) -> UIColor {
-    return UIColor.colorWith(hex, alpha: alpha)
+    return UIColor.colorWith(hex: hex, alpha: alpha)
 }
 
 // MARK: - iOS default color
