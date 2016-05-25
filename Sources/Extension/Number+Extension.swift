@@ -45,7 +45,7 @@ public extension Double {
         return String(format: "$%.0f", self)
     }
     
-    public var str: String {
+    public var string: String {
         return String(self)
     }
 }
@@ -69,7 +69,7 @@ public extension Int {
         return String(format: "$%.0i", self)
     }
     
-    public var str: String {
+    public var string: String {
         return String(self)
     }
 }
