@@ -303,19 +303,6 @@ public extension UIViewController {
     }
 }
 
-// MARK: - UINavigationBar hidden & visible
-
-extension UIViewController: UIGestureRecognizerDelegate {
-    /// Set UINavigationBar hidden with `interactivePopGestureRecognizer` enabled.
-    /// Should invoke in `viewDidLoad`.
-    public func setNavigationBar(hidden hidden: Bool, animated: Bool) {
-        navigationController?.setNavigationBarHidden(hidden, animated: animated)
-        // Enable slide-back
-        navigationController?.interactivePopGestureRecognizer?.enabled = true
-        navigationController?.interactivePopGestureRecognizer?.delegate = self
-    }
-}
-
 // MARK: - UIBarButtonItem
 
 public extension UIBarButtonItem {
