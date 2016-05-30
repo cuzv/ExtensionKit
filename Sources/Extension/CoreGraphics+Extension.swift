@@ -132,3 +132,178 @@ public func CGRectFrom(center center: CGPoint, size: CGSize) -> CGRect {
                       size.height
     )
 }
+
+/// Return center for rect
+public func RectGetCenter(rect: CGRect) -> CGPoint {
+    return CGPointMake(rect.origin.x + CGRectGetWidth(rect) / 2.0, rect.origin.y + CGRectGetHeight(rect) / 2.0)
+}
+
+/// Return calculated bounds
+public func PathBoundingBox(path: UIBezierPath) -> CGRect {
+    return CGPathGetPathBoundingBox(path.CGPath)
+}
+
+/// Return calculated bounds taking line width into account
+public func PathBoundingBoxWithLineWidth(path: UIBezierPath) -> CGRect {
+    let bounds = PathBoundingBox(path)
+    return CGRectInset(bounds, -path.lineWidth / 2.0, -path.lineWidth / 2.0)
+}
+
+/// Return the calculated center point
+public func PathBoundingCenter(path: UIBezierPath) -> CGPoint {
+    return RectGetCenter(PathBoundingBox(path))
+}
+
+/// Return the center point for the bounds property
+public func PathCenter(path: UIBezierPath) -> CGPoint {
+    return RectGetCenter(path.bounds)
+}
+
+/// Translate path’s origin to its center before applying the transform
+public func ApplyCenteredPathTransform(path: UIBezierPath, _ transform: CGAffineTransform) {
+    let center = PathBoundingCenter(path)
+    var t = CGAffineTransformIdentity
+    t = CGAffineTransformTranslate(t, center.x, center.y)
+    t = CGAffineTransformConcat(transform, t)
+    t = CGAffineTransformTranslate(t, -center.x, -center.y)
+    path.applyTransform(t)
+}
+
+/// Rotate path around its center
+public func RotatePath(path: UIBezierPath, _ theta: CGFloat) {
+    ApplyCenteredPathTransform(path, CGAffineTransformMakeRotation(theta))
+}
+
+/// Scale path to sx, sy
+public func ScalePath(path: UIBezierPath, _ sx: CGFloat, _ sy:  CGFloat) {
+    ApplyCenteredPathTransform(path, CGAffineTransformMakeScale(sx, sy))
+}
+
+/// Offset a path
+public func OffsetPath(path: UIBezierPath, _ offset: CGSize) {
+    ApplyCenteredPathTransform(path, CGAffineTransformMakeTranslation(offset.width, offset.height))
+}
+
+/// Make vector for two points
+public func PointsMakeVector(srcPoint: CGPoint, _ destPoint: CGPoint) -> CGSize {
+    return CGSizeMake(destPoint.x - srcPoint.x, destPoint.y - srcPoint.y)
+}
+
+/// Move path to a new origin
+public func MovePathToPoint(path: UIBezierPath, _ destPoint: CGPoint) {
+    let bounds = PathBoundingBox(path)
+    let vector = PointsMakeVector(bounds.origin, destPoint)
+    OffsetPath(path, vector)
+}
+
+/// Center path around a new point
+public func MovePathCenterToPoint(path: UIBezierPath, _ destPoint: CGPoint) {
+    let bounds = PathBoundingBox(path)
+    var vector = PointsMakeVector(bounds.origin, destPoint)
+    vector.width -= bounds.size.width / 2.0
+    vector.height -= bounds.size.height / 2.0
+    OffsetPath(path, vector)
+}
+
+/// Flip horizontally
+public func MirrorPathHorizontally(path: UIBezierPath) {
+    ApplyCenteredPathTransform(path, CGAffineTransformMakeScale(-1, 1))
+}
+
+/// Flip vertically
+public func MirrorPathVertically(path: UIBezierPath) {
+    ApplyCenteredPathTransform(path, CGAffineTransformMakeScale(1, -1))
+}
+
+public func FitPathToRect(path: UIBezierPath, _ destRect: CGRect) {
+    let bounds = PathBoundingBox(path)
+    let fitRect = bounds.fillingIn(destRect)
+    let scale =  bounds.size.aspectScaleToFit(destRect)
+    let newCenter = RectGetCenter(fitRect)
+    MovePathCenterToPoint(path, newCenter)
+    ScalePath(path, scale, scale)
+}
+
+public func BezierPathFromString(string: NSString, font: UIFont) -> UIBezierPath? {
+    // Initialize path
+    let path = UIBezierPath()
+    if (0 == string.length) {
+        return path
+    }
+    // Create font ref
+    let fontRef = CTFontCreateWithName(font.fontName, font.pointSize, nil)
+    // Create glyphs (that is, individual letter shapes) 
+    
+    
+    var characters = [UniChar]()
+    let length = (string as NSString).length
+    for i in Range(0 ..< length) {
+        characters.append((string as NSString).characterAtIndex(i))
+    }
+    
+    let glyphs = UnsafeMutablePointer<CGGlyph>.alloc(length)
+    glyphs.initialize(0)
+    
+    let success = CTFontGetGlyphsForCharacters(font, characters, glyphs, length)
+    if (!success) {
+        debugPrint("Error retrieving string glyphs")
+        free(glyphs)
+        return nil
+    }
+    
+    // Draw each char into path
+    for i in 0 ..< string.length {
+        // Glyph to CGPath 
+        let glyph = glyphs[i]
+        guard let pathRef = CTFontCreatePathForGlyph(fontRef, glyph, nil) else {
+            return nil
+        }
+        
+        // Append CGPath
+        path.appendPath(UIBezierPath(CGPath: pathRef))
+        
+        // Offset by size
+        let size = (string.substringWithRange(NSRange( i ..< i + 1)) as NSString).sizeWithAttributes([NSFontAttributeName: font])
+        OffsetPath(path, CGSizeMake(-size.width, 0))
+    }
+    
+    // Clean up
+    free(glyphs)
+    
+    // Return the path to the UIKit coordinate system MirrorPathVertically(path);
+    return path
+}
+
+public func BezierPolygon(numberOfSides: Int) -> UIBezierPath? {
+    if numberOfSides < 3 {
+        debugPrint("Error: Please supply at least 3 sides")
+        return nil
+    }
+    
+    let path = UIBezierPath()
+    
+    // Use a unit rectangle as the destination
+    let destinationRect = CGRectMake(0, 0, 1, 1)
+    let center = RectGetCenter(destinationRect)
+    let radius: CGFloat = 0.5
+    
+    var firstPoint = true
+    for i in 0 ..< numberOfSides - 1 {
+        let theta: Double = M_PI + Double(i) * 2 * M_PI / Double(numberOfSides)
+        let dTheta: Double = 2 * M_PI / Double(numberOfSides)
+        var point = CGPointZero
+        if firstPoint {
+            point.x = center.x + radius * CGFloat(sin(theta))
+            point.y = center.y + radius * CGFloat(cos(dTheta))
+            firstPoint = false
+        }
+        point.x = center.x + radius * CGFloat(sin(theta + dTheta))
+        point.y = center.y + radius * CGFloat(cos(theta + dTheta))
+
+        path.addLineToPoint(point)
+    }
+    path.closePath()
+    
+    return path
+}
+ 
