@@ -362,6 +362,22 @@ public extension UIView {
         layer.addSublayer(boundLayer)
     }
     
+    class _BorderLineView: UIView {
+        var edge: UIRectEdge = .None
+    }
+    
+    public func removeBorderLine(rectEdge: UIRectEdge = .All) {
+        if rectEdge == .None {
+            return
+        }
+        
+        for view in subviews {
+            if let view = view as? _BorderLineView where rectEdge.contains(view.edge) {
+                view.removeFromSuperview()
+            }
+        }
+    }
+    
     /// Add border line view using Autolayout.
     public func addBorderLine(
         width width: CGFloat = 1.0 / UIScreen.mainScreen().scale,
@@ -375,11 +391,13 @@ public extension UIView {
             sizeLayoutAttribute: NSLayoutAttribute,
             visualFormat: String,
             color: UIColor,
-            multiplier: CGFloat)
+            multiplier: CGFloat,
+            rectEdge: UIRectEdge)
         {
-            let lineView = UIView()
+            let lineView = _BorderLineView()
             lineView.backgroundColor = color
             lineView.translatesAutoresizingMaskIntoConstraints = false
+            lineView.edge = rectEdge
             addSubview(lineView)
             
             let edge = NSLayoutConstraint(item: lineView, attribute: edgeLayoutAttribute, relatedBy: .Equal, toItem: self, attribute: edgeLayoutAttribute, multiplier: 1, constant: 0)
@@ -391,6 +409,16 @@ public extension UIView {
             addConstraints(constraints)
         }
         
+        if rectEdge == .None {
+            return
+        }
+        
+        for view in subviews {
+            if let view = view as? _BorderLineView where rectEdge.contains(view.edge) {
+                return
+            }
+        }
+        
         var edgeLayoutAttribute: NSLayoutAttribute = .NotAnAttribute
         var centerLayoutAttribute: NSLayoutAttribute = .NotAnAttribute
         var sizeLayoutAttribute: NSLayoutAttribute = .NotAnAttribute
@@ -400,7 +428,7 @@ public extension UIView {
             centerLayoutAttribute = .CenterX;
             sizeLayoutAttribute = .Width;
             let visualFormat = "V:[lineView(\(width))]"
-            addLineViewConstraint(edgeLayoutAttribute: edgeLayoutAttribute, centerLayoutAttribute: centerLayoutAttribute, sizeLayoutAttribute: sizeLayoutAttribute, visualFormat: visualFormat, color: color, multiplier: multiplier)
+            addLineViewConstraint(edgeLayoutAttribute: edgeLayoutAttribute, centerLayoutAttribute: centerLayoutAttribute, sizeLayoutAttribute: sizeLayoutAttribute, visualFormat: visualFormat, color: color, multiplier: multiplier, rectEdge: .Top)
         }
         
         if rectEdge.contains(.Left) {
@@ -408,7 +436,7 @@ public extension UIView {
             centerLayoutAttribute = .CenterY;
             sizeLayoutAttribute = .Height;
             let visualFormat = "[lineView(\(width))]"
-            addLineViewConstraint(edgeLayoutAttribute: edgeLayoutAttribute, centerLayoutAttribute: centerLayoutAttribute, sizeLayoutAttribute: sizeLayoutAttribute, visualFormat: visualFormat, color: color, multiplier: multiplier)
+            addLineViewConstraint(edgeLayoutAttribute: edgeLayoutAttribute, centerLayoutAttribute: centerLayoutAttribute, sizeLayoutAttribute: sizeLayoutAttribute, visualFormat: visualFormat, color: color, multiplier: multiplier, rectEdge: .Left)
         }
         
         if rectEdge.contains(.Bottom) {
@@ -416,7 +444,7 @@ public extension UIView {
             centerLayoutAttribute = .CenterX
             sizeLayoutAttribute = .Width
             let visualFormat = "V:[lineView(\(width))]"
-            addLineViewConstraint(edgeLayoutAttribute: edgeLayoutAttribute, centerLayoutAttribute: centerLayoutAttribute, sizeLayoutAttribute: sizeLayoutAttribute, visualFormat: visualFormat, color: color, multiplier: multiplier)
+            addLineViewConstraint(edgeLayoutAttribute: edgeLayoutAttribute, centerLayoutAttribute: centerLayoutAttribute, sizeLayoutAttribute: sizeLayoutAttribute, visualFormat: visualFormat, color: color, multiplier: multiplier, rectEdge: .Bottom)
         }
         
         if rectEdge.contains(.Right) {
@@ -424,7 +452,7 @@ public extension UIView {
             centerLayoutAttribute = .CenterY
             sizeLayoutAttribute = .Height
             let visualFormat = "[lineView(\(width))]"
-            addLineViewConstraint(edgeLayoutAttribute: edgeLayoutAttribute, centerLayoutAttribute: centerLayoutAttribute, sizeLayoutAttribute: sizeLayoutAttribute, visualFormat: visualFormat, color: color, multiplier: multiplier)
+            addLineViewConstraint(edgeLayoutAttribute: edgeLayoutAttribute, centerLayoutAttribute: centerLayoutAttribute, sizeLayoutAttribute: sizeLayoutAttribute, visualFormat: visualFormat, color: color, multiplier: multiplier, rectEdge: .Right)
         }
     }
     
