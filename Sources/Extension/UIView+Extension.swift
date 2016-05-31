@@ -366,7 +366,7 @@ public extension UIView {
         var edge: UIRectEdge = .None
     }
     
-    public func removeBorderLine(rectEdge: UIRectEdge = .All) {
+    public func removeBorderLine(rectEdge rectEdge: UIRectEdge = .All) {
         if rectEdge == .None {
             return
         }
