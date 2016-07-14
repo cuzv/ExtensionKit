@@ -64,6 +64,43 @@ public extension UIScrollView {
         }
     }
     
+    public var scrollIndicatorInsetTop: CGFloat {
+        get { return  scrollIndicatorInsets.top }
+        set {
+            
+            var inset = scrollIndicatorInsets
+            inset.top = newValue
+            scrollIndicatorInsets = inset
+        }
+    }
+    
+    public var scrollIndicatorInsetLeft: CGFloat {
+        get { return scrollIndicatorInsets.left }
+        set {
+            var inset = scrollIndicatorInsets
+            inset.left = newValue
+            scrollIndicatorInsets = inset
+        }
+    }
+    
+    public var scrollIndicatorInsetBottom: CGFloat {
+        get { return scrollIndicatorInsets.bottom }
+        set {
+            var inset = scrollIndicatorInsets
+            inset.bottom = newValue
+            scrollIndicatorInsets = inset
+        }
+    }
+    
+    public var scrollIndicatorInsetRight: CGFloat {
+        get { return scrollIndicatorInsets.right }
+        set {
+            var inset = scrollIndicatorInsets
+            inset.right = newValue
+            scrollIndicatorInsets = inset
+        }
+    }
+    
     @IBInspectable public var contentOffsetX: CGFloat {
         get { return contentOffset.x }
         set {
