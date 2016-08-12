@@ -54,6 +54,7 @@
 		468F230A1CCC6DF100C0D1FD /* DefaultReflectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468F23091CCC6DF100C0D1FD /* DefaultReflectable.swift */; };
 		468F230C1CCC775C00C0D1FD /* Nostalgia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468F230B1CCC775C00C0D1FD /* Nostalgia.swift */; };
 		46CFE5711CD5BAC40098C995 /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CFE5701CD5BAC40098C995 /* Observable.swift */; };
+		46FCD8BF1D5DC94200E72ACD /* UIBarButtonItem+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46FCD8BE1D5DC94200E72ACD /* UIBarButtonItem+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -106,6 +107,7 @@
 		468F23091CCC6DF100C0D1FD /* DefaultReflectable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultReflectable.swift; sourceTree = "<group>"; };
 		468F230B1CCC775C00C0D1FD /* Nostalgia.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Nostalgia.swift; sourceTree = "<group>"; };
 		46CFE5701CD5BAC40098C995 /* Observable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
+		46FCD8BE1D5DC94200E72ACD /* UIBarButtonItem+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -202,6 +204,7 @@
 				4603E29A1CC07EE40030EDA0 /* UIView+Extension.swift */,
 				4603E29B1CC07EE40030EDA0 /* UIViewController+Extension.swift */,
 				468E95AF1CD37606007D39AA /* UITableView+Extension.swift */,
+				46FCD8BE1D5DC94200E72ACD /* UIBarButtonItem+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -332,6 +335,7 @@
 				4603E2A01CC07EE40030EDA0 /* PaddingTextField.swift in Sources */,
 				468578361CDA410000906ABA /* CGD.swift in Sources */,
 				4603E2AE1CC07EE40030EDA0 /* NSUserDefaults+Extension.swift in Sources */,
+				46FCD8BF1D5DC94200E72ACD /* UIBarButtonItem+Extension.swift in Sources */,
 				4603E2A61CC07EE40030EDA0 /* Cocoa+Extension.swift in Sources */,
 				4603E2BA1CC07EE40030EDA0 /* UILabel+Extension.swift in Sources */,
 				4603E2B21CC07EE40030EDA0 /* UIButton+Extension.swift in Sources */,

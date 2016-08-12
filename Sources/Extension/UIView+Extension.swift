@@ -383,7 +383,8 @@ public extension UIView {
         width width: CGFloat = 1.0 / UIScreen.mainScreen().scale,
         color: UIColor = UIColor.separatorDefaultColor,
         rectEdge: UIRectEdge = .All,
-        multiplier: CGFloat = 1.0)
+        multiplier: CGFloat = 1.0,
+        constant: CGFloat = 0)
     {
         func addLineViewConstraint(
             edgeLayoutAttribute edgeLayoutAttribute: NSLayoutAttribute,
@@ -402,7 +403,7 @@ public extension UIView {
             
             let edge = NSLayoutConstraint(item: lineView, attribute: edgeLayoutAttribute, relatedBy: .Equal, toItem: self, attribute: edgeLayoutAttribute, multiplier: 1, constant: 0)
             let center = NSLayoutConstraint(item: lineView, attribute: centerLayoutAttribute, relatedBy: .Equal, toItem: self, attribute: centerLayoutAttribute, multiplier: 1, constant: 0)
-            let size = NSLayoutConstraint(item: lineView, attribute: sizeLayoutAttribute, relatedBy: .Equal, toItem: self, attribute: sizeLayoutAttribute, multiplier: multiplier, constant: 0)
+            let size = NSLayoutConstraint(item: lineView, attribute: sizeLayoutAttribute, relatedBy: .Equal, toItem: self, attribute: sizeLayoutAttribute, multiplier: multiplier, constant: constant)
             addConstraints([edge, center, size])
             
             let constraints = NSLayoutConstraint.constraintsWithVisualFormat(visualFormat, options: NSLayoutFormatOptions.DirectionLeadingToTrailing, metrics: nil, views: ["lineView": lineView])
