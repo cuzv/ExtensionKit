@@ -35,7 +35,7 @@ public extension UIImage {
             return NSBundle.mainBundle().pathForResource(fileName, ofType: ofType)
         }
         
-        if UIScreen.width > 750 {
+        if UIScreen.width > 375 {
             if let filePath = pathForResource("\(fileName)@3x", ofType: ofType) {
                 return UIImage(contentsOfFile: filePath)
             }
