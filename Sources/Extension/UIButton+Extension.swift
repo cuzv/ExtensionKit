@@ -35,24 +35,23 @@ private struct AssociationKey {
 
 // MARK: - Property for state
 
-@IBDesignable
 public extension UIButton {
-    @IBInspectable public var title: String? {
+    public var title: String? {
         get { return titleForState(.Normal) }
         set { setTitle(newValue, forState: .Normal) }
     }
     
-    @IBInspectable public var titleFont: UIFont? {
+    public var titleFont: UIFont? {
         get { return titleLabel?.font }
         set { titleLabel?.font = newValue }
     }
     
-    @IBInspectable public var attributedTitle: NSAttributedString? {
+    public var attributedTitle: NSAttributedString? {
         get { return attributedTitleForState(.Normal) }
         set { setAttributedTitle(newValue, forState: .Normal) }
     }
     
-    @IBInspectable public var titleColor: UIColor? {
+    public var titleColor: UIColor? {
         get { return titleColorForState(.Normal) }
         set {
             setTitleColor(newValue, forState: .Normal)
@@ -64,7 +63,7 @@ public extension UIButton {
         }
     }
     
-    @IBInspectable public var titleShadowColor: UIColor? {
+    public var titleShadowColor: UIColor? {
         get { return titleShadowColorForState(.Normal) }
         set {
             setTitleShadowColor(newValue, forState: .Normal)
@@ -73,19 +72,19 @@ public extension UIButton {
         }
     }
     
-    @IBInspectable public var image: UIImage? {
+    public var image: UIImage? {
         get { return imageForState(.Normal) }
         set {
             setImage(newValue?.imageWithRenderingMode(.AlwaysOriginal), forState: .Normal)
         }
     }
     
-    @IBInspectable public var selectedImage: UIImage? {
+    public var selectedImage: UIImage? {
         get { return imageForState(.Selected) }
         set { setImage(newValue?.imageWithRenderingMode(.AlwaysOriginal), forState: .Selected) }
     }
     
-    @IBInspectable public var backgroundImage: UIImage? {
+    public var backgroundImage: UIImage? {
         get { return backgroundImageForState(.Normal) }
         set {
             let image = newValue?.imageWithRenderingMode(.AlwaysOriginal)
@@ -97,12 +96,12 @@ public extension UIButton {
         }
     }
     
-    @IBInspectable public var selectedBackgroundImage: UIImage? {
+    public var selectedBackgroundImage: UIImage? {
         get { return backgroundImageForState(.Selected) }
         set { setBackgroundImage(newValue?.imageWithRenderingMode(.AlwaysOriginal), forState: .Selected) }
     }
     
-    @IBInspectable public var disabledBackgroundImage: UIImage? {
+    public var disabledBackgroundImage: UIImage? {
         get { return backgroundImageForState(.Disabled) }
         set { setBackgroundImage(newValue?.imageWithRenderingMode(.AlwaysOriginal), forState: .Disabled) }
     }
@@ -110,28 +109,27 @@ public extension UIButton {
 
 // MARK: - Image position
 
-@IBDesignable
 public extension UIButton {
     /// Convenience `setImageAlignmentToTop:` setter.
-    @IBInspectable public var imageAlignmentTopSpace: CGFloat {
+    public var imageAlignmentTopSpace: CGFloat {
         get { fatalError("Unavailable.") }
         set { setImageAlignmentToTop(titleSpace: newValue) }
     }
     
     /// Convenience `setImageAlignmentToLeft:` setter.
-    @IBInspectable public var imageAlignmentLeftSpace: CGFloat {
+    public var imageAlignmentLeftSpace: CGFloat {
         get { fatalError("Unavailable.") }
         set { setImageAlignmentToLeft(titleSpace: newValue) }
     }
     
     /// Convenience `setImageAlignmentToBottom:` setter.
-    @IBInspectable public var imageAlignmentBottomSpace: CGFloat {
+    public var imageAlignmentBottomSpace: CGFloat {
         get { fatalError("Unavailable.") }
         set { setImageAlignmentToBottom(titleSpace: newValue) }
     }
     
     /// Convenience `setImageAlignmentToRight:` setter.
-    @IBInspectable public var imageAlignmentRightSpace: CGFloat {
+    public var imageAlignmentRightSpace: CGFloat {
         get { fatalError("Unavailable.") }
         set { setImageAlignmentToRight(titleSpace: newValue) }
     }

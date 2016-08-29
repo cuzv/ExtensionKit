@@ -26,9 +26,8 @@
 
 import UIKit
 
-@IBDesignable
 public extension UIScrollView {
-    @IBInspectable public var insetTop: CGFloat {
+    public var insetTop: CGFloat {
         get { return contentInset.top }
         set {
             var inset = contentInset
@@ -37,7 +36,7 @@ public extension UIScrollView {
         }
     }
     
-    @IBInspectable public var insetLeft: CGFloat {
+    public var insetLeft: CGFloat {
         get { return contentInset.left }
         set {
             var inset = contentInset
@@ -46,7 +45,7 @@ public extension UIScrollView {
         }
     }
     
-    @IBInspectable public var insetBottom: CGFloat {
+    public var insetBottom: CGFloat {
         get { return contentInset.bottom }
         set {
             var inset = contentInset
@@ -55,7 +54,7 @@ public extension UIScrollView {
         }
     }
     
-    @IBInspectable public var insetRight: CGFloat {
+    public var insetRight: CGFloat {
         get { return contentInset.right }
         set {
             var inset = contentInset
@@ -101,7 +100,7 @@ public extension UIScrollView {
         }
     }
     
-    @IBInspectable public var contentOffsetX: CGFloat {
+    public var contentOffsetX: CGFloat {
         get { return contentOffset.x }
         set {
             var offset = contentOffset
@@ -110,7 +109,7 @@ public extension UIScrollView {
         }
     }
     
-    @IBInspectable public var contentOffsetY: CGFloat {
+    public var contentOffsetY: CGFloat {
         get { return contentOffset.y }
         set {
             var offset = contentOffset
@@ -119,7 +118,7 @@ public extension UIScrollView {
         }
     }
     
-    @IBInspectable public var contentSizeWidth: CGFloat {
+    public var contentSizeWidth: CGFloat {
         get { return contentSize.width }
         set {
             var size = contentSize
@@ -128,7 +127,7 @@ public extension UIScrollView {
         }
     }
     
-    @IBInspectable public var contentSizeHeight: CGFloat {
+    public var contentSizeHeight: CGFloat {
         get { return contentSize.height }
         set {
             var size = contentSize

@@ -26,11 +26,10 @@
 
 import UIKit
 
-@IBDesignable
 final public class DashLineView: UIView {
-    @IBInspectable public var spacing: CGFloat = 2
-    @IBInspectable public var lineColor: UIColor = UIColor.separatorDefaultColor
-    @IBInspectable public var horizontal: Bool = true
+    public var spacing: CGFloat = 2
+    public var lineColor: UIColor = UIColor.separatorDefaultColor
+    public var horizontal: Bool = true
     
     public override func drawRect(rect: CGRect) {
         super.drawRect(rect)
