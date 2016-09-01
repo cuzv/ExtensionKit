@@ -306,7 +306,7 @@ public extension UIView {
                 radius: CGFloat = 3,
                 fillColor: UIColor = UIColor.whiteColor(),
                 strokeColor: UIColor = UIColor.clearColor(),
-                stockLineWidth: CGFloat = 0)
+                strokeLineWidth: CGFloat = 0)
     {
         if CGSizeEqualToSize(frame.size, CGSize.zero) {
             debugPrint("Could not set rounding corners on zero size view.")
@@ -323,7 +323,7 @@ public extension UIView {
                 roundingCorners: corners,
                 radius: radius,
                 strokeColor: strokeColor,
-                stockLineWidth: stockLineWidth
+                strokeLineWidth: strokeLineWidth
             )
             
             dispatch_async(dispatch_get_main_queue()) {
