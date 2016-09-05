@@ -54,6 +54,6 @@ final public class TouchesButton: UIButton {
             return super.pointInside(point, withEvent: event)
         }
         
-        return CGRectContainsPoint(touchesLocation, point) ? true : false
+        return CGRectContainsPoint(touchesLocation, point)
     }
 }

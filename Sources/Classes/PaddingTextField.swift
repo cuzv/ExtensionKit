@@ -56,14 +56,10 @@ final public class PaddingTextField: UITextField {
     }
     
     public override func textRectForBounds(bounds: CGRect) -> CGRect {
-        let width = CGRectGetWidth(bounds) + contentEdgeInsets.left + contentEdgeInsets.right
-        let height = CGRectGetHeight(bounds) + contentEdgeInsets.top + contentEdgeInsets.bottom
-        return CGRectMake(0, 0, width, height)
+        return UIEdgeInsetsInsetRect(bounds, self.contentEdgeInsets)
     }
     
     public override func editingRectForBounds(bounds: CGRect) -> CGRect {
-        let width = CGRectGetWidth(bounds) + contentEdgeInsets.left + contentEdgeInsets.right;
-        let height = CGRectGetHeight(bounds) + contentEdgeInsets.top + contentEdgeInsets.bottom;
-        return CGRectMake(0, 0, width, height);
+        return UIEdgeInsetsInsetRect(bounds, self.contentEdgeInsets)
     }
 }

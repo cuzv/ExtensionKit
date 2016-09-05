@@ -85,7 +85,9 @@ public extension UIView {
     }
     
     internal func handleGestureRecognizerAction(sender: UIGestureRecognizer) {
-        sender.gestureRecognizerWrapper.invoke((self, sender))
+        if (sender.state == .Ended) {
+            sender.gestureRecognizerWrapper.invoke((self, sender))
+        }
     }
 }
 
