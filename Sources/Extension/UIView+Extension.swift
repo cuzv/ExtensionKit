@@ -314,9 +314,6 @@ public extension UIView {
             debugPrint("Could not set rounding corners on zero size view.")
             return
         }
-        if nil != layer.contents {
-            return
-        }
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
             let backImage = UIImageFrom(
