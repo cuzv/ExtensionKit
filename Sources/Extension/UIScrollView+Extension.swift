@@ -26,9 +26,8 @@
 
 import UIKit
 
-@IBDesignable
 public extension UIScrollView {
-    @IBInspectable public var insetTop: CGFloat {
+    public var insetTop: CGFloat {
         get { return contentInset.top }
         set {
             var inset = contentInset
@@ -37,7 +36,7 @@ public extension UIScrollView {
         }
     }
     
-    @IBInspectable public var insetLeft: CGFloat {
+    public var insetLeft: CGFloat {
         get { return contentInset.left }
         set {
             var inset = contentInset
@@ -46,7 +45,7 @@ public extension UIScrollView {
         }
     }
     
-    @IBInspectable public var insetBottom: CGFloat {
+    public var insetBottom: CGFloat {
         get { return contentInset.bottom }
         set {
             var inset = contentInset
@@ -55,7 +54,7 @@ public extension UIScrollView {
         }
     }
     
-    @IBInspectable public var insetRight: CGFloat {
+    public var insetRight: CGFloat {
         get { return contentInset.right }
         set {
             var inset = contentInset
@@ -64,7 +63,44 @@ public extension UIScrollView {
         }
     }
     
-    @IBInspectable public var contentOffsetX: CGFloat {
+    public var scrollIndicatorInsetTop: CGFloat {
+        get { return  scrollIndicatorInsets.top }
+        set {
+            
+            var inset = scrollIndicatorInsets
+            inset.top = newValue
+            scrollIndicatorInsets = inset
+        }
+    }
+    
+    public var scrollIndicatorInsetLeft: CGFloat {
+        get { return scrollIndicatorInsets.left }
+        set {
+            var inset = scrollIndicatorInsets
+            inset.left = newValue
+            scrollIndicatorInsets = inset
+        }
+    }
+    
+    public var scrollIndicatorInsetBottom: CGFloat {
+        get { return scrollIndicatorInsets.bottom }
+        set {
+            var inset = scrollIndicatorInsets
+            inset.bottom = newValue
+            scrollIndicatorInsets = inset
+        }
+    }
+    
+    public var scrollIndicatorInsetRight: CGFloat {
+        get { return scrollIndicatorInsets.right }
+        set {
+            var inset = scrollIndicatorInsets
+            inset.right = newValue
+            scrollIndicatorInsets = inset
+        }
+    }
+    
+    public var contentOffsetX: CGFloat {
         get { return contentOffset.x }
         set {
             var offset = contentOffset
@@ -73,7 +109,7 @@ public extension UIScrollView {
         }
     }
     
-    @IBInspectable public var contentOffsetY: CGFloat {
+    public var contentOffsetY: CGFloat {
         get { return contentOffset.y }
         set {
             var offset = contentOffset
@@ -82,7 +118,7 @@ public extension UIScrollView {
         }
     }
     
-    @IBInspectable public var contentSizeWidth: CGFloat {
+    public var contentSizeWidth: CGFloat {
         get { return contentSize.width }
         set {
             var size = contentSize
@@ -91,12 +127,75 @@ public extension UIScrollView {
         }
     }
     
-    @IBInspectable public var contentSizeHeight: CGFloat {
+    public var contentSizeHeight: CGFloat {
         get { return contentSize.height }
         set {
             var size = contentSize
             size.height = newValue
             contentSize = size
         }
+    }
+}
+
+// MARK: - RefreshControl
+
+public extension UIScrollView {
+    private struct AssociationKey {
+        private static var refreshControl: String = "UIScrollView.RefreshControl"
+    }
+    
+    public var refreshContrl: UIRefreshControl? {
+        get { return associatedObject(forKey: &AssociationKey.refreshControl) as? UIRefreshControl }
+        set { associate(assignObject: newValue, forKey: &AssociationKey.refreshControl) }
+    }
+    
+    public func addRefreshControl(withActionHandler handler: ((UIScrollView) -> ())) {
+        if let _ = refreshContrl {
+            return
+        }
+        
+        let _refreshContrl = UIRefreshControl(frame: CGRectMake(0, 0, CGRectGetWidth(UIScreen.mainScreen().bounds), 64))
+        addSubview(_refreshContrl)
+        sendSubviewToBack(_refreshContrl)
+        _refreshContrl.addControlEvents(.ValueChanged) { [weak self] (_) in
+            if let this = self {
+                if this.refreshControlEnabled {
+                    handler(this)
+                } else {
+                    this.endRefreshing()
+                }
+            }
+        }
+        refreshContrl = _refreshContrl
+    }
+    
+    public var refreshControlEnabled: Bool {
+        get {
+            if let refreshContrl = refreshContrl {
+                return refreshContrl.enabled
+            }
+            return false
+        }
+        set {
+            if let refreshContrl = refreshContrl {
+                refreshContrl.enabled = newValue
+                refreshContrl.alpha = newValue ? 1 : 0
+            }
+        }
+    }
+    
+    public func beginRefreshing() {
+        refreshContrl?.beginRefreshing()
+    }
+    
+    public func endRefreshing() {
+        refreshContrl?.endRefreshing()
+    }
+    
+    public var refreshing: Bool {
+        if let refreshContrl = refreshContrl {
+            return refreshContrl.refreshing
+        }
+        return false
     }
 }

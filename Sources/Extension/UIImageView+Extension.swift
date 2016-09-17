@@ -34,7 +34,7 @@ public extension UIImageView {
         radius: CGFloat = 3,
         fillColor: UIColor = UIColor.whiteColor(),
         strokeColor: UIColor = UIColor.clearColor(),
-        stockLineWidth: CGFloat = 0)
+        strokeLineWidth: CGFloat = 0)
     {
         if CGSizeEqualToSize(frame.size, CGSize.zero) {
             debugPrint("Could not set rounding corners on zero size view.")
@@ -48,9 +48,9 @@ public extension UIImageView {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
             let scale = max(_image.size.width / self.frame.size.width, _image.size.height / self.frame.size.height)
             let relatedRadius = scale * radius
-            let relatedStockLineWidth = scale * stockLineWidth
+            let relatedStockLineWidth = scale * strokeLineWidth
             
-            let newImage = _image.imageWith(roundingCorners: corners, radius: relatedRadius, strokeColor: strokeColor, stockLineWidth: relatedStockLineWidth)
+            let newImage = _image.imageWith(roundingCorners: corners, radius: relatedRadius, strokeColor: strokeColor, strokeLineWidth: relatedStockLineWidth)
             dispatch_async(dispatch_get_main_queue()) {
                 self.backgroundColor = UIColor.clearColor()
                 self.image = newImage

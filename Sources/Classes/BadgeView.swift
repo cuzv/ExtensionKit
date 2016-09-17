@@ -74,7 +74,6 @@ final public class BadgeView: UIView {
         badgeLabel.backgroundColor?.setFill()
         UIRectFill(rect)
         badgeLabel.drawTextInRect(rect)
-
     }
 }
 
@@ -97,6 +96,7 @@ public extension UIView {
                 addBadgeView()
             }
             badgeView?.badgeValue = newValue ?? ""
+            badgeView?.userInteractionEnabled = false
         }
     }
     

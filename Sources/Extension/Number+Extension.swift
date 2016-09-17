@@ -29,8 +29,18 @@ import Foundation
 // MARK: - Double -> String
 
 public extension Double {
+    public var price:  String {
+        let str = String(format: "%.2f", self)
+        if str.hasSuffix("00") {
+            return String(format: "%.0f", self)
+        }
+        if str.hasSuffix("0") {
+            return String(format: "%.1f", self)
+        }
+        return str
+    }
     public var CNYString: String {
-        return String(format: "¥%.2f", self)
+        return "¥" + price
     }
 
     public var CNYShortString: String {
@@ -38,38 +48,14 @@ public extension Double {
     }
 
     public var USDString: String {
-        return String(format: "$%.2f", self)
+        return "$" + price
     }
     
     public var USDShortString: String {
         return String(format: "$%.0f", self)
     }
     
-    public var str: String {
-        return String(self)
-    }
-}
-
-// MARK: - Int -> String
-
-public extension Int {
-    public var CNYString: String {
-        return String(format: "¥%.2i", self)
-    }
-    
-    public var CNYShortString: String {
-        return String(format: "¥%.0i", self)
-    }
-    
-    public var USDString: String {
-        return String(format: "$%.2i", self)
-    }
-    
-    public var USDShortString: String {
-        return String(format: "$%.0i", self)
-    }
-    
-    public var str: String {
+    public var string: String {
         return String(self)
     }
 }

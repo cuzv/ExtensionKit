@@ -35,7 +35,7 @@ public extension UIImage {
             return NSBundle.mainBundle().pathForResource(fileName, ofType: ofType)
         }
         
-        if UIScreen.width > 750 {
+        if UIScreen.width > 375 {
             if let filePath = pathForResource("\(fileName)@3x", ofType: ofType) {
                 return UIImage(contentsOfFile: filePath)
             }
@@ -142,7 +142,7 @@ public extension UIImage {
         roundingCorners: UIRectCorner = .AllCorners,
         radius: CGFloat = 0,
         strokeColor: UIColor = UIColor.clearColor(),
-        stockLineWidth: CGFloat = 0) -> UIImage
+        strokeLineWidth: CGFloat = 0) -> UIImage
     {
         let rect = CGRect(origin: CGPoint(x: 0, y: 0), size: size)
         UIGraphicsBeginImageContextWithOptions(rect.size, false, 0)
@@ -150,10 +150,10 @@ public extension UIImage {
         guard let context = UIGraphicsGetCurrentContext() else { fatalError() }
         
         CGContextSetFillColorWithColor(context, color.CGColor)
-        CGContextSetLineWidth(context, stockLineWidth)
+        CGContextSetLineWidth(context, strokeLineWidth)
         CGContextSetStrokeColorWithColor(context, strokeColor.CGColor)
         
-        let roundedRect = CGRectMake(stockLineWidth, stockLineWidth, rect.width - stockLineWidth * 2, rect.height - stockLineWidth * 2)
+        let roundedRect = CGRectMake(strokeLineWidth, strokeLineWidth, rect.width - strokeLineWidth * 2, rect.height - strokeLineWidth * 2)
         let path = UIBezierPath(roundedRect: roundedRect, byRoundingCorners: roundingCorners, cornerRadii: CGSize(width: radius, height: radius))
         CGContextAddPath(context, path.CGPath)
         
@@ -168,7 +168,7 @@ public extension UIImage {
         roundingCorners corners: UIRectCorner = .AllCorners,
         radius: CGFloat = 0,
         strokeColor: UIColor = UIColor.clearColor(),
-        stockLineWidth: CGFloat = 1.0 / UIScreen.mainScreen().scale
+        strokeLineWidth: CGFloat = 1.0 / UIScreen.mainScreen().scale
     ) -> UIImage
     {
         let rect = CGRect(origin: CGPoint(x: 0, y: 0), size: size)
@@ -182,9 +182,9 @@ public extension UIImage {
         CGContextClip(context)
         drawInRect(rect)
         
-        CGContextSetLineWidth(context, stockLineWidth)
+        CGContextSetLineWidth(context, strokeLineWidth)
         CGContextSetStrokeColorWithColor(context, strokeColor.CGColor)
-        let roundedRect = CGRectMake(stockLineWidth, stockLineWidth, rect.width - stockLineWidth * 2, rect.height - stockLineWidth * 2)
+        let roundedRect = CGRectMake(strokeLineWidth, strokeLineWidth, rect.width - strokeLineWidth * 2, rect.height - strokeLineWidth * 2)
         let roundedPath = UIBezierPath(roundedRect: roundedRect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
         roundedPath.stroke()
         
@@ -278,9 +278,9 @@ public func UIImageFrom(
     roundingCorners: UIRectCorner = .AllCorners,
     radius: CGFloat = 0,
     strokeColor: UIColor = UIColor.clearColor(),
-    stockLineWidth: CGFloat = 0) -> UIImage
+    strokeLineWidth: CGFloat = 0) -> UIImage
 {
-    return UIImage.imageWith(color: color, size: size, roundingCorners: roundingCorners, radius: radius, strokeColor: strokeColor, stockLineWidth: stockLineWidth)
+    return UIImage.imageWith(color: color, size: size, roundingCorners: roundingCorners, radius: radius, strokeColor: strokeColor, strokeLineWidth: strokeLineWidth)
 }
 
 @available(iOS 8.0, *)

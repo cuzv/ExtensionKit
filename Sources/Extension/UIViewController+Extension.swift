@@ -50,7 +50,9 @@ public extension UIAlertAction {
 public extension UIViewController {
     /// Present error.
     public func presentError(error: NSError) {
-        if let message = error.userInfo[NSLocalizedFailureReasonErrorKey] as? String {
+        if let message = error.userInfo[NSLocalizedDescriptionKey] as? String {
+            presentAlert(message: message)
+        } else if let message = error.userInfo[NSLocalizedFailureReasonErrorKey] as? String {
             presentAlert(message: message)
         }
     }
@@ -300,19 +302,6 @@ public extension UIViewController {
         viewController.view.frame = view.frame
         view.addSubview(viewController.view)
         viewController.didMoveToParentViewController(self)
-    }
-}
-
-// MARK: - UINavigationBar hidden & visible
-
-extension UIViewController: UIGestureRecognizerDelegate {
-    /// Set UINavigationBar hidden with `interactivePopGestureRecognizer` enabled.
-    /// Should invoke in `viewDidLoad`.
-    public func setNavigationBar(hidden hidden: Bool, animated: Bool) {
-        navigationController?.setNavigationBarHidden(hidden, animated: animated)
-        // Enable slide-back
-        navigationController?.interactivePopGestureRecognizer?.enabled = true
-        navigationController?.interactivePopGestureRecognizer?.delegate = self
     }
 }
 

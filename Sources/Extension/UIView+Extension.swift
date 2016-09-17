@@ -85,7 +85,9 @@ public extension UIView {
     }
     
     internal func handleGestureRecognizerAction(sender: UIGestureRecognizer) {
-        sender.gestureRecognizerWrapper.invoke((self, sender))
+        if (sender.state == .Ended) {
+            sender.gestureRecognizerWrapper.invoke((self, sender))
+        }
     }
 }
 
@@ -190,84 +192,83 @@ public extension UIView {
 }
 
 // MARK: - Frame & Struct
-//@IBDesignable
 public extension UIView {
-    @IBInspectable public var origin: CGPoint {
+    public var origin: CGPoint {
         get { return frame.origin }
         set { frame = CGRectMake(newValue.x, newValue.y, width, height) }
     }
     
-    @IBInspectable public var size: CGSize {
+    public var size: CGSize {
         get { return frame.size }
         set { frame = CGRectMake(minX, minY, newValue.width, newValue.height) }
     }
     
-    @IBInspectable public var minX: CGFloat {
+    public var minX: CGFloat {
         get { return frame.origin.x }
         set { frame = CGRectMake(newValue, minY, width, height) }
     }
     
-    @IBInspectable public var left: CGFloat {
+    public var left: CGFloat {
         get { return frame.origin.x }
         set { frame = CGRectMake(newValue, minY, width, height) }
     }
     
-    @IBInspectable public var midX: CGFloat {
+    public var midX: CGFloat {
         get { return CGRectGetMidX(frame) }
         set { frame = CGRectMake(newValue - width / 2, minY, width, height) }
     }
     
-    @IBInspectable public var centerX: CGFloat {
+    public var centerX: CGFloat {
         get { return CGRectGetMidX(frame) }
         set { frame = CGRectMake(newValue - width / 2, minY, width, height) }
     }
     
-    @IBInspectable public var maxX: CGFloat {
+    public var maxX: CGFloat {
         get { return minX + width }
         set { frame = CGRectMake(newValue - width, minY, width, height) }
     }
     
-    @IBInspectable public var right: CGFloat {
+    public var right: CGFloat {
         get { return minX + width }
         set { frame = CGRectMake(newValue - width, minY, width, height) }
     }
     
-    @IBInspectable public var minY: CGFloat {
+    public var minY: CGFloat {
         get { return frame.origin.y }
         set { frame = CGRectMake(minX, newValue, width, height) }
     }
     
-    @IBInspectable public var top: CGFloat {
+    public var top: CGFloat {
         get { return frame.origin.y }
         set { frame = CGRectMake(minX, newValue, width, height) }
     }
     
-    @IBInspectable public var midY: CGFloat {
+    public var midY: CGFloat {
         get { return CGRectGetMidY(frame) }
         set { frame = CGRectMake(minX, newValue - height / 2, width, height) }
     }
     
-    @IBInspectable public var centerY: CGFloat {
+    public var centerY: CGFloat {
         get { return CGRectGetMidY(frame) }
         set { frame = CGRectMake(minX, newValue - height / 2, width, height) }
     }
     
-    @IBInspectable public var maxY: CGFloat {
+    public var maxY: CGFloat {
         get { return minY + height }
         set { frame = CGRectMake(minX, newValue - height, width, height) }
     }
     
-    @IBInspectable public var bottom: CGFloat {
+    public var bottom: CGFloat {
         get { return minY + height }
         set { frame = CGRectMake(minX, newValue - height, width, height) }
     }
     
-    @IBInspectable public var width: CGFloat {
+    public var width: CGFloat {
         get { return CGRectGetWidth(bounds) }
         set { frame = CGRectMake(minX, minY, newValue, height) }
     }
     
-    @IBInspectable public var height: CGFloat {
+    public var height: CGFloat {
         get { return CGRectGetHeight(bounds) }
         set { frame = CGRectMake(minX, minY, width, newValue) }
     }
@@ -275,9 +276,8 @@ public extension UIView {
 
 // MARK: - Corner & Border
 
-@IBDesignable
 public extension UIView {
-    @IBInspectable public var cornerRadius: CGFloat {
+    public var cornerRadius: CGFloat {
         get { return layer.cornerRadius }
         set {
             layer.masksToBounds = newValue > 0
@@ -285,12 +285,12 @@ public extension UIView {
         }
     }
     
-    @IBInspectable public var borderWith: CGFloat {
+    public var borderWith: CGFloat {
         get { return layer.borderWidth }
         set { layer.borderWidth = newValue }
     }
     
-    @IBInspectable public var borderColor: UIColor? {
+    public var borderColor: UIColor? {
         get {
             if let CGColor = layer.borderColor {
                 return UIColor(CGColor: CGColor)
@@ -308,7 +308,7 @@ public extension UIView {
                 radius: CGFloat = 3,
                 fillColor: UIColor = UIColor.whiteColor(),
                 strokeColor: UIColor = UIColor.clearColor(),
-                stockLineWidth: CGFloat = 0)
+                strokeLineWidth: CGFloat = 0)
     {
         if CGSizeEqualToSize(frame.size, CGSize.zero) {
             debugPrint("Could not set rounding corners on zero size view.")
@@ -325,7 +325,7 @@ public extension UIView {
                 roundingCorners: corners,
                 radius: radius,
                 strokeColor: strokeColor,
-                stockLineWidth: stockLineWidth
+                strokeLineWidth: strokeLineWidth
             )
             
             dispatch_async(dispatch_get_main_queue()) {
@@ -362,12 +362,29 @@ public extension UIView {
         layer.addSublayer(boundLayer)
     }
     
+    class _BorderLineView: UIView {
+        var edge: UIRectEdge = .None
+    }
+    
+    public func removeBorderLine(rectEdge rectEdge: UIRectEdge = .All) {
+        if rectEdge == .None {
+            return
+        }
+        
+        for view in subviews {
+            if let view = view as? _BorderLineView where rectEdge.contains(view.edge) {
+                view.removeFromSuperview()
+            }
+        }
+    }
+    
     /// Add border line view using Autolayout.
     public func addBorderLine(
         width width: CGFloat = 1.0 / UIScreen.mainScreen().scale,
         color: UIColor = UIColor.separatorDefaultColor,
         rectEdge: UIRectEdge = .All,
-        multiplier: CGFloat = 1.0)
+        multiplier: CGFloat = 1.0,
+        constant: CGFloat = 0)
     {
         func addLineViewConstraint(
             edgeLayoutAttribute edgeLayoutAttribute: NSLayoutAttribute,
@@ -375,20 +392,32 @@ public extension UIView {
             sizeLayoutAttribute: NSLayoutAttribute,
             visualFormat: String,
             color: UIColor,
-            multiplier: CGFloat)
+            multiplier: CGFloat,
+            rectEdge: UIRectEdge)
         {
-            let lineView = UIView()
+            let lineView = _BorderLineView()
             lineView.backgroundColor = color
             lineView.translatesAutoresizingMaskIntoConstraints = false
+            lineView.edge = rectEdge
             addSubview(lineView)
             
             let edge = NSLayoutConstraint(item: lineView, attribute: edgeLayoutAttribute, relatedBy: .Equal, toItem: self, attribute: edgeLayoutAttribute, multiplier: 1, constant: 0)
             let center = NSLayoutConstraint(item: lineView, attribute: centerLayoutAttribute, relatedBy: .Equal, toItem: self, attribute: centerLayoutAttribute, multiplier: 1, constant: 0)
-            let size = NSLayoutConstraint(item: lineView, attribute: sizeLayoutAttribute, relatedBy: .Equal, toItem: self, attribute: sizeLayoutAttribute, multiplier: multiplier, constant: 0)
+            let size = NSLayoutConstraint(item: lineView, attribute: sizeLayoutAttribute, relatedBy: .Equal, toItem: self, attribute: sizeLayoutAttribute, multiplier: multiplier, constant: constant)
             addConstraints([edge, center, size])
             
             let constraints = NSLayoutConstraint.constraintsWithVisualFormat(visualFormat, options: NSLayoutFormatOptions.DirectionLeadingToTrailing, metrics: nil, views: ["lineView": lineView])
             addConstraints(constraints)
+        }
+        
+        if rectEdge == .None {
+            return
+        }
+        
+        for view in subviews {
+            if let view = view as? _BorderLineView where rectEdge.contains(view.edge) {
+                return
+            }
         }
         
         var edgeLayoutAttribute: NSLayoutAttribute = .NotAnAttribute
@@ -400,7 +429,7 @@ public extension UIView {
             centerLayoutAttribute = .CenterX;
             sizeLayoutAttribute = .Width;
             let visualFormat = "V:[lineView(\(width))]"
-            addLineViewConstraint(edgeLayoutAttribute: edgeLayoutAttribute, centerLayoutAttribute: centerLayoutAttribute, sizeLayoutAttribute: sizeLayoutAttribute, visualFormat: visualFormat, color: color, multiplier: multiplier)
+            addLineViewConstraint(edgeLayoutAttribute: edgeLayoutAttribute, centerLayoutAttribute: centerLayoutAttribute, sizeLayoutAttribute: sizeLayoutAttribute, visualFormat: visualFormat, color: color, multiplier: multiplier, rectEdge: .Top)
         }
         
         if rectEdge.contains(.Left) {
@@ -408,7 +437,7 @@ public extension UIView {
             centerLayoutAttribute = .CenterY;
             sizeLayoutAttribute = .Height;
             let visualFormat = "[lineView(\(width))]"
-            addLineViewConstraint(edgeLayoutAttribute: edgeLayoutAttribute, centerLayoutAttribute: centerLayoutAttribute, sizeLayoutAttribute: sizeLayoutAttribute, visualFormat: visualFormat, color: color, multiplier: multiplier)
+            addLineViewConstraint(edgeLayoutAttribute: edgeLayoutAttribute, centerLayoutAttribute: centerLayoutAttribute, sizeLayoutAttribute: sizeLayoutAttribute, visualFormat: visualFormat, color: color, multiplier: multiplier, rectEdge: .Left)
         }
         
         if rectEdge.contains(.Bottom) {
@@ -416,7 +445,7 @@ public extension UIView {
             centerLayoutAttribute = .CenterX
             sizeLayoutAttribute = .Width
             let visualFormat = "V:[lineView(\(width))]"
-            addLineViewConstraint(edgeLayoutAttribute: edgeLayoutAttribute, centerLayoutAttribute: centerLayoutAttribute, sizeLayoutAttribute: sizeLayoutAttribute, visualFormat: visualFormat, color: color, multiplier: multiplier)
+            addLineViewConstraint(edgeLayoutAttribute: edgeLayoutAttribute, centerLayoutAttribute: centerLayoutAttribute, sizeLayoutAttribute: sizeLayoutAttribute, visualFormat: visualFormat, color: color, multiplier: multiplier, rectEdge: .Bottom)
         }
         
         if rectEdge.contains(.Right) {
@@ -424,7 +453,7 @@ public extension UIView {
             centerLayoutAttribute = .CenterY
             sizeLayoutAttribute = .Height
             let visualFormat = "[lineView(\(width))]"
-            addLineViewConstraint(edgeLayoutAttribute: edgeLayoutAttribute, centerLayoutAttribute: centerLayoutAttribute, sizeLayoutAttribute: sizeLayoutAttribute, visualFormat: visualFormat, color: color, multiplier: multiplier)
+            addLineViewConstraint(edgeLayoutAttribute: edgeLayoutAttribute, centerLayoutAttribute: centerLayoutAttribute, sizeLayoutAttribute: sizeLayoutAttribute, visualFormat: visualFormat, color: color, multiplier: multiplier, rectEdge: .Right)
         }
     }
     
