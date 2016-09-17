@@ -37,7 +37,7 @@ public func FlipContextVertically(context: CGContextRef, _ size: CGSize) {
 
 /// Flip context by retrieving image
 public func FlipImageContextVertically(context: CGContextRef) {
-    FlipContextVertically(context, UIGraphicsGetImageFromCurrentImageContext().size)
+    FlipContextVertically(context, UIGraphicsGetImageFromCurrentImageContext()!.size)
 }
 
 /// Query context for size and use screen scale to map from Quartz pixels to UIKit points

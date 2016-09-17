@@ -44,13 +44,13 @@ final public class DashLineView: UIView {
                                     CGPointMake((CGRectGetWidth(rect) / 2).ceilly , CGRectGetHeight(rect) - (lineWidth / 2).ceilly)
         
         let context = UIGraphicsGetCurrentContext()
-        CGContextBeginPath(context)
-        CGContextSetLineWidth(context, lineWidth)
-        CGContextSetStrokeColorWithColor(context, lineColor.CGColor)
+        CGContextBeginPath(context!)
+        CGContextSetLineWidth(context!, lineWidth)
+        CGContextSetStrokeColorWithColor(context!, lineColor.CGColor)
         let lengths = [spacing, spacing]
-        CGContextSetLineDash(context, 0, lengths, lengths.count)
-        CGContextMoveToPoint(context, startPoint.x, startPoint.y)
-        CGContextAddLineToPoint(context, endPoint.x, endPoint.y)
-        CGContextStrokePath(context)
+        CGContextSetLineDash(context!, 0, lengths, lengths.count)
+        CGContextMoveToPoint(context!, startPoint.x, startPoint.y)
+        CGContextAddLineToPoint(context!, endPoint.x, endPoint.y)
+        CGContextStrokePath(context!)
     }
 }

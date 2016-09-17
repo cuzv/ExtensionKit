@@ -71,7 +71,7 @@ public extension UIImage {
         drawAtPoint(CGPointZero)
         let decompressedImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        return decompressedImage
+        return decompressedImage!
     }
         
     /// Compress image as possible to target size kb.
@@ -109,7 +109,7 @@ public extension UIImage {
     
     public var bytes: NSData? {
         // Establish color space
-        guard let colorSpace = CGColorSpaceCreateDeviceRGB() else { return nil }
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
         
         // Establish context
         let width: Int = Int(size.width)
@@ -126,6 +126,9 @@ public extension UIImage {
         
         // Draw source into context bytes
         let rect = CGRectFrom(size: size)
+        guard let CGImage = CGImage else {
+            return nil
+        }
         CGContextDrawImage(context, rect, CGImage)
         
         // Create NSData from bytes
@@ -161,7 +164,7 @@ public extension UIImage {
         
         let output = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        return output
+        return output!
     }
     
     public func imageWith(
@@ -191,7 +194,7 @@ public extension UIImage {
         let output = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        return output
+        return output!
     }
 
     public func imgeWithAlpha(alpha: CGFloat) -> UIImage {
@@ -202,7 +205,7 @@ public extension UIImage {
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        return image
+        return image!
     }
     
     public func rendering(color color: UIColor, alpha: CGFloat = 1.0) -> UIImage {
@@ -215,7 +218,7 @@ public extension UIImage {
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        return image
+        return image!
     }
     
     public func buildThumbnail(targetSize targetSize: CGSize, useFitting: Bool = true) -> UIImage {
@@ -232,12 +235,12 @@ public extension UIImage {
         // Retrieve and return the new image 
         let thumbnail = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        return thumbnail
+        return thumbnail!
     }
     
     /// Extract image
     public func extractingIn(subRect: CGRect) -> UIImage? {
-        if let imageRef = CGImageCreateWithImageInRect(CGImage, subRect) {
+        if let imageRef = CGImageCreateWithImageInRect(CGImage!, subRect) {
             return UIImage(CGImage: imageRef)
         }
         return nil
@@ -254,21 +257,21 @@ public extension UIImage {
         
         // Rotate the context
         let center = targetRect.center
-        CGContextTranslateCTM(context, center.x, center.y)
-        CGContextRotateCTM(context, CGFloat(rotate))
-        CGContextTranslateCTM(context, -center.x, -center.y)
+        CGContextTranslateCTM(context!, center.x, center.y)
+        CGContextRotateCTM(context!, CGFloat(rotate))
+        CGContextTranslateCTM(context!, -center.x, -center.y)
         
         let stringSize = text.sizeFrom(font: font, preferredMaxLayoutWidth: size.width)
         let stringRect = CGRectFrom(size: stringSize).centeringIn(CGRectFrom(size: size))
         
         // Draw the string, using a blend mode
-        CGContextSetBlendMode(context, .Normal)
+        CGContextSetBlendMode(context!, .Normal)
         (text as NSString).drawInRect(stringRect, withAttributes: [NSForegroundColorAttributeName: color])
         
         // Retrieve the new image
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        return image
+        return image!
     }
 }
 
@@ -288,9 +291,9 @@ public func UIImageIsQRCode(image: UIImage) -> Bool {
     if let CIImage = CIImage(image: image) {
         let detector = CIDetector(ofType: CIDetectorTypeQRCode, context: nil,
                                   options: [CIDetectorAccuracy : CIDetectorAccuracyHigh])
-        let features = detector.featuresInImage(CIImage)
+        let features = detector!.featuresInImage(CIImage)
         if let first = features.first as? CIQRCodeFeature {
-            return first.messageString.length > 0
+            return first.messageString!.length > 0
         }
     }
 
