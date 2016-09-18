@@ -30,12 +30,12 @@ import UIKit
 /// Optional has a counting remain text length present label.
 /// **Note**: Do not forget invoke `invokeTextObserver(maxLength:, actionHandler:)`.
 final public class PlaceholderTextView: UITextView {
-    private let placeholderLabel: UILabel = {
+    fileprivate let placeholderLabel: UILabel = {
         let label = UILabel()
-        label.backgroundColor = UIColor.clearColor()
+        label.backgroundColor = UIColor.clear
         label.textColor = UIColor.placeholderColor
-        label.font = UIFont.preferredFontForTextStyle(UIFontTextStyleFootnote)
-        label.lineBreakMode = .ByTruncatingTail
+        label.font = UIFont.preferredFont(forTextStyle: UIFontTextStyle.footnote)
+        label.lineBreakMode = .byTruncatingTail
         label.numberOfLines = 0
         return label
     }()
@@ -56,10 +56,10 @@ final public class PlaceholderTextView: UITextView {
     
     override public var text: String? {
         didSet {
-            if let text = text where text.length > 0 {
-                placeholderLabel.hidden = true
+            if let text = text , text.length > 0 {
+                placeholderLabel.isHidden = true
             } else {
-                placeholderLabel.hidden = false
+                placeholderLabel.isHidden = false
             }
         }
     }
@@ -76,26 +76,25 @@ final public class PlaceholderTextView: UITextView {
     
     public override func layoutSubviews() {
         super.layoutSubviews()
-        
         updatePlaceholderLabelFrame()
     }
 }
 
 public extension PlaceholderTextView {
-    private func setup() {
+    fileprivate func setup() {
         addSubview(placeholderLabel)
     }
     
-    private func updatePlaceholderLabelFrame() {
-        if let size = placeholderLabel.text?.sizeFrom(font: placeholderLabel.font, preferredMaxLayoutWidth: CGRectGetWidth(bounds) - 10) {
-            placeholderLabel.frame = CGRectMake(5, 4, size.width + 10, size.height + 8)
+    fileprivate func updatePlaceholderLabelFrame() {
+        if let size = placeholderLabel.text?.sizeFrom(font: placeholderLabel.font, preferredMaxLayoutWidth: bounds.width - 10) {
+            placeholderLabel.frame = CGRect(x: 5, y: 4, width: size.width + 10, height: size.height + 8)
         }
     }
     
     /// **Note**: Do not invoke `setupTextObserver(maxLength:, actionHandler:)` the both.
-    public func invokeTextObserver(maxLength maxLength: Int = 100, actionHandler: ((Int) -> ())? = nil) {
+    public func invokeTextObserver(maxLength: Int = 100, actionHandler: ((Int) -> ())? = nil) {
         setupTextObserver(maxLength: maxLength) { [weak self] (remainCount) -> () in
-            self?.placeholderLabel.hidden = remainCount != maxLength
+            self?.placeholderLabel.isHidden = remainCount != maxLength
             actionHandler?(remainCount)
         }
     }

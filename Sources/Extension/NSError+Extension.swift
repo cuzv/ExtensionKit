@@ -27,7 +27,7 @@
 import Foundation
 
 public extension NSError {
-    public class func errorWithMessage(message: String) -> NSError {
+    public class func errorWithMessage(_ message: String) -> NSError {
         return NSError(domain: "com.mochxiao.error.maker", code: 999, userInfo: [NSLocalizedDescriptionKey: message, NSLocalizedFailureReasonErrorKey: message])
     }
     
@@ -39,7 +39,7 @@ public extension NSError {
     public static var emptyErrorCode: Int { return 1024 }
 }
 
-public func NSErrorFrom(message: String) -> NSError {
+public func NSErrorFrom(_ message: String) -> NSError {
     return NSError.errorWithMessage(message)
 }
 

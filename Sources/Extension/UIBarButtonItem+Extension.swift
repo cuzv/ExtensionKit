@@ -9,11 +9,9 @@
 import UIKit
 
 public extension UIBarButtonItem {
-    public class func fixedSpace(width: CGFloat) -> UIBarButtonItem {
-        let spacing = UIBarButtonItem(barButtonSystemItem: .FixedSpace, target: nil, action: #selector(UIBarButtonItem.doNothing))
+    public class func fixedSpace(_ width: CGFloat) -> UIBarButtonItem {
+        let spacing = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
         spacing.width = width
         return spacing
     }
-    
-    dynamic private func doNothing() {}
 }

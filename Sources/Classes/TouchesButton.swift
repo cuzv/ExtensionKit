@@ -30,18 +30,18 @@ import UIKit
 
 final public class TouchesButton: UIButton {
     public var touchesEdgeInsets: UIEdgeInsets?
-    private var touchesLocation: CGRect {
+    fileprivate var touchesLocation: CGRect {
         if let touchesEdgeInsets = touchesEdgeInsets {
             let top = touchesEdgeInsets.top
             let left = touchesEdgeInsets.left
             let bottom = touchesEdgeInsets.bottom
             let right = touchesEdgeInsets.right
             if 0.0 != top || 0.0 != left || 0.0 != bottom || 0.0 != right {
-                return CGRectMake(
-                    bounds.origin.x - left,
-                    bounds.origin.y - top,
-                    bounds.size.width + left + right,
-                    bounds.size.height + top + bottom
+                return CGRect(
+                    x: bounds.origin.x - left,
+                    y: bounds.origin.y - top,
+                    width: bounds.size.width + left + right,
+                    height: bounds.size.height + top + bottom
                 )
             }
         }
@@ -49,11 +49,11 @@ final public class TouchesButton: UIButton {
         return bounds
     }
     
-    override public func pointInside(point: CGPoint, withEvent event: UIEvent?) -> Bool {
-        if CGRectEqualToRect(touchesLocation, bounds) {
-            return super.pointInside(point, withEvent: event)
+    override public func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        if touchesLocation.equalTo(bounds) {
+            return super.point(inside: point, with: event)
         }
         
-        return CGRectContainsPoint(touchesLocation, point)
+        return touchesLocation.contains(point)
     }
 }

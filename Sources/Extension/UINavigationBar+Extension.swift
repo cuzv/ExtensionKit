@@ -30,12 +30,12 @@ import UIKit
 
 public extension UINavigationBar {
     /// Only effect when `translucent` is true.
-    public func setBackgroundVisible(visible: Bool) {
-        if !translucent {
+    public func setBackgroundVisible(_ visible: Bool) {
+        if !isTranslucent {
             debugPrint("`translucent` must be true if you wanna change background visible.")
         }
         
-        setBackgroundImage(visible ? nil : UIImage(), forBarMetrics: .Default)
+        setBackgroundImage(visible ? nil : UIImage(), for: .default)
         shadowImage = visible ? nil : UIImage()
     }
 }
@@ -48,7 +48,7 @@ public extension UINavigationBar {
         guard let cls = NSClassFromString("_UINavigationBarBackground") else { return nil }
         
         for subview in subviews {
-            if subview.isKindOfClass(cls) {
+            if subview.isKind(of: cls) {
                 for view in subview.subviews {
                     if view is UIImageView && view.frame.size.height == 1.0 / UIScreen.scale_var {
                         return view

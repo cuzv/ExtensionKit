@@ -26,8 +26,8 @@
 
 import Foundation
 
-public extension NSBundle {
-    private static let _mainBundle = NSBundle.mainBundle()
+public extension Bundle {
+    fileprivate static let _mainBundle = Bundle.main
     
     public class var build: String {
         return (_mainBundle.infoDictionary?["CFBundleVersion"] ?? "") as! String

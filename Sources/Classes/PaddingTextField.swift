@@ -29,13 +29,13 @@ import UIKit
 // MARK: - PaddingTextField
 
 final public class PaddingTextField: UITextField {
-    private var contentEdgeInsets = UIEdgeInsetsMake(2, 4, 2, 4)
+    fileprivate var contentEdgeInsets = UIEdgeInsetsMake(2, 4, 2, 4)
     
-    private init() {
-        super.init(frame: CGRectZero)
+    fileprivate init() {
+        super.init(frame: CGRect.zero)
     }
     
-    private override init(frame: CGRect) {
+    fileprivate override init(frame: CGRect) {
         super.init(frame: frame)
     }
     
@@ -44,22 +44,22 @@ final public class PaddingTextField: UITextField {
     }
     
     public convenience init(contentEdgeInsets: UIEdgeInsets) {
-        self.init(frame: CGRectZero)
+        self.init(frame: CGRect.zero)
         self.contentEdgeInsets = contentEdgeInsets
     }
     
-    public override func intrinsicContentSize() -> CGSize {
-        let size = sizeThatFits(CGSizeMake(CGRectGetWidth(bounds), CGRectGetHeight(bounds)))
+    public override var intrinsicContentSize : CGSize {
+        let size = sizeThatFits(CGSize(width: bounds.width, height: bounds.height))
         let width = size.width + contentEdgeInsets.left + contentEdgeInsets.right
         let height = size.height + contentEdgeInsets.top + contentEdgeInsets.bottom
-        return CGSizeMake(width, height)
+        return CGSize(width: width, height: height)
     }
     
-    public override func textRectForBounds(bounds: CGRect) -> CGRect {
+    public override func textRect(forBounds bounds: CGRect) -> CGRect {
         return UIEdgeInsetsInsetRect(bounds, self.contentEdgeInsets)
     }
     
-    public override func editingRectForBounds(bounds: CGRect) -> CGRect {
+    public override func editingRect(forBounds bounds: CGRect) -> CGRect {
         return UIEdgeInsetsInsetRect(bounds, self.contentEdgeInsets)
     }
 }

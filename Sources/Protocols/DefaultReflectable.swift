@@ -33,7 +33,7 @@ public protocol DefaultReflectable: CustomStringConvertible {}
 /// A default implementation that enables class members to display their values.
 extension DefaultReflectable {
     /// Constructs a better representation using reflection.
-    internal func DefaultDescription<T>(instance: T) -> String {
+    internal func DefaultDescription<T>(_ instance: T) -> String {
         let mirror = Mirror(reflecting: instance)
         let chunks = mirror.children.map { (label: String?, value: Any) -> String in
             if let label = label {
@@ -46,7 +46,7 @@ extension DefaultReflectable {
             }
         }
         if chunks.count > 0 {
-            let chunksString = chunks.joinWithSeparator(", ")
+            let chunksString = chunks.joined(separator: ", ")
             return "\(mirror.subjectType)(\(chunksString))"
         } else {
             return "\(instance)"

@@ -11,8 +11,8 @@ import UIKit
 public extension UIResponder {
     public func responder(ofClass cls: AnyClass) -> UIResponder? {
         var responder = self
-        while let _responder = responder.nextResponder() {
-            if _responder.isKindOfClass(cls) {
+        while let _responder = responder.next {
+            if _responder.isKind(of: cls) {
                 return _responder
             }
             
@@ -22,27 +22,27 @@ public extension UIResponder {
         return nil
     }
     
-    public func sendAction(action: Selector) -> Bool {
+    public func sendAction(_ action: Selector) -> Bool {
         return UIApplication.sendAction(action, fromSender: self)
     }
 
     public func performAction(
-        action: Selector,
+        _ action: Selector,
         _ firstArgument: AnyObject! = nil,
         _ secondArgument: AnyObject! = nil) -> Unmanaged<AnyObject>!
     {
         var responder: UIResponder? = self
 
-        while let _responder = responder where !_responder.respondsToSelector(action) {
-            responder = _responder.nextResponder()
+        while let _responder = responder , !_responder.responds(to: action) {
+            responder = _responder.next
         }
         
         if nil == firstArgument {
-            return responder?.performSelector(action)
+            return responder?.perform(action)
         } else if nil == secondArgument {
-            return responder?.performSelector(action, withObject: firstArgument)
+            return responder?.perform(action, with: firstArgument)
         } else {
-            return responder?.performSelector(action, withObject: firstArgument, withObject: secondArgument)
+            return responder?.perform(action, with: firstArgument, with: secondArgument)
         }
     }
 }

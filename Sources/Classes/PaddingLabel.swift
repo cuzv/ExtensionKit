@@ -29,13 +29,13 @@ import UIKit
 // MARK: - PaddingLabel
 
 final public class PaddingLabel: UILabel {
-    private var contentEdgeInsets = UIEdgeInsetsMake(2, 4, 2, 4)
+    fileprivate var contentEdgeInsets = UIEdgeInsetsMake(2, 4, 2, 4)
     
-    private init() {
-        super.init(frame: CGRectZero)
+    fileprivate init() {
+        super.init(frame: CGRect.zero)
     }
     
-    private override init(frame: CGRect) {
+    fileprivate override init(frame: CGRect) {
         super.init(frame: frame)
     }
     
@@ -44,18 +44,18 @@ final public class PaddingLabel: UILabel {
     }
     
     public convenience init(contentEdgeInsets: UIEdgeInsets) {
-        self.init(frame: CGRectZero)
+        self.init(frame: CGRect.zero)
         self.contentEdgeInsets = contentEdgeInsets
     }
     
-    public override func intrinsicContentSize() -> CGSize {
-        let size = sizeThatFits(CGSizeMake(CGRectGetWidth(bounds), CGRectGetHeight(bounds)))
+    public override var intrinsicContentSize : CGSize {
+        let size = sizeThatFits(CGSize(width: bounds.width, height: bounds.height))
         let width = size.width + contentEdgeInsets.left + contentEdgeInsets.right
         let height = size.height + contentEdgeInsets.top + contentEdgeInsets.bottom
-        return CGSizeMake(width, height)
+        return CGSize(width: width, height: height)
     }
     
-    public override func drawTextInRect(rect: CGRect) {
-        super.drawTextInRect(UIEdgeInsetsInsetRect(rect, contentEdgeInsets))
+    public override func drawText(in rect: CGRect) {
+        super.drawText(in: UIEdgeInsetsInsetRect(rect, contentEdgeInsets))
     }
 }

@@ -64,24 +64,24 @@ public extension Double {
 
 public extension Double {
     var formattedDate: String {
-        let formatter = NSDateFormatter()
+        let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
-        let date = NSDate(timeIntervalSince1970: self)
-        return formatter.stringFromDate(date)
+        let date = Date(timeIntervalSince1970: self)
+        return formatter.string(from: date)
     }
     
     var formattedTime: String {
-        let formatter = NSDateFormatter()
+        let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm"
-        let date = NSDate(timeIntervalSince1970: self)
-        return formatter.stringFromDate(date)
+        let date = Date(timeIntervalSince1970: self)
+        return formatter.string(from: date)
     }
 
     var formattedDateTime: String {
-        let formatter = NSDateFormatter()
+        let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm"
-        let date = NSDate(timeIntervalSince1970: self)
-        return formatter.stringFromDate(date)
+        let date = Date(timeIntervalSince1970: self)
+        return formatter.string(from: date)
     }
 }
 

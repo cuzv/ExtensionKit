@@ -29,33 +29,33 @@ import UIKit
 // MARK: - TextObserver
 
 final public class TextObserver {
-    private let maxLength: Int
-    private let actionHandler: ((Int) -> ())
-    private var textFieldObserver: NSObjectProtocol?
-    private var textViewObserver: NSObjectProtocol?
+    fileprivate let maxLength: Int
+    fileprivate let actionHandler: ((Int) -> ())
+    fileprivate var textFieldObserver: NSObjectProtocol?
+    fileprivate var textViewObserver: NSObjectProtocol?
     
-    public init(maxLength: Int, actionHandler: ((Int) -> ())) {
+    public init(maxLength: Int, actionHandler: @escaping ((Int) -> ())) {
         self.maxLength = maxLength
         self.actionHandler = actionHandler
     }
     
     deinit {        
         if let textFieldObserver = textFieldObserver {
-            NSNotificationCenter.defaultCenter().removeObserver(textFieldObserver)
+            NotificationCenter.default.removeObserver(textFieldObserver)
         }
         
         if let textViewObserver = textViewObserver {
-            NSNotificationCenter.defaultCenter().removeObserver(textViewObserver)
+            NotificationCenter.default.removeObserver(textViewObserver)
         }
     }
     
     // MARK: - UITextField
     
-    public func observe(object: UITextField) {
-        textFieldObserver = NSNotificationCenter.defaultCenter().addObserverForName(
-            UITextFieldTextDidChangeNotification,
+    public func observe(_ object: UITextField) {
+        textFieldObserver = NotificationCenter.default.addObserver(
+            forName: NSNotification.Name.UITextFieldTextDidChange,
             object: object,
-            queue: NSOperationQueue.mainQueue()) { [weak self] (notification) -> Void in
+            queue: OperationQueue.main) { [weak self] (notification) -> Void in
                 guard let _self = self else { return }
                 guard let textField = notification.object as? UITextField else { return }
                 guard let text = textField.text else { return }
@@ -71,11 +71,11 @@ final public class TextObserver {
     
     // MARK: - UITextView
     
-    public func observe(object: UITextView) {
-        textViewObserver = NSNotificationCenter.defaultCenter().addObserverForName(
-            UITextViewTextDidChangeNotification,
+    public func observe(_ object: UITextView) {
+        textViewObserver = NotificationCenter.default.addObserver(
+            forName: NSNotification.Name.UITextViewTextDidChange,
             object: object,
-            queue: NSOperationQueue.mainQueue()) { [weak self] (notification) -> Void in
+            queue: OperationQueue.main) { [weak self] (notification) -> Void in
                 guard let _self = self else { return }
                 guard let textView = notification.object as? UITextView else { return }
                 guard let text = textView.text else { return }

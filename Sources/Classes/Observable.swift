@@ -8,10 +8,10 @@
 
 import Foundation
 
-public class Observable<T> {
-    public typealias Observer = T -> ()
-    private var observer: Observer?
-    private var value: T {
+open class Observable<T> {
+    public typealias Observer = (T) -> ()
+    fileprivate var observer: Observer?
+    fileprivate var value: T {
         didSet {
             observer?(value)
         }
@@ -21,7 +21,7 @@ public class Observable<T> {
         value = v
     }
     
-    public func observe(observer: Observer?) {
+    open func observe(_ observer: Observer?) {
         self.observer = observer
         observer?(value)
     }

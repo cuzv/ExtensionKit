@@ -27,26 +27,26 @@
 import UIKit
 
 private struct AssociationKey {
-    private static var touchDownHandlerWrapper: String = "touchDownHandlerWrapper"
-    private static var touchDownRepeatHandlerWrapper: String = "touchDownRepeatHandlerWrapper"
-    private static var touchDragInsideHandlerWrapper: String = "touchDragInsideHandlerWrapper"
-    private static var touchDragOutsideHandlerWrapper: String = "touchDragOutsideHandlerWrapper"
-    private static var touchDragEnterHandlerWrapper: String = "touchDragEnterHandlerWrapper"
-    private static var touchDragExitHandlerWrapper: String = "touchDragExitHandlerWrapper"
-    private static var touchUpInsideHandlerWrapper: String = "touchUpInsideHandlerWrapper"
-    private static var touchUpOutsideHandlerWrapper: String = "touchUpOutsideHandlerWrapper"
-    private static var touchCancelHandlerWrapper: String = "touchCancelHandlerWrapper"
-    private static var valueChangedHandlerWrapper: String = "valueChangedHandlerWrapper"
-    private static var primaryActionTriggeredHandlerWrapper: String = "primaryActionTriggeredHandlerWrapper"
-    private static var editingDidBeginHandlerWrapper: String = "editingDidBeginHandlerWrapper"
-    private static var editingChangedHandlerWrapper: String = "editingChangedHandlerWrapper"
-    private static var editingDidEndHandlerWrapper: String = "editingDidEndHandlerWrapper"
-    private static var editingDidEndOnExitHandlerWrapper: String = "editingDidEndOnExitHandlerWrapper"
-    private static var allTouchEventsHandlerWrapper: String = "allTouchEventsHandlerWrapper"
-    private static var allEditingEventsHandlerWrapper: String = "allEditingEventsHandlerWrapper"
-    private static var applicationReservedHandlerWrapper: String = "applicationReservedHandlerWrapper"
-    private static var systemReservedHandlerWrapper: String = "systemReservedHandlerWrapper"
-    private static var allEventsHandlerWrapper: String = "allEventsHandlerWrapper"
+    fileprivate static var touchDownHandlerWrapper: String = "touchDownHandlerWrapper"
+    fileprivate static var touchDownRepeatHandlerWrapper: String = "touchDownRepeatHandlerWrapper"
+    fileprivate static var touchDragInsideHandlerWrapper: String = "touchDragInsideHandlerWrapper"
+    fileprivate static var touchDragOutsideHandlerWrapper: String = "touchDragOutsideHandlerWrapper"
+    fileprivate static var touchDragEnterHandlerWrapper: String = "touchDragEnterHandlerWrapper"
+    fileprivate static var touchDragExitHandlerWrapper: String = "touchDragExitHandlerWrapper"
+    fileprivate static var touchUpInsideHandlerWrapper: String = "touchUpInsideHandlerWrapper"
+    fileprivate static var touchUpOutsideHandlerWrapper: String = "touchUpOutsideHandlerWrapper"
+    fileprivate static var touchCancelHandlerWrapper: String = "touchCancelHandlerWrapper"
+    fileprivate static var valueChangedHandlerWrapper: String = "valueChangedHandlerWrapper"
+    fileprivate static var primaryActionTriggeredHandlerWrapper: String = "primaryActionTriggeredHandlerWrapper"
+    fileprivate static var editingDidBeginHandlerWrapper: String = "editingDidBeginHandlerWrapper"
+    fileprivate static var editingChangedHandlerWrapper: String = "editingChangedHandlerWrapper"
+    fileprivate static var editingDidEndHandlerWrapper: String = "editingDidEndHandlerWrapper"
+    fileprivate static var editingDidEndOnExitHandlerWrapper: String = "editingDidEndOnExitHandlerWrapper"
+    fileprivate static var allTouchEventsHandlerWrapper: String = "allTouchEventsHandlerWrapper"
+    fileprivate static var allEditingEventsHandlerWrapper: String = "allEditingEventsHandlerWrapper"
+    fileprivate static var applicationReservedHandlerWrapper: String = "applicationReservedHandlerWrapper"
+    fileprivate static var systemReservedHandlerWrapper: String = "systemReservedHandlerWrapper"
+    fileprivate static var allEventsHandlerWrapper: String = "allEventsHandlerWrapper"
 }
 
 // MARK: - UIControl Action
@@ -55,55 +55,55 @@ public protocol UIControlActionFunctionProtocol {}
 extension UIControl: UIControlActionFunctionProtocol {}
 
 public extension UIControlActionFunctionProtocol where Self: UIControl {
-    public func addControlEvents(events: UIControlEvents, handler: Self -> ()) {
+    public func addControlEvents(_ events: UIControlEvents, handler: @escaping (Self) -> ()) {
         let trampoline = ActionTrampoline(action: handler)
-        addTarget(trampoline, action: NSSelectorFromString("action:"), forControlEvents: events)
+        addTarget(trampoline, action: NSSelectorFromString("action:"), for: events)
         associate(object: trampoline, forEvents: events)
     }
     
-    private func associate(object object: AnyObject, forEvents events: UIControlEvents) {
-        if events == .TouchDown {
+    fileprivate func associate(object: AnyObject, forEvents events: UIControlEvents) {
+        if events == .touchDown {
             associate(retainObject: object, forKey: &AssociationKey.touchDownHandlerWrapper)
-        } else if events == .TouchDownRepeat {
+        } else if events == .touchDownRepeat {
             associate(retainObject: object, forKey: &AssociationKey.touchDownRepeatHandlerWrapper)
-        } else if events == .TouchDragInside {
+        } else if events == .touchDragInside {
             associate(retainObject: object, forKey: &AssociationKey.touchDragInsideHandlerWrapper)
-        } else if events == .TouchDragOutside {
+        } else if events == .touchDragOutside {
             associate(retainObject: object, forKey: &AssociationKey.touchDragOutsideHandlerWrapper)
-        } else if events == .TouchDragEnter {
+        } else if events == .touchDragEnter {
             associate(retainObject: object, forKey: &AssociationKey.touchDragEnterHandlerWrapper)
-        } else if events == .TouchDragExit {
+        } else if events == .touchDragExit {
             associate(retainObject: object, forKey: &AssociationKey.touchDragExitHandlerWrapper)
-        } else if events == .TouchUpInside {
+        } else if events == .touchUpInside {
             associate(retainObject: object, forKey: &AssociationKey.touchUpInsideHandlerWrapper)
-        } else if events == .TouchUpOutside {
+        } else if events == .touchUpOutside {
             associate(retainObject: object, forKey: &AssociationKey.touchUpOutsideHandlerWrapper)
-        } else if events == .TouchCancel {
+        } else if events == .touchCancel {
             associate(retainObject: object, forKey: &AssociationKey.touchCancelHandlerWrapper)
-        } else if events == .ValueChanged {
+        } else if events == .valueChanged {
             associate(retainObject: object, forKey: &AssociationKey.valueChangedHandlerWrapper)
-        } else if events == .EditingDidBegin {
+        } else if events == .editingDidBegin {
             associate(retainObject: object, forKey: &AssociationKey.editingDidBeginHandlerWrapper)
-        } else if events == .EditingChanged {
+        } else if events == .editingChanged {
             associate(retainObject: object, forKey: &AssociationKey.editingChangedHandlerWrapper)
-        } else if events == .EditingDidEnd {
+        } else if events == .editingDidEnd {
             associate(retainObject: object, forKey: &AssociationKey.editingDidEndHandlerWrapper)
-        } else if events == .AllTouchEvents {
+        } else if events == .allTouchEvents {
             associate(retainObject: object, forKey: &AssociationKey.allTouchEventsHandlerWrapper)
-        } else if events == .EditingDidEndOnExit {
+        } else if events == .editingDidEndOnExit {
             associate(retainObject: object, forKey: &AssociationKey.editingDidEndOnExitHandlerWrapper)
-        } else if events == .AllEditingEvents {
+        } else if events == .allEditingEvents {
             associate(retainObject: object, forKey: &AssociationKey.allEditingEventsHandlerWrapper)
-        } else if events == .ApplicationReserved {
+        } else if events == .applicationReserved {
             associate(retainObject: object, forKey: &AssociationKey.applicationReservedHandlerWrapper)
-        } else if events == .SystemReserved {
+        } else if events == .systemReserved {
             associate(retainObject: object, forKey: &AssociationKey.systemReservedHandlerWrapper)
-        } else if events == .AllEvents {
+        } else if events == .allEvents {
             associate(retainObject: object, forKey: &AssociationKey.allEventsHandlerWrapper)
         }
         
         if #available(iOS 9.0, *) {
-            if events == .PrimaryActionTriggered {
+            if events == .primaryActionTriggered {
                 associate(retainObject: object, forKey: &AssociationKey.primaryActionTriggeredHandlerWrapper)
             }
         }

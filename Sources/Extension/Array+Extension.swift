@@ -40,8 +40,8 @@ public extension Array {
         let secondaryItemData = self[otherIndex]
         let secondaryRange = Range(otherIndex ..< otherIndex + 1)
         
-        replaceRange(firstRange, with: [secondaryItemData])
-        replaceRange(secondaryRange, with: [firstItemData])
+        replaceSubrange(firstRange, with: [secondaryItemData])
+        replaceSubrange(secondaryRange, with: [firstItemData])
     }
     
     public mutating func replace(atIndex index: Int, with element: Element) {
@@ -49,14 +49,14 @@ public extension Array {
             fatalError("Index beyond boundary.")
         }
         let range = Range(index ..< index + 1)
-        replaceRange(range, with: [element])
+        replaceSubrange(range, with: [element])
     }
     
-    public mutating func replaceLast(element: Element) {
+    public mutating func replaceLast(_ element: Element) {
         replace(atIndex: count - 1, with: element)
     }
     
-    public mutating func replaceFirst(element: Element) {
+    public mutating func replaceFirst(_ element: Element) {
         replace(atIndex: 0, with: element)
     }
     
@@ -67,7 +67,7 @@ public extension Array {
             output.append("\(index): \(item)")
             index += 1
         }
-        return output.joinWithSeparator("\n")
+        return output.joined(separator: "\n")
     }
     
     public var second: Element? {

@@ -27,35 +27,35 @@
 import UIKit
 
 @objc public protocol SetupData {
-    func setupData(data: AnyObject!)
+    func setupData(_ data: AnyObject!)
 }
 
 extension UITableViewCell: SetupData {
-    public func setupData(data: AnyObject!) {}
+    public func setupData(_ data: AnyObject!) {}
 }
 
 extension UITableViewHeaderFooterView: SetupData {
-    public func setupData(data: AnyObject!) {}
+    public func setupData(_ data: AnyObject!) {}
 }
 
 extension UICollectionReusableView: SetupData {
-    public func setupData(data: AnyObject!) {}
+    public func setupData(_ data: AnyObject!) {}
 }
 
 @objc public protocol LazyLoadImagesData {
-    func lazilySetupData(data: AnyObject!)
+    func lazilySetupData(_ data: AnyObject!)
 }
 
 extension UITableViewCell: LazyLoadImagesData {
-    public func lazilySetupData(data: AnyObject!) {}
+    public func lazilySetupData(_ data: AnyObject!) {}
 }
 
 extension UITableViewHeaderFooterView: LazyLoadImagesData {
-    public func lazilySetupData(data: AnyObject!) {}
+    public func lazilySetupData(_ data: AnyObject!) {}
 }
 
 extension UICollectionReusableView: LazyLoadImagesData {
-    public func lazilySetupData(data: AnyObject!) {}
+    public func lazilySetupData(_ data: AnyObject!) {}
 }
 
 public func +(lhs: UIEdgeInsets, rhs: UIEdgeInsets) -> UIEdgeInsets {

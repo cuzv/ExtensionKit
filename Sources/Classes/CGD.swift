@@ -13,34 +13,34 @@ private let serial_queue_label = "com.mochxiao.queue.serial"
 private let concurrent_queue_label = "com.mochxiao.queue.concurrent"
 private let isolation_queue_label = "com.mochxiao.isolation.queue"
 
-public class AsyncSerialWorker {
+open class AsyncSerialWorker {
     public init() {}
-    private let serialQueue = dispatch_queue_create(serial_queue_label, DISPATCH_QUEUE_SERIAL)
+    fileprivate let serialQueue = DispatchQueue(label: serial_queue_label, attributes: [])
     
-    public func enqueueWork(work: (() -> ()) -> ()) {
-        dispatch_async(serialQueue) {
-            let semaphore = dispatch_semaphore_create(0)
+    open func enqueueWork(_ work: @escaping (() -> ()) -> ()) {
+        serialQueue.async {
+            let semaphore = DispatchSemaphore(value: 0)
             work {
-                dispatch_semaphore_signal(semaphore)
+                semaphore.signal()
             }
-            dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+            _ = semaphore.wait(timeout: DispatchTime.distantFuture)
         }
     }
 }
 
-public class LimitedWorker {
-    private let concurrentQueue = dispatch_queue_create(concurrent_queue_label, DISPATCH_QUEUE_CONCURRENT)
-    private let semaphore: dispatch_semaphore_t
+open class LimitedWorker {
+    fileprivate let concurrentQueue = DispatchQueue(label: concurrent_queue_label, attributes: DispatchQueue.Attributes.concurrent)
+    fileprivate let semaphore: DispatchSemaphore
     
     public init(limit: Int) {
-        semaphore = dispatch_semaphore_create(limit)
+        semaphore = DispatchSemaphore(value: limit)
     }
     
-    public func enqueueWork(work: () -> ()) {
-        dispatch_async(concurrentQueue) {
-            dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER)
+    open func enqueueWork(_ work: @escaping () -> ()) {
+        concurrentQueue.async {
+            _ = self.semaphore.wait(timeout: DispatchTime.distantFuture)
             work()
-            dispatch_semaphore_signal(self.semaphore)
+            self.semaphore.signal()
         }
     }
 }
@@ -50,28 +50,28 @@ public protocol Identifiable {
 }
 
 extension Identifiable {
-    var identifier: String { return NSUUID().UUIDString }
+    var identifier: String { return UUID().uuidString }
 }
 
 extension NSObject: Identifiable {
     public var identifier: String { return "\(hash)" }
 }
 
-public class IdentityMap<T: Identifiable> {
+open class IdentityMap<T: Identifiable> {
     var dictionary = [String: T]()
-    let accessQueue = dispatch_queue_create(isolation_queue_label, DISPATCH_QUEUE_CONCURRENT)
+    let accessQueue = DispatchQueue(label: isolation_queue_label, attributes: DispatchQueue.Attributes.concurrent)
     
-    func objectWithIdentifier(identifier: String) -> T? {
+    func objectWithIdentifier(_ identifier: String) -> T? {
         var result: T? = nil
-        dispatch_sync(accessQueue) {
+        accessQueue.sync {
             result = self.dictionary[identifier] as T?
         }
         return result
     }
     
-    func addObject(object: T) {
-        dispatch_barrier_async(accessQueue) {
+    func addObject(_ object: T) {
+        accessQueue.async(flags: .barrier, execute: {
             self.dictionary[object.identifier] = object
-        }
+        }) 
     }
 }

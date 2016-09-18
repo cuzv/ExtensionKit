@@ -25,28 +25,48 @@
 //
 
 import UIKit
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+fileprivate func >= <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l >= r
+  default:
+    return !(lhs < rhs)
+  }
+}
+
 
 public extension UIScreen {
-    private static let _sharedApplication  = UIApplication.sharedApplication()
-    private static let _isLandscape        = UIInterfaceOrientationIsLandscape(_sharedApplication.statusBarOrientation)
-    private static let _iOS8Plus           = Float(UIDevice.sysVersion) >= 8.0
-    private static let _mainScreen         = UIScreen.mainScreen()
+    fileprivate static let _sharedApplication  = UIApplication.shared
+    fileprivate static let _isLandscape        = UIInterfaceOrientationIsLandscape(_sharedApplication.statusBarOrientation)
+    fileprivate static let _iOS8Plus           = Float(UIDevice.sysVersion) >= 8.0
+    fileprivate static let _mainScreen         = UIScreen.main
 
-    private static let _nativeBounds       = _mainScreen.nativeBounds
-    private static let _nativeBoundsSize   = _nativeBounds.size
-    private static let _nativeBoundsHeight = _nativeBoundsSize.height
-    private static let _nativeBoundsWidth  = _nativeBoundsSize.width
-    private static let _nativeScale        = _mainScreen.nativeScale
+    fileprivate static let _nativeBounds       = _mainScreen.nativeBounds
+    fileprivate static let _nativeBoundsSize   = _nativeBounds.size
+    fileprivate static let _nativeBoundsHeight = _nativeBoundsSize.height
+    fileprivate static let _nativeBoundsWidth  = _nativeBoundsSize.width
+    fileprivate static let _nativeScale        = _mainScreen.nativeScale
 
-    private static let _bounds             = _mainScreen.bounds
-    private static let _boundsSize         = _bounds.size
-    private static let _boundsHeight       = _boundsSize.height
-    private static let _boundsWidth        = _boundsSize.width
+    fileprivate static let _bounds             = _mainScreen.bounds
+    fileprivate static let _boundsSize         = _bounds.size
+    fileprivate static let _boundsHeight       = _boundsSize.height
+    fileprivate static let _boundsWidth        = _boundsSize.width
 
-    private static let _statusBarWidth       = _sharedApplication.statusBarFrame.size.width
-    private static let _statusBarHeight     = _sharedApplication.statusBarFrame.size.height
+    fileprivate static let _statusBarWidth       = _sharedApplication.statusBarFrame.size.width
+    fileprivate static let _statusBarHeight     = _sharedApplication.statusBarFrame.size.height
     
-    private class func screenWidth() -> CGFloat {
+    fileprivate class func screenWidth() -> CGFloat {
         if _isLandscape {
             if _iOS8Plus {
                 return _nativeBoundsHeight / _nativeScale
@@ -62,7 +82,7 @@ public extension UIScreen {
         }
     }
     
-    private class func screenHeight() -> CGFloat {
+    fileprivate class func screenHeight() -> CGFloat {
         if _isLandscape {
             if _iOS8Plus {
                 if _statusBarWidth > 20 {
@@ -90,11 +110,11 @@ public extension UIScreen {
         }
     }
     
-    private class func screenScale() -> CGFloat {
+    fileprivate class func screenScale() -> CGFloat {
         if _iOS8Plus {
             return _nativeScale
         } else {
-            return UIScreen.mainScreen().scale
+            return UIScreen.main.scale
         }
     }
     

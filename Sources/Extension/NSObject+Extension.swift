@@ -31,34 +31,34 @@ import Foundation
 public extension NSObject {
     /// Sets an associated value for a given object using a weak reference to the associated object.
     /// **Note**: the `key` underlying type must be String.
-    public func associate(assignObject object: AnyObject!, forKey key: UnsafePointer<Void>) {
+    public func associate(assignObject object: AnyObject!, forKey key: UnsafeRawPointer) {
         let strKey: String = convertUnsafePointerToSwiftType(key)
-        willChangeValueForKey(strKey)
+        willChangeValue(forKey: strKey)
         objc_setAssociatedObject(self, key, object, .OBJC_ASSOCIATION_ASSIGN)
-        didChangeValueForKey(strKey)
+        didChangeValue(forKey: strKey)
     }
 
     /// Sets an associated value for a given object using a strong reference to the associated object.
     /// **Note**: the `key` underlying type must be String.
-    public func associate(retainObject object: AnyObject!, forKey key: UnsafePointer<Void>) {
+    public func associate(retainObject object: AnyObject!, forKey key: UnsafeRawPointer) {
         let strKey: String = convertUnsafePointerToSwiftType(key)
-        willChangeValueForKey(strKey)
+        willChangeValue(forKey: strKey)
         objc_setAssociatedObject(self, key, object, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        didChangeValueForKey(strKey)
+        didChangeValue(forKey: strKey)
     }
 
     /// Sets an associated value for a given object using a copied reference to the associated object.
     /// **Note**: the `key` underlying type must be String.
-    public func associate(copyObject object: AnyObject!, forKey key: UnsafePointer<Void>) {
+    public func associate(copyObject object: AnyObject!, forKey key: UnsafeRawPointer) {
         let strKey: String = convertUnsafePointerToSwiftType(key)
-        willChangeValueForKey(strKey)
+        willChangeValue(forKey: strKey)
         objc_setAssociatedObject(self, key, object, .OBJC_ASSOCIATION_COPY_NONATOMIC)
-        didChangeValueForKey(strKey)
+        didChangeValue(forKey: strKey)
     }
     
     /// Returns the value associated with a given object for a given key.
     /// **Note**: the `key` underlying type must be String.
-    public func associatedObject(forKey key: UnsafePointer<Void>) -> AnyObject! {
-        return objc_getAssociatedObject(self, key)
+    public func associatedObject(forKey key: UnsafeRawPointer) -> AnyObject! {
+        return objc_getAssociatedObject(self, key) as AnyObject!
     }
 }

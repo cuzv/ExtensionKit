@@ -27,16 +27,16 @@
 import UIKit
 
 public extension UITableView {
-    public func scrollToTop(animated animated: Bool = true) {
-        if let indexPath = indexPathForRowAtPoint(CGPointMake(CGRectGetMidX(bounds), 2)) where !isEmpty {
-            scrollToRowAtIndexPath(indexPath, atScrollPosition: .Top, animated: animated)
+    public func scrollToTop(animated: Bool = true) {
+        if let indexPath = indexPathForRow(at: CGPoint(x: bounds.midX, y: 2)) , !isEmpty {
+            scrollToRow(at: indexPath, at: .top, animated: animated)
         }
     }
     
     public var isEmpty: Bool {
         var count = 0
         for section in 0 ..< numberOfSections {
-            count += numberOfRowsInSection(section)
+            count += numberOfRows(inSection: section)
         }
         
         return count == 0

@@ -27,12 +27,12 @@
 import Foundation
 
 /// Find out the geiven object is some type or not.
-public func objectIsType<T>(object: Any, someObjectOfType: T.Type) -> Bool {
+public func objectIsType<T>(_ object: Any, someObjectOfType: T.Type) -> Bool {
     return object is T
 }
 
 /// Log func.
-public func log<T>(message: T,
+public func log<T>(_ message: T,
     file: String = #file,
     method: String = #function,
     line: Int = #line)
@@ -41,10 +41,10 @@ public func log<T>(message: T,
 }
 
 /// Get value from `any` instance like KVC
-public func valueFrom(object: Any, forKey key: String) -> Any? {
+public func valueFrom(_ object: Any, forKey key: String) -> Any? {
     let mirror = Mirror(reflecting: object)
-    for i in mirror.children.startIndex ..< mirror.children.endIndex {
-        let (targetKey, targetMirror) = mirror.children[i]
+    
+    for (targetKey, targetMirror) in mirror.children {
         if key == targetKey {
             return targetMirror
         }
@@ -54,28 +54,28 @@ public func valueFrom(object: Any, forKey key: String) -> Any? {
 }
 
 /// Generate random number in range
-public func randomIn(range: Range<Int>) -> Int {
-    let count = UInt32(range.endIndex - range.startIndex)
-    return  Int(arc4random_uniform(count)) + range.startIndex
+public func randomIn(_ range: Range<Int>) -> Int {
+    let count = UInt32(range.upperBound - range.lowerBound)
+    return  Int(arc4random_uniform(count)) + range.lowerBound
 }
 
 
 // MARK: - GCD
 
-public typealias Task = (cancel: Bool) -> ()
+public typealias Task = ((_ cancel: Bool) -> ())
 
-public func delay(time: NSTimeInterval, task: () -> ()) -> Task? {
-    func dispatch_later(block: () -> ()) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(time * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), block)
+public func delay(_ time: TimeInterval, task: @escaping (() -> ())) -> Task? {
+    func dispatch_later(_ block: @escaping () -> ()) {
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(time * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: block)
     }
     
-    var closure: dispatch_block_t? = task
+    var closure: (() -> ())? = task
     var result: Task?
     
     let delayedClosure: Task = {
         if let internalClosure = closure {
             if $0 == false {
-                dispatch_async(dispatch_get_main_queue(), internalClosure)
+                DispatchQueue.main.async(execute: internalClosure)
             }
         }
         
@@ -87,36 +87,36 @@ public func delay(time: NSTimeInterval, task: () -> ()) -> Task? {
     
     dispatch_later {
         if let delayedClosure = result {
-            delayedClosure(cancel: false)
+            delayedClosure(false)
         }
     }
     
     return result
 }
 
-public func cancel(task: Task?) {
-    task?(cancel: true)
+public func cancel(_ task: Task?) {
+    task?(true)
 }
 
-public func UIThreadAsyncAction(block: dispatch_block_t) {
-    if NSThread.isMainThread() {
+public func UIThreadAsyncAction(_ block: @escaping ()->()) {
+    if Thread.isMainThread {
         block()
         return
     }
-    dispatch_async(dispatch_get_main_queue(), block)
+    DispatchQueue.main.async(execute: block)
 }
 
-public func BackgroundThreadAsyncAction(block: dispatch_block_t) {
-    if !NSThread.isMainThread() {
+public func BackgroundThreadAsyncAction(_ block: @escaping ()->()) {
+    if !Thread.isMainThread {
         block()
         return
     }
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), block)
+    DispatchQueue.global().async(execute: block)
 }
 
 // MARK: - synchronized
 
-public func synchronized(lock: AnyObject, closure: () -> ()) {
+public func synchronized(_ lock: AnyObject, closure: () -> ()) {
     objc_sync_enter(lock)
     closure()
     objc_sync_exit(lock)
@@ -151,62 +151,62 @@ public func swizzleClassMethod(forClass cls: AnyClass, originalSelector: Selecto
 // MARK: - C Pointers
 
 /// Convert a `void *` type to Swift type, use this function carefully
-public func convertUnsafePointerToSwiftType<T>(value: UnsafePointer<Void>) -> T {
-    return unsafeBitCast(value, UnsafePointer<T>.self).memory
+public func convertUnsafePointerToSwiftType<T>(_ value: UnsafeRawPointer) -> T {
+    return unsafeBitCast(value, to: UnsafePointer<T>.self).pointee
 }
 
 // MARK: - Sandbox
 
-private func searchPathForDirectory(directory: NSSearchPathDirectory) -> String? {
-    return NSSearchPathForDirectoriesInDomains(directory, NSSearchPathDomainMask.UserDomainMask, true).first
+private func searchPathForDirectory(_ directory: FileManager.SearchPathDirectory) -> String? {
+    return NSSearchPathForDirectoriesInDomains(directory, FileManager.SearchPathDomainMask.userDomainMask, true).first
 }
 
 public func directoryForDocument() -> String? {
-    return searchPathForDirectory(.DocumentDirectory)
+    return searchPathForDirectory(.documentDirectory)
 }
 
 public func directoryForCache() -> String? {
-    return searchPathForDirectory(.CachesDirectory)
+    return searchPathForDirectory(.cachesDirectory)
 }
 
 public func directoryForDownloads() -> String? {
-    return searchPathForDirectory(.DownloadsDirectory)
+    return searchPathForDirectory(.downloadsDirectory)
 }
 
 public func directoryForMovies() -> String? {
-    return searchPathForDirectory(.MoviesDirectory)
+    return searchPathForDirectory(.moviesDirectory)
 }
 
 public func directoryForMusic() -> String? {
-    return searchPathForDirectory(.MusicDirectory)
+    return searchPathForDirectory(.musicDirectory)
 }
 
 public func directoryForPictures() -> String? {
-    return searchPathForDirectory(.PicturesDirectory)
+    return searchPathForDirectory(.picturesDirectory)
 }
 
 // MARK: - ClosureDecorator
 
 /// ClosureDecorator, make use closure like a NSObject, aka objc_asscoiateXXX.
 final public class ClosureDecorator<T>: NSObject {
-    private let closure: Any
+    fileprivate let closure: Any
     
-    private override init() {
+    fileprivate override init() {
         fatalError("Use init(action:) instead.")
     }
     
-    public init(_ closure: () -> ()) {
+    public init(_ closure: @escaping (() -> ())) {
         self.closure = closure
     }
     
-    public init(_ closure: (T) -> ()) {
+    public init(_ closure: @escaping ((T) -> ())) {
         self.closure = closure
     }
     
-    func invoke(param: T) {
-        if let closure = closure as? () -> () {
+    func invoke(_ param: T) {
+        if let closure = closure as? (() -> ()) {
             closure()
-        } else if let closure = closure as? (T) -> () {
+        } else if let closure = closure as? ((T) -> ()) {
             closure(param)
         }
     }

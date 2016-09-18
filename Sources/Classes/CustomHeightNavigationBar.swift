@@ -27,10 +27,10 @@
 import UIKit
 
 // See: http://www.emdentec.com/blog/2014/2/25/hacking-uinavigationbar
-public class CustomHeightNavigationBar: UINavigationBar {
-    private let defaultHeight: CGFloat = 44
+open class CustomHeightNavigationBar: UINavigationBar {
+    fileprivate let defaultHeight: CGFloat = 44
     @IBInspectable
-    public var customHeight: CGFloat = 88
+    open var customHeight: CGFloat = 88
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -42,31 +42,31 @@ public class CustomHeightNavigationBar: UINavigationBar {
         commitInit()
     }
     
-    public override func awakeFromNib() {
+    open override func awakeFromNib() {
         super.awakeFromNib()
         commitInit()
     }
     
-    private func commitInit() {
-        transform = CGAffineTransformIdentity
-        transform = CGAffineTransformMakeTranslation(0, defaultHeight - customHeight)
+    fileprivate func commitInit() {
+        transform = CGAffineTransform.identity
+        transform = CGAffineTransform(translationX: 0, y: defaultHeight - customHeight)
     }
     
-    public override func sizeThatFits(size: CGSize) -> CGSize {
+    open override func sizeThatFits(_ size: CGSize) -> CGSize {
         var newSize = super.sizeThatFits(size)
         newSize.height = customHeight
         return newSize
     }
     
-    public override func layoutSubviews() {
+    open override func layoutSubviews() {
         super.layoutSubviews()
         
         let classNamesToReposition = ["_UINavigationBarBackground"]
         for view in subviews {
-            if classNamesToReposition.contains(NSStringFromClass(view.dynamicType)) {
+            if classNamesToReposition.contains(NSStringFromClass(type(of: view))) {
                 let _bounds = bounds
                 var _frame = view.frame
-                let _statusBarHeight = UIApplication.sharedApplication().statusBarFrame.size.height
+                let _statusBarHeight = UIApplication.shared.statusBarFrame.size.height
                 _frame.origin.y = _bounds.origin.y + customHeight - defaultHeight - _statusBarHeight
                 _frame.size.height = _bounds.size.height + _statusBarHeight
                 view.frame = _frame

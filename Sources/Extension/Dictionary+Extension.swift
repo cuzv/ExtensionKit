@@ -34,19 +34,19 @@ public extension Dictionary {
         let mappedList = map {
             return "\($0.0)=\($0.1)"
         }
-        return mappedList.sort().joinWithSeparator("&")
+        return mappedList.sorted().joined(separator: "&")
     }
     
     public var JSONString: String? {
-        if let object = self as? AnyObject, let data = NSDataFrom(object) {
-            return String(data: data, encoding: NSUTF8StringEncoding)
+        if let data = NSDataFrom(self as AnyObject) {
+            return String(data: data, encoding: String.Encoding.utf8)
         }
         return nil
     }
 }
 
 /// Combine two `Dictionary` to one.
-public func += <KeyType, ValueType> (inout lhs: Dictionary<KeyType, ValueType>, rhs: Dictionary<KeyType, ValueType>) {
+public func += <KeyType, ValueType> (lhs: inout Dictionary<KeyType, ValueType>, rhs: Dictionary<KeyType, ValueType>) {
     for (key, value) in rhs {
         lhs.updateValue(value, forKey: key)
     }

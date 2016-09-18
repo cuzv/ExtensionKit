@@ -30,26 +30,25 @@ private class _LabelBackgroundImageView: UIImageView {}
 
 public extension UILabel {
     public override func setRoundingCorners(
-        corners corners: UIRectCorner = .AllCorners,
+        corners: UIRectCorner = .allCorners,
         radius: CGFloat = 3,
-        fillColor: UIColor = UIColor.whiteColor(),
-        strokeColor: UIColor = UIColor.clearColor(),
+        fillColor: UIColor = UIColor.white,
+        strokeColor: UIColor = UIColor.clear,
         strokeLineWidth: CGFloat = 0)
     {
-        if CGSizeEqualToSize(frame.size, CGSize.zero) {
+        if frame.size.equalTo(CGSize.zero) {
             debugPrint("Could not set rounding corners on zero size view.")
             return
         }
 
         if let superview = superview {
             for sub in superview.subviews {
-                if sub.isMemberOfClass(_LabelBackgroundImageView.self) {
+                if sub.isMember(of: _LabelBackgroundImageView.self) {
                     return
                 }
             }
         }
-        
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+        DispatchQueue.global().async {
             let backImage = UIImageFrom(
                 color: fillColor,
                 size: self.frame.size,
@@ -59,13 +58,13 @@ public extension UILabel {
                 strokeLineWidth: strokeLineWidth
             )
             
-            dispatch_async(dispatch_get_main_queue()) {
+            DispatchQueue.main.async {
                 let backImageView = _LabelBackgroundImageView(image: backImage)
                 backImageView.frame = self.frame
                 self.superview?.addSubview(backImageView)
-                self.superview?.sendSubviewToBack(backImageView)
+                self.superview?.sendSubview(toBack: backImageView)
 
-                self.backgroundColor = UIColor.clearColor()
+                self.backgroundColor = UIColor.clear
             }
         }
     }

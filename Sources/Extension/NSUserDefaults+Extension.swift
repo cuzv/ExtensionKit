@@ -26,52 +26,52 @@
 
 import UIKit
 
-public let UserDefaults = NSUserDefaults.standardUserDefaults()
+public let UserDefaults = Foundation.UserDefaults.standard
 
-public extension NSUserDefaults {
+public extension Foundation.UserDefaults {
     public subscript(key: String) -> Any? {
-        get { return valueForKey(key) as Any }
+        get { return value(forKey: key) as Any }
         set {
             switch newValue {
-            case let value as Int: setInteger(value, forKey: key)
-            case let value as Double: setDouble(value, forKey: key)
-            case let value as Bool: setBool(value, forKey: key)
-            case let value as NSURL: setURL(value, forKey: key)
-            case let value as NSObject: setObject(value, forKey: key)
-            case nil: removeObjectForKey(key)
+            case let value as Int: set(value, forKey: key)
+            case let value as Double: set(value, forKey: key)
+            case let value as Bool: set(value, forKey: key)
+            case let value as URL: set(value, forKey: key)
+            case let value as NSObject: set(value, forKey: key)
+            case nil: removeObject(forKey: key)
             default: assertionFailure("Invalid value type.")
             }
         }
     }
     
-    private func setter(key key: String, value: AnyObject?) {
+    fileprivate func setter(key: String, value: AnyObject?) {
         self[key] = value
         synchronize()
     }
 
     /// Is there a object for specific key exist.
-    public func hasKey(key: String) -> Bool {
-        return nil != objectForKey(key)
+    public func hasKey(_ key: String) -> Bool {
+        return nil != object(forKey: key)
     }
     
     /// Archive object to NSData to save.
-    public func archive(object object: AnyObject?, forKey key: String) {
+    public func archive(object: AnyObject?, forKey key: String) {
         if let value = object {
-            setter(key: key, value: NSKeyedArchiver.archivedDataWithRootObject(value))
+            setter(key: key, value: NSKeyedArchiver.archivedData(withRootObject: value) as AnyObject?)
         } else {
-            removeObjectForKey(key)
+            removeObject(forKey: key)
         }
     }
     
     /// Unarchive object for specific key.
     public func unarchiveObject(forKey key: String) -> AnyObject? {
-        return dataForKey(key).flatMap { NSKeyedUnarchiver.unarchiveObjectWithData($0) }
+        return data(forKey: key).flatMap { NSKeyedUnarchiver.unarchiveObject(with: $0) as AnyObject }
     }
     
     
     /// Get the Int value for key.
     public func intValue(forKey key: String) -> Int? {
-        if let value: Any? = self[key], let intValue = value as? Int {
+        if let value = self[key], let intValue = value as? Int {
             return intValue
         } else {
             return nil
@@ -80,7 +80,7 @@ public extension NSUserDefaults {
     
     /// Get the Double value for key.
     public func doubleValue(forKey key: String) -> Double? {
-        if let value: Any? = self[key], let doubleValue = value as? Double {
+        if let value = self[key], let doubleValue = value as? Double {
             return doubleValue
         } else {
             return nil
@@ -89,7 +89,7 @@ public extension NSUserDefaults {
     
     /// Get the Bool value for key.
     public func boolValue(forKey key: String) -> Bool {
-        if let value: Any? = self["Key"], let boolValue = value as? Bool  {
+        if let value = self["Key"], let boolValue = value as? Bool  {
             return boolValue
         } else {
             return false
@@ -97,8 +97,8 @@ public extension NSUserDefaults {
     }
     
     /// Get the NSURL value for key.
-    public func urlValue(forKey  key: String) -> NSURL? {
-        if let value: Any? = self[key], let urlValue = value as? NSURL {
+    public func urlValue(forKey  key: String) -> URL? {
+        if let value = self[key], let urlValue = value as? URL {
             return urlValue
         } else {
             return nil
@@ -107,7 +107,7 @@ public extension NSUserDefaults {
     
     /// Get the NSObject value for key.
     public func objectValue(forKey key: String) -> NSObject? {
-        if let value: Any? = self[key], let objectValue = value as? NSObject {
+        if let value = self[key], let objectValue = value as? NSObject {
             return objectValue
         } else {
             return nil

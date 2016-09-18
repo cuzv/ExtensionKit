@@ -26,11 +26,11 @@
 
 import Foundation
 
-public extension NSData {
+public extension Data {
     /// Create a Foundation object from JSON data.
     public var JSONObject: AnyObject? {
         do {
-            return try NSJSONSerialization.JSONObjectWithData(self, options: NSJSONReadingOptions.MutableLeaves)
+            return try JSONSerialization.jsonObject(with: self, options: JSONSerialization.ReadingOptions.mutableLeaves) as AnyObject
         } catch let error as NSError {
             debugPrint("Deserialized JSON string failed with error: \(error)")
             return nil
@@ -39,9 +39,9 @@ public extension NSData {
 }
 
 /// Generate JSON data from a Foundation object
-public func NSDataFrom(JSONObject: AnyObject) -> NSData? {
+public func NSDataFrom(_ JSONObject: AnyObject) -> Data? {
     do {
-        return try NSJSONSerialization.dataWithJSONObject(JSONObject, options: NSJSONWritingOptions.PrettyPrinted)
+        return try JSONSerialization.data(withJSONObject: JSONObject, options: JSONSerialization.WritingOptions.prettyPrinted)
     } catch let error as NSError {
         debugPrint("Serialized JSON string failed with error: \(error)")
         return nil

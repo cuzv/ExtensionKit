@@ -29,17 +29,17 @@ import UIKit
 // MARK: - AssociationKey
 
 private struct AssociationKey {
-    private static var alertActionIndex: String = "alertActionIndex"
-    private static var imagePickerCompletionHandlerWrapper = "imagePickerCompletionHandlerWrapper"
-    private static var barButtonItemActionHandlerWrapper: String = "barButtonItemActionHandlerWrapper"
+    fileprivate static var alertActionIndex: String = "alertActionIndex"
+    fileprivate static var imagePickerCompletionHandlerWrapper = "imagePickerCompletionHandlerWrapper"
+    fileprivate static var barButtonItemActionHandlerWrapper: String = "barButtonItemActionHandlerWrapper"
 }
 
 // MARK: - Present UIAlertController
 
 public extension UIAlertAction {
-    private var alertActionIndex: Int? {
+    fileprivate var alertActionIndex: Int? {
         get { return associatedObject(forKey: &AssociationKey.alertActionIndex) as? Int }
-        set { associate(retainObject: newValue, forKey: &AssociationKey.alertActionIndex) }
+        set { associate(retainObject: newValue as AnyObject!, forKey: &AssociationKey.alertActionIndex) }
     }
     
     public var index: Int? {
@@ -49,7 +49,7 @@ public extension UIAlertAction {
 
 public extension UIViewController {
     /// Present error.
-    public func presentError(error: NSError) {
+    public func presentError(_ error: NSError) {
         if let message = error.userInfo[NSLocalizedDescriptionKey] as? String {
             presentAlert(message: message)
         } else if let message = error.userInfo[NSLocalizedFailureReasonErrorKey] as? String {
@@ -59,53 +59,53 @@ public extension UIViewController {
     
     /// Present message.
     public func presentAlert(
-        title title: String = "",
+        title: String = "",
         message: String,
         cancelTitle: String = "好",
         cancelHandler: ((UIAlertAction) -> ())? = nil,
         otherTitles: [String]? = nil,
         othersHandler: ((UIAlertAction) -> ())? = nil)
     {
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-        let cancelAction = UIAlertAction(title: cancelTitle, style: .Cancel, handler: cancelHandler)
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: cancelTitle, style: .cancel, handler: cancelHandler)
         alertController.addAction(cancelAction)
         
         if let otherTitles = otherTitles {
             for otherTitle in otherTitles {
-                let action = UIAlertAction(title: otherTitle, style: .Default, handler: othersHandler)
-                action.alertActionIndex = otherTitles.indexOf(otherTitle)
+                let action = UIAlertAction(title: otherTitle, style: .default, handler: othersHandler)
+                action.alertActionIndex = otherTitles.index(of: otherTitle)
                 alertController.addAction(action)
             }
         }
         
-        presentViewController(alertController, animated: true, completion: nil)
+        present(alertController, animated: true, completion: nil)
     }
     
     /// Present ActionSheet.
     public func presentActionSheet(
-        title title: String = "",
+        title: String = "",
         message: String,
         cancelTitle: String = "取消",
         cancelHandler: ((UIAlertAction) -> ())? = nil,
         actionTitles: [String],
         actionHandler: ((UIAlertAction) -> ())? = nil)
     {
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .ActionSheet)
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
         for actionTitle in actionTitles {
-            let action = UIAlertAction(title: actionTitle, style: .Default, handler: actionHandler)
-            action.alertActionIndex = actionTitles.indexOf(actionTitle)
+            let action = UIAlertAction(title: actionTitle, style: .default, handler: actionHandler)
+            action.alertActionIndex = actionTitles.index(of: actionTitle)
             alertController.addAction(action)
         }
-        let cancelAction = UIAlertAction(title: cancelTitle, style: .Cancel, handler: cancelHandler)
+        let cancelAction = UIAlertAction(title: cancelTitle, style: .cancel, handler: cancelHandler)
         alertController.addAction(cancelAction)
-        presentViewController(alertController, animated: true, completion: nil)
+        present(alertController, animated: true, completion: nil)
     }
 }
 
 /// The convience version of `presentAlert(title:message:cancelTitle:cancelHandler:)`.
 /// Use this func carefully, it maybe iterate many times.
 public func doPresentAlert(
-    title title: String = "",
+    title: String = "",
     message: String,
     cancelTitle: String = "好",
     cancelHandler: ((UIAlertAction) -> ())? = nil)
@@ -119,7 +119,7 @@ public func doPresentAlert(
 }
 
 public func doPresentAlert(
-    title title: String = "",
+    title: String = "",
     message: String,
     cancelTitle: String = "好",
     cancelHandler: ((UIAlertAction) -> ())? = nil,
@@ -138,14 +138,14 @@ public func doPresentAlert(
 
 /// The convience version of `presentError:`.
 /// Use this func carefully, it maybe iterate many times.
-public func doPresentError(error: NSError) {
+public func doPresentError(_ error: NSError) {
     findLastPresentedViewController()?.presentError(error)
 }
 
 /// The convience version of `presentActionSheet(title:message:cancelTitle:cancelHandler:actionTitles:actionHandler:)`.
 /// Use this func carefully, it maybe iterate many times.
 public func doPresentActionSheet(
-    title title: String = "",
+    title: String = "",
     message: String,
     cancelTitle: String = "取消",
     cancelHandler: ((UIAlertAction) -> ())? = nil,
@@ -167,7 +167,7 @@ public func doPresentActionSheet(
 /// Returns the most recently presented UIViewController (visible).
 /// http://stackoverflow.com/questions/24825123/get-the-current-view-controller-from-the-app-delegate
 public func findLastPresentedViewController() -> UIViewController? {
-    func findTopLevelViewController(viewController: UIViewController) -> UIViewController? {
+    func findTopLevelViewController(_ viewController: UIViewController) -> UIViewController? {
         if let vc = viewController.presentedViewController {
             return findTopLevelViewController(vc)
         } else if let vc = viewController as? UISplitViewController  {
@@ -190,7 +190,7 @@ public func findLastPresentedViewController() -> UIViewController? {
         }
     }
 
-    if let rootViewController = UIApplication.sharedApplication().keyWindow?.rootViewController {
+    if let rootViewController = UIApplication.shared.keyWindow?.rootViewController {
         return findTopLevelViewController(rootViewController)
     }
 
@@ -200,7 +200,7 @@ public func findLastPresentedViewController() -> UIViewController? {
 // MARK: - Present UIImagePickerController
 
 private extension UIImagePickerController {
-    private var imagePickerCompletionHandlerWrapper: ClosureDecorator<(UIImagePickerController, UIImage?)> {
+    var imagePickerCompletionHandlerWrapper: ClosureDecorator<(UIImagePickerController, UIImage?)> {
         get { return associatedObject(forKey: &AssociationKey.imagePickerCompletionHandlerWrapper) as! ClosureDecorator<(UIImagePickerController, UIImage?)> }
         set { associate(retainObject: newValue, forKey: &AssociationKey.imagePickerCompletionHandlerWrapper) }
     }
@@ -208,28 +208,28 @@ private extension UIImagePickerController {
 
 public extension UIViewController {
     /// Present UIImagePickerController.
-    public func presentImagePicker(sourceType sourceType: UIImagePickerControllerSourceType = .PhotoLibrary, completionHandler: ((UIImagePickerController, UIImage?) -> ())) {
+    public func presentImagePicker(sourceType: UIImagePickerControllerSourceType = .photoLibrary, completionHandler: @escaping ((UIImagePickerController, UIImage?) -> ())) {
         let imagePicker = UIImagePickerController()
         imagePicker.sourceType = sourceType
-        imagePicker.videoQuality = .TypeLow
+        imagePicker.videoQuality = .typeLow
         imagePicker.delegate = self
         imagePicker.allowsEditing = true
         
         imagePicker.imagePickerCompletionHandlerWrapper = ClosureDecorator(completionHandler)
-        presentViewController(imagePicker, animated: true, completion: nil)
+        present(imagePicker, animated: true, completion: nil)
     }
 }
 
 extension UIViewController: UINavigationControllerDelegate, UIImagePickerControllerDelegate {
-    public func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+    public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss()
         picker.imagePickerCompletionHandlerWrapper.invoke((picker, nil))
     }
 
-    public func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         BackgroundThreadAsyncAction { () -> Void in
             if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
-                let newImage = image.orientationTo(.Up)
+                let newImage = image.orientationTo(.up)
                 if let imageData = newImage.compressAsPossible() {
                     let resultImage = UIImage(data: imageData, scale: UIScreen.scale_var)
                     UIThreadAsyncAction({ () -> Void in
@@ -243,7 +243,7 @@ extension UIViewController: UINavigationControllerDelegate, UIImagePickerControl
         }
     }
     
-    public func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
         picker.dismiss()
         picker.imagePickerCompletionHandlerWrapper.invoke((picker, image))
     }
@@ -252,69 +252,69 @@ extension UIViewController: UINavigationControllerDelegate, UIImagePickerControl
 // MARK: - Navigation
 
 public extension UIViewController {
-    public func showViewController(viewController: UIViewController) {
-        navigationController?.showViewController(viewController, sender: self)
+    public func showViewController(_ viewController: UIViewController) {
+        navigationController?.show(viewController, sender: self)
     }
     
-    public func backToPreviousViewController(animated animated: Bool = true) {
+    public func backToPreviousViewController(animated: Bool = true) {
         if let presentingViewController = presentingViewController {
-            presentingViewController.dismissViewControllerAnimated(animated, completion: nil)
+            presentingViewController.dismiss(animated: animated, completion: nil)
         } else {
-            navigationController?.popViewControllerAnimated(animated)
+            _ = navigationController?.popViewController(animated: animated)
         }
     }
     
-    public func backToRootViewController(animated animated: Bool = true) {
+    public func backToRootViewController(animated: Bool = true) {
         if let presentingViewController = presentingViewController {
-            presentingViewController.dismissViewControllerAnimated(animated, completion: nil)
+            presentingViewController.dismiss(animated: animated, completion: nil)
         } else {
-            navigationController?.popToRootViewControllerAnimated(animated)
+            _ = navigationController?.popToRootViewController(animated: animated)
         }
     }
     
-    public func presentViewController(viewControllerToPresent: UIViewController) {
-        presentViewController(viewControllerToPresent, animated: true, completion: nil)
+    public func presentViewController(_ viewControllerToPresent: UIViewController) {
+        present(viewControllerToPresent, animated: true, completion: nil)
     }
     
-    public func presentTranslucentViewController(viewController: UIViewController, modalTransitionStyle: UIModalTransitionStyle = .CoverVertical, animated flag: Bool = true, completion: (() -> Void)? = nil) {
-        viewController.modalPresentationStyle = .Custom
-        viewController.modalTransitionStyle = UIDevice.iOS8Plus ? modalTransitionStyle : .CrossDissolve
+    public func presentTranslucentViewController(_ viewController: UIViewController, modalTransitionStyle: UIModalTransitionStyle = .coverVertical, animated flag: Bool = true, completion: (() -> Void)? = nil) {
+        viewController.modalPresentationStyle = .custom
+        viewController.modalTransitionStyle = UIDevice.iOS8Plus ? modalTransitionStyle : .crossDissolve
         // Very important
-        view.window?.rootViewController?.modalPresentationStyle = UIDevice.iOS8Plus ? .FullScreen : .CurrentContext
-        presentViewController(viewController, animated: flag, completion: completion)
+        view.window?.rootViewController?.modalPresentationStyle = UIDevice.iOS8Plus ? .fullScreen : .currentContext
+        present(viewController, animated: flag, completion: completion)
     }
     
-    public func dismiss(animated animated: Bool = true, completion: (() -> Void)? = nil) {
-        presentingViewController?.dismissViewControllerAnimated(animated, completion: completion)
+    public func dismiss(animated: Bool = true, completion: (() -> Void)? = nil) {
+        presentingViewController?.dismiss(animated: animated, completion: completion)
     }
     
-    public func dismissToTop(animated animated: Bool = true, completion: (() -> Void)? = nil) {
+    public func dismissToTop(animated: Bool = true, completion: (() -> Void)? = nil) {
         var presentedViewController = self
         while let presentingViewController = presentedViewController.presentingViewController {
             presentedViewController = presentingViewController
         }
-        presentedViewController.dismissViewControllerAnimated(animated, completion: completion)
+        presentedViewController.dismiss(animated: animated, completion: completion)
     }
     
-    public func addSubViewController(viewController: UIViewController) {
-        viewController.willMoveToParentViewController(self)
+    public func addSubViewController(_ viewController: UIViewController) {
+        viewController.willMove(toParentViewController: self)
         addChildViewController(viewController)
         viewController.view.frame = view.frame
         view.addSubview(viewController.view)
-        viewController.didMoveToParentViewController(self)
+        viewController.didMove(toParentViewController: self)
     }
 }
 
 // MARK: - UIBarButtonItem
 
 public extension UIBarButtonItem {
-    private var barButtonItemActionHandlerWrapper: ClosureDecorator<(UIBarButtonItem, Any?)>! {
+    fileprivate var barButtonItemActionHandlerWrapper: ClosureDecorator<(UIBarButtonItem, Any?)>! {
         get { return associatedObject(forKey: &AssociationKey.barButtonItemActionHandlerWrapper) as? ClosureDecorator<(UIBarButtonItem, Any?)> }
         set { associate(retainObject: newValue, forKey: &AssociationKey.barButtonItemActionHandlerWrapper) }
     }
     
-    public class func barButtonItemWith(title title: String, actionHandler: ((UIBarButtonItem, Any?) -> ())?) -> UIBarButtonItem {
-        let barButtonItem = UIBarButtonItem(title: title, style: .Plain, target: self, action: #selector(UIBarButtonItem.performActionHandler(_:)))
+    public class func barButtonItemWith(title: String, actionHandler: ((UIBarButtonItem, Any?) -> ())?) -> UIBarButtonItem {
+        let barButtonItem = UIBarButtonItem(title: title, style: .plain, target: self, action: #selector(UIBarButtonItem.performActionHandler(_:)))
         
         if let actionHandler = actionHandler {
             barButtonItem.barButtonItemActionHandlerWrapper = ClosureDecorator(actionHandler)
@@ -323,8 +323,8 @@ public extension UIBarButtonItem {
         return barButtonItem
     }
     
-    public class func barButtonItemWith(image image: UIImage?, actionHandler: ((UIBarButtonItem, Any?) -> ())?) -> UIBarButtonItem {
-        let barButtonItem = UIBarButtonItem(image: image?.originalImage, style: .Plain, target: self, action: #selector(UIBarButtonItem.performActionHandler(_:)))
+    public class func barButtonItemWith(image: UIImage?, actionHandler: ((UIBarButtonItem, Any?) -> ())?) -> UIBarButtonItem {
+        let barButtonItem = UIBarButtonItem(image: image?.originalImage, style: .plain, target: self, action: #selector(UIBarButtonItem.performActionHandler(_:)))
         
         if let actionHandler = actionHandler {
             barButtonItem.barButtonItemActionHandlerWrapper = ClosureDecorator(actionHandler)
@@ -343,7 +343,7 @@ public extension UIBarButtonItem {
     }
     
     /// Helper func
-    internal class func performActionHandler(sender: UIBarButtonItem) {
+    internal class func performActionHandler(_ sender: UIBarButtonItem) {
         sender.barButtonItemActionHandlerWrapper.invoke((sender, nil))
     }
 }

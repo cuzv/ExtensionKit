@@ -34,20 +34,20 @@ public extension UIColor {
         return UIColor.colorWith(red, green: green, blue: blue)
     }
     
-    public class func colorWith(red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat = 100) -> UIColor {
+    public class func colorWith(_ red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat = 100) -> UIColor {
         return UIColor(red: red / 255.0, green: green / 255.0, blue: blue / 255.0, alpha: alpha / 100)
     }
     
-    public class func colorWith(hex hex: String, alpha: CGFloat = 100) -> UIColor {
+    public class func colorWith(hex: String, alpha: CGFloat = 100) -> UIColor {
         // Convert hex string to an integer
         var hexint: UInt32 = 0
         
         // Create scanner
-        let scanner = NSScanner(string: hex)
+        let scanner = Scanner(string: hex)
         
         // Tell scanner to skip the # character
-        scanner.charactersToBeSkipped = NSCharacterSet(charactersInString: "#")
-        scanner.scanHexInt(&hexint)
+        scanner.charactersToBeSkipped = CharacterSet(charactersIn: "#")
+        scanner.scanHexInt32(&hexint)
         
         // Create color object, specifying alpha
         if hex.length <= 4 {
@@ -66,11 +66,11 @@ public extension UIColor {
     }
 }
 
-public func UIColorFrom(red red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat = 100) -> UIColor {
+public func UIColorFrom(red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat = 100) -> UIColor {
     return UIColor.colorWith(red, green: green, blue: blue, alpha: alpha)
 }
 
-public func UIColorFrom(hex hex: String, alpha: CGFloat = 100) -> UIColor {
+public func UIColorFrom(hex: String, alpha: CGFloat = 100) -> UIColor {
     return UIColor.colorWith(hex: hex, alpha: alpha)
 }
 

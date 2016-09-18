@@ -31,26 +31,27 @@ final public class DashLineView: UIView {
     public var lineColor: UIColor = UIColor.separatorDefaultColor
     public var horizontal: Bool = true
     
-    public override func drawRect(rect: CGRect) {
-        super.drawRect(rect)
+    public override func draw(_ rect: CGRect) {
+        super.draw(rect)
         
         backgroundColor?.setFill()
         UIRectFill(rect)
         
-        let lineWidth = horizontal ? CGRectGetHeight(rect).ceilly : CGRectGetWidth(rect).ceilly
-        let startPoint = horizontal ? CGPointMake((lineWidth / 2).ceilly, (CGRectGetHeight(rect) / 2).ceilly) :
-                                      CGPointMake((CGRectGetWidth(rect) / 2).ceilly , (lineWidth / 2).ceilly)
-        let endPoint = horizontal ? CGPointMake(CGRectGetWidth(rect) - (lineWidth / 2).ceilly, (CGRectGetHeight(rect) / 2).ceilly) :
-                                    CGPointMake((CGRectGetWidth(rect) / 2).ceilly , CGRectGetHeight(rect) - (lineWidth / 2).ceilly)
+        let lineWidth = horizontal ? rect.height.ceilly : rect.width.ceilly
+        let startPoint = horizontal ? CGPoint(x: (lineWidth / 2).ceilly, y: (rect.height / 2).ceilly) :
+                                      CGPoint(x: (rect.width / 2).ceilly , y: (lineWidth / 2).ceilly)
+        let endPoint = horizontal ? CGPoint(x: rect.width - (lineWidth / 2).ceilly, y: (rect.height / 2).ceilly) :
+                                    CGPoint(x: (rect.width / 2).ceilly , y: rect.height - (lineWidth / 2).ceilly)
         
-        let context = UIGraphicsGetCurrentContext()
-        CGContextBeginPath(context!)
-        CGContextSetLineWidth(context!, lineWidth)
-        CGContextSetStrokeColorWithColor(context!, lineColor.CGColor)
-        let lengths = [spacing, spacing]
-        CGContextSetLineDash(context!, 0, lengths, lengths.count)
-        CGContextMoveToPoint(context!, startPoint.x, startPoint.y)
-        CGContextAddLineToPoint(context!, endPoint.x, endPoint.y)
-        CGContextStrokePath(context!)
+        guard let context = UIGraphicsGetCurrentContext() else {
+            return
+        }
+        context.beginPath()
+        context.setLineWidth(lineWidth)
+        context.setStrokeColor(lineColor.cgColor)
+        context.setLineDash(phase: 0, lengths: [spacing, spacing])
+        context.move(to: CGPoint(x: startPoint.x, y: startPoint.y))
+        context.addLine(to: CGPoint(x: endPoint.x, y: endPoint.y))
+        context.strokePath()
     }
 }

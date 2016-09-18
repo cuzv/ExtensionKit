@@ -30,18 +30,18 @@ import UIKit
 // See: https://www.mikeash.com/pyblog/friday-qa-2015-12-25-swifty-targetaction.html
 
 final public class ActionTrampoline<T>: NSObject {
-    private let action: T -> ()
+    fileprivate let action: ((T) -> ())
     
-    public init(action: T -> ()) {
+    public init(action: @escaping ((T) -> ())) {
         self.action = action
     }
     
-    @objc public func action(sender: AnyObject) {
+    @objc public func action(_ sender: AnyObject) {
         // UIControl: add(target: AnyObject?, action: Selector, forControlEvents controlEvents: UIControlEvents)
         if let sender = sender as? T {
             action(sender)
         }
-            // UIGestureRecognizer: add(target: AnyObject, action: Selector)
+        // UIGestureRecognizer: add(target: AnyObject, action: Selector)
         else if let sender = sender as? UIGestureRecognizer {
             action(sender.view as! T)
         }
@@ -49,7 +49,7 @@ final public class ActionTrampoline<T>: NSObject {
     
     #if DEBUG
     deinit {
-        debugPrint("\(#file):\(#line):\(self.dynamicType):\(#function)")
+        debugPrint("\(#file):\(#line):\(type(of: self)):\(#function)")
     }
     #endif
 }

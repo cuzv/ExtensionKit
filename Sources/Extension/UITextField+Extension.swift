@@ -29,20 +29,20 @@ import UIKit
 // MARK: - AssociationKey
 
 private struct AssociationKey {
-    private static var textFieldTextObserver: String = "textFieldTextObserver"
+    fileprivate static var textFieldTextObserver: String = "textFieldTextObserver"
 }
 
 // MARK: - TextObserver Extension
 
 private extension UITextField {
-    private var textFieldTextObserver: TextObserver {
+    var textFieldTextObserver: TextObserver {
         get { return associatedObject(forKey: &AssociationKey.textFieldTextObserver) as! TextObserver }
         set { associate(retainObject: newValue, forKey: &AssociationKey.textFieldTextObserver) }
     }
 }
 
 public extension UITextField {
-    public func setupTextObserver(maxLength maxLength: Int = 100, actionHandler: ((Int) -> ())? = nil) {
+    public func setupTextObserver(maxLength: Int = 100, actionHandler: ((Int) -> ())? = nil) {
         let textObserver = TextObserver(maxLength: maxLength) { (remainCount) -> () in
             actionHandler?(remainCount)
         }
