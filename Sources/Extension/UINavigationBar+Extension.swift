@@ -32,7 +32,7 @@ public extension UINavigationBar {
     /// Only effect when `translucent` is true.
     public func setBackgroundVisible(_ visible: Bool) {
         if !isTranslucent {
-            debugPrint("`translucent` must be true if you wanna change background visible.")
+            logging("`translucent` must be true if you wanna change background visible.")
         }
         
         setBackgroundImage(visible ? nil : UIImage(), for: .default)
@@ -46,23 +46,20 @@ public extension UINavigationBar {
     /// The hairline view.
     public var hairline: UIView? {
         guard let cls = NSClassFromString("_UINavigationBarBackground") else { return nil }
-        
         for subview in subviews {
             if subview.isKind(of: cls) {
                 for view in subview.subviews {
-                    if view is UIImageView && view.frame.size.height == 1.0 / UIScreen.scale_var {
+                    if view is UIImageView && view.frame.size.height == 1.0 / UIScreen.main.scale {
                         return view
                     }
                 }
             }
         }
-        
         return nil
     }
     
     /// Remove the hairline view.
     public func removeHairline() {
-        guard let hairline = hairline else { return }
-        hairline.removeFromSuperview()
+        hairline?.removeFromSuperview()
     }
 }

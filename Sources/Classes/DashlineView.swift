@@ -1,5 +1,5 @@
 //
-//  DashLineView.swift
+//  DashlineView.swift
 //  ExtensionKit
 //
 //  Created by Moch Xiao on 4/5/16.
@@ -26,9 +26,9 @@
 
 import UIKit
 
-final public class DashLineView: UIView {
+final public class DashlineView: UIView {
     public var spacing: CGFloat = 2
-    public var lineColor: UIColor = UIColor.separatorDefaultColor
+    public var lineColor: UIColor = UIColor.separator
     public var horizontal: Bool = true
     
     public override func draw(_ rect: CGRect) {
@@ -37,11 +37,11 @@ final public class DashLineView: UIView {
         backgroundColor?.setFill()
         UIRectFill(rect)
         
-        let lineWidth = horizontal ? rect.height.ceilly : rect.width.ceilly
-        let startPoint = horizontal ? CGPoint(x: (lineWidth / 2).ceilly, y: (rect.height / 2).ceilly) :
-                                      CGPoint(x: (rect.width / 2).ceilly , y: (lineWidth / 2).ceilly)
-        let endPoint = horizontal ? CGPoint(x: rect.width - (lineWidth / 2).ceilly, y: (rect.height / 2).ceilly) :
-                                    CGPoint(x: (rect.width / 2).ceilly , y: rect.height - (lineWidth / 2).ceilly)
+        let lineWidth = horizontal ? rect.height.ceilling : rect.width.ceilling
+        let startPoint = horizontal ? CGPoint(x: (lineWidth / 2).ceilling, y: (rect.height / 2).ceilling) :
+                                      CGPoint(x: (rect.width / 2).ceilling , y: (lineWidth / 2).ceilling)
+        let endPoint = horizontal ? CGPoint(x: rect.width - (lineWidth / 2).ceilling, y: (rect.height / 2).ceilling) :
+                                    CGPoint(x: (rect.width / 2).ceilling , y: rect.height - (lineWidth / 2).ceilling)
         
         guard let context = UIGraphicsGetCurrentContext() else {
             return

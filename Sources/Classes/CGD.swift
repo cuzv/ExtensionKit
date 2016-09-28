@@ -45,18 +45,6 @@ open class LimitedWorker {
     }
 }
 
-public protocol Identifiable {
-    var identifier: String { get }
-}
-
-extension Identifiable {
-    var identifier: String { return UUID().uuidString }
-}
-
-extension NSObject: Identifiable {
-    public var identifier: String { return "\(hash)" }
-}
-
 open class IdentityMap<T: Identifiable> {
     var dictionary = [String: T]()
     let accessQueue = DispatchQueue(label: isolation_queue_label, attributes: DispatchQueue.Attributes.concurrent)

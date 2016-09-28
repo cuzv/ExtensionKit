@@ -25,26 +25,6 @@
 //
 
 import UIKit
-fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-  switch (lhs, rhs) {
-  case let (l?, r?):
-    return l < r
-  case (nil, _?):
-    return true
-  default:
-    return false
-  }
-}
-
-fileprivate func >= <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-  switch (lhs, rhs) {
-  case let (l?, r?):
-    return l >= r
-  default:
-    return !(lhs < rhs)
-  }
-}
-
 
 public extension UIDevice {
     fileprivate static let _currentDevice = UIDevice.current
@@ -56,17 +36,27 @@ public extension UIDevice {
     public class var majorVersion: Int {
         return Int(UIDevice.sysVersion.components(separatedBy: ".").first!)!
     }
-
-    fileprivate static let _iOS7Plus = Float(UIDevice.sysVersion) >= 7.0
-    public class var iOS7Plus: Bool {
-        return _iOS7Plus
-    }
-
-    fileprivate static let _iOS8Plus = Float(UIDevice.sysVersion) >= 8.0
-    public class var iOS8Plus: Bool {
-        return _iOS8Plus
+    
+    public class var iOS7x: Bool {
+        return majorVersion >= 7
     }
     
+    public class var iOS8x: Bool {
+        return majorVersion >= 8
+    }
+    
+    public class var iOS9x: Bool {
+        return majorVersion >= 9
+    }
+    
+    public class var iOS10x: Bool {
+        return majorVersion >= 10
+    }
+    
+    public class var iOS11x: Bool {
+        return majorVersion >= 11
+    }
+
     fileprivate static func deviceOrientation(_ result: (UIDeviceOrientation) -> ()) {
         if !_currentDevice.isGeneratingDeviceOrientationNotifications {
             _currentDevice.beginGeneratingDeviceOrientationNotifications()

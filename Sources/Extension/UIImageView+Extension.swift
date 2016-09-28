@@ -27,33 +27,40 @@
 import UIKit
 
 public extension UIImageView {
-    /// Setup rounding corners radius
+    /// Setup rounding corners radius, fillColor will not be used.
     /// **Note**: Before you invoke this method, ensure `self` already have correct frame and image.
-    public override func setRoundingCorners(
-        corners: UIRectCorner = .allCorners,
+    public override func addRoundingCorners(
+        for corners: UIRectCorner = .allCorners,
         radius: CGFloat = 3,
-        fillColor: UIColor = UIColor.white,
-        strokeColor: UIColor = UIColor.clear,
+        fillColor: UIColor? = nil,
+        strokeColor: UIColor? = nil,
         strokeLineWidth: CGFloat = 0)
     {
         if frame.size.equalTo(CGSize.zero) {
-            debugPrint("Could not set rounding corners on zero size view.")
+            logging("Could not set rounding corners on zero size view.")
             return
         }
         if nil != layer.contents {
             return
         }
-        guard let _image = image else { return }
+        guard let image = image else {
+            return
+        }
         
         DispatchQueue.global().async {
-            let scale = max(_image.size.width / self.frame.size.width, _image.size.height / self.frame.size.height)
+            let scale = max(image.size.width / self.frame.size.width, image.size.height / self.frame.size.height)
             let relatedRadius = scale * radius
             let relatedStockLineWidth = scale * strokeLineWidth
-            
-            let newImage = _image.imageWith(roundingCorners: corners, radius: relatedRadius, strokeColor: strokeColor, strokeLineWidth: relatedStockLineWidth)
+            let newImage = image.remake(
+                roundingCorners: corners,
+                radius: relatedRadius,
+                strokeColor: strokeColor ?? UIColor.clear,
+                strokeLineWidth: relatedStockLineWidth
+            )
             DispatchQueue.main.async {
                 self.backgroundColor = UIColor.clear
                 self.image = newImage
+                self.isRoundingCornersExists = true
             }
         }
     }

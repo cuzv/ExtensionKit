@@ -51,7 +51,7 @@ final public class TextObserver {
     
     // MARK: - UITextField
     
-    public func observe(_ object: UITextField) {
+    public func observe(textField object: UITextField) {
         textFieldObserver = NotificationCenter.default.addObserver(
             forName: NSNotification.Name.UITextFieldTextDidChange,
             object: object,
@@ -71,7 +71,7 @@ final public class TextObserver {
     
     // MARK: - UITextView
     
-    public func observe(_ object: UITextView) {
+    public func observe(textView object: UITextView) {
         textViewObserver = NotificationCenter.default.addObserver(
             forName: NSNotification.Name.UITextViewTextDidChange,
             object: object,

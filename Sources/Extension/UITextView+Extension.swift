@@ -29,7 +29,7 @@ import UIKit
 // MARK: - AssociationKey
 
 private struct AssociationKey {
-    fileprivate static var textViewTextObserver: String = "textViewTextObserver"
+    fileprivate static var textViewTextObserver: String = "com.mochxiao.uitextview.textViewTextObserver"
 }
 
 // MARK: - TextObserver Extension
@@ -46,7 +46,7 @@ public extension UITextView {
         let textObserver = TextObserver(maxLength: maxLength) { (remainCount) -> () in
             actionHandler?(remainCount)
         }
-        textObserver.observe(self)
+        textObserver.observe(textView: self)
         textViewTextObserver = textObserver
     }
 }

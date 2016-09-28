@@ -29,7 +29,7 @@ import Foundation
 // MARK: - Double -> String
 
 public extension Double {
-    public var price:  String {
+    public var price: String {
         let str = String(format: "%.2f", self)
         if str.hasSuffix("00") {
             return String(format: "%.0f", self)
@@ -39,20 +39,12 @@ public extension Double {
         }
         return str
     }
-    public var CNYString: String {
+    public var CNY: String {
         return "¥" + price
     }
 
-    public var CNYShortString: String {
-        return String(format: "¥%.0f", self)
-    }
-
-    public var USDString: String {
+    public var USD: String {
         return "$" + price
-    }
-    
-    public var USDShortString: String {
-        return String(format: "$%.0f", self)
     }
     
     public var string: String {

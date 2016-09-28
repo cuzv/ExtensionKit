@@ -38,7 +38,6 @@ public extension UITableView {
         for section in 0 ..< numberOfSections {
             count += numberOfRows(inSection: section)
         }
-        
         return count == 0
     }
 }

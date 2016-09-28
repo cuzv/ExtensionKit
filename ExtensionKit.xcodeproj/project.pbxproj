@@ -9,24 +9,19 @@
 /* Begin PBXBuildFile section */
 		4603E26B1CC07E990030EDA0 /* ExtensionKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 4603E26A1CC07E990030EDA0 /* ExtensionKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4603E29C1CC07EE40030EDA0 /* BadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E2731CC07EE40030EDA0 /* BadgeView.swift */; };
-		4603E29D1CC07EE40030EDA0 /* DashLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E2741CC07EE40030EDA0 /* DashLineView.swift */; };
+		4603E29D1CC07EE40030EDA0 /* DashlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E2741CC07EE40030EDA0 /* DashlineView.swift */; };
 		4603E29E1CC07EE40030EDA0 /* NoPasteTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E2751CC07EE40030EDA0 /* NoPasteTextField.swift */; };
-		4603E29F1CC07EE40030EDA0 /* PaddingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E2761CC07EE40030EDA0 /* PaddingLabel.swift */; };
-		4603E2A01CC07EE40030EDA0 /* PaddingTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E2771CC07EE40030EDA0 /* PaddingTextField.swift */; };
 		4603E2A11CC07EE40030EDA0 /* PlaceholderTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E2781CC07EE40030EDA0 /* PlaceholderTextView.swift */; };
 		4603E2A21CC07EE40030EDA0 /* TextObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E2791CC07EE40030EDA0 /* TextObserver.swift */; };
-		4603E2A31CC07EE40030EDA0 /* TouchesButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E27A1CC07EE40030EDA0 /* TouchesButton.swift */; };
 		4603E2A41CC07EE40030EDA0 /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E27C1CC07EE40030EDA0 /* Array+Extension.swift */; };
-		4603E2A51CC07EE40030EDA0 /* CGFloat+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E27D1CC07EE40030EDA0 /* CGFloat+Extension.swift */; };
-		4603E2A61CC07EE40030EDA0 /* Cocoa+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E27E1CC07EE40030EDA0 /* Cocoa+Extension.swift */; };
 		4603E2A71CC07EE40030EDA0 /* CoreGraphics+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E27F1CC07EE40030EDA0 /* CoreGraphics+Extension.swift */; };
 		4603E2A81CC07EE40030EDA0 /* Dictionary+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E2801CC07EE40030EDA0 /* Dictionary+Extension.swift */; };
 		4603E2A91CC07EE40030EDA0 /* Lang+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E2811CC07EE40030EDA0 /* Lang+Extension.swift */; };
-		4603E2AA1CC07EE40030EDA0 /* NSBundle+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E2821CC07EE40030EDA0 /* NSBundle+Extension.swift */; };
-		4603E2AB1CC07EE40030EDA0 /* NSData+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E2831CC07EE40030EDA0 /* NSData+Extension.swift */; };
+		4603E2AA1CC07EE40030EDA0 /* Bundle+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E2821CC07EE40030EDA0 /* Bundle+Extension.swift */; };
+		4603E2AB1CC07EE40030EDA0 /* Data+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E2831CC07EE40030EDA0 /* Data+Extension.swift */; };
 		4603E2AC1CC07EE40030EDA0 /* NSError+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E2841CC07EE40030EDA0 /* NSError+Extension.swift */; };
 		4603E2AD1CC07EE40030EDA0 /* NSObject+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E2851CC07EE40030EDA0 /* NSObject+Extension.swift */; };
-		4603E2AE1CC07EE40030EDA0 /* NSUserDefaults+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E2861CC07EE40030EDA0 /* NSUserDefaults+Extension.swift */; };
+		4603E2AE1CC07EE40030EDA0 /* UserDefaults+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E2861CC07EE40030EDA0 /* UserDefaults+Extension.swift */; };
 		4603E2AF1CC07EE40030EDA0 /* Number+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E2871CC07EE40030EDA0 /* Number+Extension.swift */; };
 		4603E2B01CC07EE40030EDA0 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E2881CC07EE40030EDA0 /* String+Extension.swift */; };
 		4603E2B11CC07EE40030EDA0 /* UIApplication+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E2891CC07EE40030EDA0 /* UIApplication+Extension.swift */; };
@@ -51,7 +46,7 @@
 		466B95671CD9DE2B001507F3 /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 466B95661CD9DE2B001507F3 /* UIImageView+Extension.swift */; };
 		468578361CDA410000906ABA /* CGD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468578351CDA410000906ABA /* CGD.swift */; };
 		468E95B01CD37606007D39AA /* UITableView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468E95AF1CD37606007D39AA /* UITableView+Extension.swift */; };
-		468F230A1CCC6DF100C0D1FD /* DefaultReflectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468F23091CCC6DF100C0D1FD /* DefaultReflectable.swift */; };
+		468F230A1CCC6DF100C0D1FD /* ExtensionProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468F23091CCC6DF100C0D1FD /* ExtensionProtocols.swift */; };
 		468F230C1CCC775C00C0D1FD /* Nostalgia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468F230B1CCC775C00C0D1FD /* Nostalgia.swift */; };
 		46CFE5711CD5BAC40098C995 /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CFE5701CD5BAC40098C995 /* Observable.swift */; };
 		46FCD8BF1D5DC94200E72ACD /* UIBarButtonItem+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46FCD8BE1D5DC94200E72ACD /* UIBarButtonItem+Extension.swift */; };
@@ -62,24 +57,19 @@
 		4603E26A1CC07E990030EDA0 /* ExtensionKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExtensionKit.h; sourceTree = "<group>"; };
 		4603E26C1CC07E990030EDA0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4603E2731CC07EE40030EDA0 /* BadgeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BadgeView.swift; sourceTree = "<group>"; };
-		4603E2741CC07EE40030EDA0 /* DashLineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DashLineView.swift; sourceTree = "<group>"; };
+		4603E2741CC07EE40030EDA0 /* DashlineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DashlineView.swift; sourceTree = "<group>"; };
 		4603E2751CC07EE40030EDA0 /* NoPasteTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoPasteTextField.swift; sourceTree = "<group>"; };
-		4603E2761CC07EE40030EDA0 /* PaddingLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaddingLabel.swift; sourceTree = "<group>"; };
-		4603E2771CC07EE40030EDA0 /* PaddingTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaddingTextField.swift; sourceTree = "<group>"; };
 		4603E2781CC07EE40030EDA0 /* PlaceholderTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaceholderTextView.swift; sourceTree = "<group>"; };
 		4603E2791CC07EE40030EDA0 /* TextObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextObserver.swift; sourceTree = "<group>"; };
-		4603E27A1CC07EE40030EDA0 /* TouchesButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TouchesButton.swift; sourceTree = "<group>"; };
 		4603E27C1CC07EE40030EDA0 /* Array+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
-		4603E27D1CC07EE40030EDA0 /* CGFloat+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGFloat+Extension.swift"; sourceTree = "<group>"; };
-		4603E27E1CC07EE40030EDA0 /* Cocoa+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Cocoa+Extension.swift"; sourceTree = "<group>"; };
 		4603E27F1CC07EE40030EDA0 /* CoreGraphics+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "CoreGraphics+Extension.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		4603E2801CC07EE40030EDA0 /* Dictionary+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+Extension.swift"; sourceTree = "<group>"; };
 		4603E2811CC07EE40030EDA0 /* Lang+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Lang+Extension.swift"; sourceTree = "<group>"; };
-		4603E2821CC07EE40030EDA0 /* NSBundle+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSBundle+Extension.swift"; sourceTree = "<group>"; };
-		4603E2831CC07EE40030EDA0 /* NSData+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSData+Extension.swift"; sourceTree = "<group>"; };
+		4603E2821CC07EE40030EDA0 /* Bundle+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bundle+Extension.swift"; sourceTree = "<group>"; };
+		4603E2831CC07EE40030EDA0 /* Data+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+Extension.swift"; sourceTree = "<group>"; };
 		4603E2841CC07EE40030EDA0 /* NSError+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "NSError+Extension.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		4603E2851CC07EE40030EDA0 /* NSObject+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+Extension.swift"; sourceTree = "<group>"; };
-		4603E2861CC07EE40030EDA0 /* NSUserDefaults+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSUserDefaults+Extension.swift"; sourceTree = "<group>"; };
+		4603E2861CC07EE40030EDA0 /* UserDefaults+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Extension.swift"; sourceTree = "<group>"; };
 		4603E2871CC07EE40030EDA0 /* Number+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Number+Extension.swift"; sourceTree = "<group>"; };
 		4603E2881CC07EE40030EDA0 /* String+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		4603E2891CC07EE40030EDA0 /* UIApplication+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIApplication+Extension.swift"; sourceTree = "<group>"; };
@@ -104,7 +94,7 @@
 		466B95661CD9DE2B001507F3 /* UIImageView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "UIImageView+Extension.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		468578351CDA410000906ABA /* CGD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGD.swift; sourceTree = "<group>"; };
 		468E95AF1CD37606007D39AA /* UITableView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableView+Extension.swift"; sourceTree = "<group>"; };
-		468F23091CCC6DF100C0D1FD /* DefaultReflectable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultReflectable.swift; sourceTree = "<group>"; };
+		468F23091CCC6DF100C0D1FD /* ExtensionProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtensionProtocols.swift; sourceTree = "<group>"; };
 		468F230B1CCC775C00C0D1FD /* Nostalgia.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Nostalgia.swift; sourceTree = "<group>"; };
 		46CFE5701CD5BAC40098C995 /* Observable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
 		46FCD8BE1D5DC94200E72ACD /* UIBarButtonItem+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+Extension.swift"; sourceTree = "<group>"; };
@@ -153,13 +143,10 @@
 			isa = PBXGroup;
 			children = (
 				4603E2731CC07EE40030EDA0 /* BadgeView.swift */,
-				4603E2741CC07EE40030EDA0 /* DashLineView.swift */,
+				4603E2741CC07EE40030EDA0 /* DashlineView.swift */,
 				4603E2751CC07EE40030EDA0 /* NoPasteTextField.swift */,
-				4603E2761CC07EE40030EDA0 /* PaddingLabel.swift */,
-				4603E2771CC07EE40030EDA0 /* PaddingTextField.swift */,
 				4603E2781CC07EE40030EDA0 /* PlaceholderTextView.swift */,
 				4603E2791CC07EE40030EDA0 /* TextObserver.swift */,
-				4603E27A1CC07EE40030EDA0 /* TouchesButton.swift */,
 				4631CE281CCB9F6700CFCBCD /* CustomHeightNavigationBar.swift */,
 				468F230B1CCC775C00C0D1FD /* Nostalgia.swift */,
 				46CFE5701CD5BAC40098C995 /* Observable.swift */,
@@ -172,16 +159,14 @@
 			isa = PBXGroup;
 			children = (
 				4603E27C1CC07EE40030EDA0 /* Array+Extension.swift */,
-				4603E27D1CC07EE40030EDA0 /* CGFloat+Extension.swift */,
-				4603E27E1CC07EE40030EDA0 /* Cocoa+Extension.swift */,
 				4603E27F1CC07EE40030EDA0 /* CoreGraphics+Extension.swift */,
 				4603E2801CC07EE40030EDA0 /* Dictionary+Extension.swift */,
 				4603E2811CC07EE40030EDA0 /* Lang+Extension.swift */,
-				4603E2821CC07EE40030EDA0 /* NSBundle+Extension.swift */,
-				4603E2831CC07EE40030EDA0 /* NSData+Extension.swift */,
+				4603E2821CC07EE40030EDA0 /* Bundle+Extension.swift */,
+				4603E2831CC07EE40030EDA0 /* Data+Extension.swift */,
 				4603E2841CC07EE40030EDA0 /* NSError+Extension.swift */,
 				4603E2851CC07EE40030EDA0 /* NSObject+Extension.swift */,
-				4603E2861CC07EE40030EDA0 /* NSUserDefaults+Extension.swift */,
+				4603E2861CC07EE40030EDA0 /* UserDefaults+Extension.swift */,
 				4603E2871CC07EE40030EDA0 /* Number+Extension.swift */,
 				4603E2881CC07EE40030EDA0 /* String+Extension.swift */,
 				4603E2891CC07EE40030EDA0 /* UIApplication+Extension.swift */,
@@ -212,7 +197,7 @@
 		468F23081CCC6DE600C0D1FD /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
-				468F23091CCC6DF100C0D1FD /* DefaultReflectable.swift */,
+				468F23091CCC6DF100C0D1FD /* ExtensionProtocols.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -298,13 +283,12 @@
 			files = (
 				4603E2A21CC07EE40030EDA0 /* TextObserver.swift in Sources */,
 				4603E2B01CC07EE40030EDA0 /* String+Extension.swift in Sources */,
-				4603E29F1CC07EE40030EDA0 /* PaddingLabel.swift in Sources */,
-				4603E29D1CC07EE40030EDA0 /* DashLineView.swift in Sources */,
+				4603E29D1CC07EE40030EDA0 /* DashlineView.swift in Sources */,
 				4603E2B91CC07EE40030EDA0 /* UIKit+Extension.swift in Sources */,
 				4631CE291CCB9F6700CFCBCD /* CustomHeightNavigationBar.swift in Sources */,
 				4603E2BB1CC07EE40030EDA0 /* UINavigationBar+Extension.swift in Sources */,
 				4603E2A41CC07EE40030EDA0 /* Array+Extension.swift in Sources */,
-				4603E2AB1CC07EE40030EDA0 /* NSData+Extension.swift in Sources */,
+				4603E2AB1CC07EE40030EDA0 /* Data+Extension.swift in Sources */,
 				4603E2C31CC07EE40030EDA0 /* UIViewController+Extension.swift in Sources */,
 				4603E2B61CC07EE40030EDA0 /* UIFont+Extension.swift in Sources */,
 				468E95B01CD37606007D39AA /* UITableView+Extension.swift in Sources */,
@@ -314,12 +298,11 @@
 				4603E2B11CC07EE40030EDA0 /* UIApplication+Extension.swift in Sources */,
 				4603E2A91CC07EE40030EDA0 /* Lang+Extension.swift in Sources */,
 				4603E2BE1CC07EE40030EDA0 /* UIScrollView+Extension.swift in Sources */,
-				4603E2A51CC07EE40030EDA0 /* CGFloat+Extension.swift in Sources */,
-				4603E2AA1CC07EE40030EDA0 /* NSBundle+Extension.swift in Sources */,
+				4603E2AA1CC07EE40030EDA0 /* Bundle+Extension.swift in Sources */,
 				4603E2B51CC07EE40030EDA0 /* UIDevice+Extension.swift in Sources */,
 				4603E2B71CC07EE40030EDA0 /* UIImage+Extension.swift in Sources */,
 				4603E29C1CC07EE40030EDA0 /* BadgeView.swift in Sources */,
-				468F230A1CCC6DF100C0D1FD /* DefaultReflectable.swift in Sources */,
+				468F230A1CCC6DF100C0D1FD /* ExtensionProtocols.swift in Sources */,
 				4603E2A11CC07EE40030EDA0 /* PlaceholderTextView.swift in Sources */,
 				4603E2AD1CC07EE40030EDA0 /* NSObject+Extension.swift in Sources */,
 				4603E2B31CC07EE40030EDA0 /* UIColor+Extension.swift in Sources */,
@@ -330,14 +313,11 @@
 				46CFE5711CD5BAC40098C995 /* Observable.swift in Sources */,
 				4603E2BF1CC07EE40030EDA0 /* UITabBar+Extension.swift in Sources */,
 				4603E2C21CC07EE40030EDA0 /* UIView+Extension.swift in Sources */,
-				4603E2A31CC07EE40030EDA0 /* TouchesButton.swift in Sources */,
 				4603E29E1CC07EE40030EDA0 /* NoPasteTextField.swift in Sources */,
 				4603E2A71CC07EE40030EDA0 /* CoreGraphics+Extension.swift in Sources */,
-				4603E2A01CC07EE40030EDA0 /* PaddingTextField.swift in Sources */,
 				468578361CDA410000906ABA /* CGD.swift in Sources */,
-				4603E2AE1CC07EE40030EDA0 /* NSUserDefaults+Extension.swift in Sources */,
+				4603E2AE1CC07EE40030EDA0 /* UserDefaults+Extension.swift in Sources */,
 				46FCD8BF1D5DC94200E72ACD /* UIBarButtonItem+Extension.swift in Sources */,
-				4603E2A61CC07EE40030EDA0 /* Cocoa+Extension.swift in Sources */,
 				4603E2BA1CC07EE40030EDA0 /* UILabel+Extension.swift in Sources */,
 				4603E2B21CC07EE40030EDA0 /* UIButton+Extension.swift in Sources */,
 				4603E2AC1CC07EE40030EDA0 /* NSError+Extension.swift in Sources */,
@@ -459,6 +439,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				OTHER_SWIFT_FLAGS = "\"-D\" \"DEBUG\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mochxiao.ExtensionKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;

@@ -26,45 +26,75 @@
 
 import Foundation
 
+public func +(lhs: UIEdgeInsets, rhs: UIEdgeInsets) -> UIEdgeInsets {
+    return UIEdgeInsetsMake(lhs.top + rhs.top, lhs.left + rhs.left, lhs.bottom + rhs.bottom, lhs.right + rhs.right)
+}
+
 /// Find out the geiven object is some type or not.
-public func objectIsType<T>(_ object: Any, someObjectOfType: T.Type) -> Bool {
+public func objectIsType<T>(_ object: Any, _ someObjectOfType: T.Type) -> Bool {
     return object is T
 }
 
-/// Log func.
-public func log<T>(_ message: T,
-    file: String = #file,
-    method: String = #function,
-    line: Int = #line)
-{
-    debugPrint("\((file as NSString).lastPathComponent)[\(line)], \(method): \(message)")
+/**
+ See: https://gist.githubusercontent.com/Abizern/a81f31a75e1ad98ff80d/raw/85b85cbb9bcdeb8cdbf2521ac935e3d2cb4cdd4f/loggingPrint.swift
+ 
+ Prints the filename, function name, line number and textual representation of `object` and a newline character into
+ the standard output if the build setting for "Other Swift Flags" defines `-D DEBUG`.
+ 
+ The current thread is a prefix on the output. <UI> for the main thread, <BG> for anything else.
+ 
+ Only the first parameter needs to be passed to this funtion.
+ 
+ The textual representation is obtained from the `object` using its protocol conformances, in the following
+ order of preference: `CustomDebugStringConvertible` and `CustomStringConvertible`. Do not overload this function for
+ your type. Instead, adopt one of the protocols mentioned above.
+ 
+ :param: object   The object whose textual representation will be printed. If this is an expression, it is lazily evaluated.
+ :param: file     The name of the file, defaults to the current file without the ".swift" extension.
+ :param: function The name of the function, defaults to the function within which the call is made.
+ :param: line     The line number, defaults to the line number within the file that the call is made.
+ */
+func logging<T>(_ object: @autoclosure () -> T, _ file: String = #file, _ function: String = #function, _ line: Int = #line) {
+    #if DEBUG
+        let value = object()
+        let stringRepresentation: String
+        
+        if let value = value as? CustomDebugStringConvertible {
+            stringRepresentation = value.debugDescription
+        } else if let value = value as? CustomStringConvertible {
+            stringRepresentation = value.description
+        } else {
+            stringRepresentation = "\(value)"
+        }
+        let fileURL = NSURL(string: file)?.lastPathComponent ?? "Unknown file"
+        let queue = Thread.isMainThread ? "UI" : "BG"
+        print("<\(queue)> \(fileURL) \(function)[\(line)]: " + stringRepresentation)
+    #endif
 }
 
 /// Get value from `any` instance like KVC
-public func valueFrom(_ object: Any, forKey key: String) -> Any? {
+public func value(from object: Any, forKey key: String) -> Any? {
     let mirror = Mirror(reflecting: object)
-    
     for (targetKey, targetMirror) in mirror.children {
         if key == targetKey {
             return targetMirror
         }
     }
-    
     return nil
 }
 
 /// Generate random number in range
-public func randomIn(_ range: Range<Int>) -> Int {
+public func random(in range: Range<Int>) -> Int {
     let count = UInt32(range.upperBound - range.lowerBound)
     return  Int(arc4random_uniform(count)) + range.lowerBound
 }
-
 
 // MARK: - GCD
 
 public typealias Task = ((_ cancel: Bool) -> ())
 
-public func delay(_ time: TimeInterval, task: @escaping (() -> ())) -> Task? {
+@discardableResult
+public func delay(interval time: TimeInterval, task: @escaping (() -> ())) -> Task? {
     func dispatch_later(_ block: @escaping () -> ()) {
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(time * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: block)
     }
@@ -98,27 +128,27 @@ public func cancel(_ task: Task?) {
     task?(true)
 }
 
-public func UIThreadAsyncAction(_ block: @escaping ()->()) {
+public func mainThreadAsync(execute work: @escaping ()->()) {
     if Thread.isMainThread {
-        block()
+        work()
         return
     }
-    DispatchQueue.main.async(execute: block)
+    DispatchQueue.main.async(execute: work)
 }
 
-public func BackgroundThreadAsyncAction(_ block: @escaping ()->()) {
+public func backgroundThreadAsync(execute work: @escaping ()->()) {
     if !Thread.isMainThread {
-        block()
+        work()
         return
     }
-    DispatchQueue.global().async(execute: block)
+    DispatchQueue.global().async(execute: work)
 }
 
 // MARK: - synchronized
 
-public func synchronized(_ lock: AnyObject, closure: () -> ()) {
+public func synchronized(lock: AnyObject, work: () -> ()) {
     objc_sync_enter(lock)
-    closure()
+    work()
     objc_sync_exit(lock)
 }
 
@@ -157,32 +187,32 @@ public func convertUnsafePointerToSwiftType<T>(_ value: UnsafeRawPointer) -> T {
 
 // MARK: - Sandbox
 
-private func searchPathForDirectory(_ directory: FileManager.SearchPathDirectory) -> String? {
+private func searchPath(for directory: FileManager.SearchPathDirectory) -> String? {
     return NSSearchPathForDirectoriesInDomains(directory, FileManager.SearchPathDomainMask.userDomainMask, true).first
 }
 
 public func directoryForDocument() -> String? {
-    return searchPathForDirectory(.documentDirectory)
+    return searchPath(for: .documentDirectory)
 }
 
 public func directoryForCache() -> String? {
-    return searchPathForDirectory(.cachesDirectory)
+    return searchPath(for: .cachesDirectory)
 }
 
 public func directoryForDownloads() -> String? {
-    return searchPathForDirectory(.downloadsDirectory)
+    return searchPath(for: .downloadsDirectory)
 }
 
 public func directoryForMovies() -> String? {
-    return searchPathForDirectory(.moviesDirectory)
+    return searchPath(for: .moviesDirectory)
 }
 
 public func directoryForMusic() -> String? {
-    return searchPathForDirectory(.musicDirectory)
+    return searchPath(for: .musicDirectory)
 }
 
 public func directoryForPictures() -> String? {
-    return searchPathForDirectory(.picturesDirectory)
+    return searchPath(for: .picturesDirectory)
 }
 
 // MARK: - ClosureDecorator
@@ -210,4 +240,35 @@ final public class ClosureDecorator<T>: NSObject {
             closure(param)
         }
     }
+    
+    deinit {
+        logging("\(#file):\(#line):\(type(of: self)):\(#function)")
+    }
 }
+
+// MARK: - Swifty Target & Action
+// See: https://www.mikeash.com/pyblog/friday-qa-2015-12-25-swifty-targetaction.html
+
+final public class ActionTrampoline<T>: NSObject {
+    fileprivate let action: ((T) -> ())
+    
+    public init(action: @escaping ((T) -> ())) {
+        self.action = action
+    }
+    
+    @objc public func action(_ sender: AnyObject) {
+        // UIControl: add(target: AnyObject?, action: Selector, forControlEvents controlEvents: UIControlEvents)
+        if let sender = sender as? T {
+            action(sender)
+        }
+        // UIGestureRecognizer: add(target: AnyObject, action: Selector)
+        else if let sender = sender as? UIGestureRecognizer {
+            action(sender.view as! T)
+        }
+    }
+    
+    deinit {
+        logging("\(#file):\(#line):\(type(of: self)):\(#function)")
+    }
+}
+

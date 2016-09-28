@@ -18,7 +18,6 @@ public extension UIResponder {
             
             responder = _responder
         }
-        
         return nil
     }
     
@@ -32,7 +31,6 @@ public extension UIResponder {
         _ secondArgument: AnyObject! = nil) -> Unmanaged<AnyObject>!
     {
         var responder: UIResponder? = self
-
         while let _responder = responder , !_responder.responds(to: action) {
             responder = _responder.next
         }

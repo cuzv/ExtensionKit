@@ -29,15 +29,28 @@ import UIKit
 // MARK: - AssociationKey
 
 private struct AssociationKey {
-    fileprivate static var gestureRecognizerWrapper: String = "gestureRecognizerWrapper"
-    fileprivate static var activityIndicatorView: String = "activityIndicatorView"
-    fileprivate static var arcIndicatorLayer: String = "arcIndicatorLayer"
-    fileprivate static var executeConainerView: String =  "executeConainerView"
+    fileprivate static var gestureRecognizerWrapper: String = "com.mochxiao.uiview.gestureRecognizerWrapper"
+    fileprivate static var activityIndicatorView: String = "com.mochxiao.uiview.activityIndicatorView"
+    fileprivate static var arcIndicatorLayer: String = "com.mochxiao.uiview.arcIndicatorLayer"
+    fileprivate static var isRoundingCornersExists: String = "com.mochxiao.uiview.isRoundingCornersExists"
     
     /// ActionTrampoline
-    fileprivate static var singleTapGestureRecognizer: String = "singleTapGestureRecognizer"
-    fileprivate static var doubleTapGestureRecognizer: String = "doubleTapGestureRecognizer"
-    fileprivate static var longPressGestureRecognizer: String = "longPressGestureRecognizer"
+    fileprivate static var singleTapGestureRecognizer: String = "com.mochxiao.uiview.singleTapGestureRecognizer"
+    fileprivate static var doubleTapGestureRecognizer: String = "com.mochxiao.uiview.doubleTapGestureRecognizer"
+    fileprivate static var longPressGestureRecognizer: String = "com.mochxiao.uiview.longPressGestureRecognizer"
+    
+    fileprivate static var touchExtendInsets: String = "touchExtendInsets"
+}
+
+// MARK: - Swizzle
+
+extension UIView {
+    override open class func initialize() {
+        if self != UIButton.self {
+            return
+        }
+        swizzleInstanceMethod(forClass: UIView.self, originalSelector: #selector(UIView.point(inside:with:)), overrideSelector: #selector(UIView._ek_point(inside:with:)))
+    }
 }
 
 // MARK: - UIGestureRecognizer
@@ -215,12 +228,12 @@ public extension UIView {
     
     public var midX: CGFloat {
         get { return frame.midX }
-        set { frame = CGRect(x: newValue - width / 2, y: minY, width: width, height: height) }
+        set { frame = CGRect(x: newValue - width / 2.0, y: minY, width: width, height: height) }
     }
     
     public var centerX: CGFloat {
         get { return frame.midX }
-        set { frame = CGRect(x: newValue - width / 2, y: minY, width: width, height: height) }
+        set { frame = CGRect(x: newValue - width / 2.0, y: minY, width: width, height: height) }
     }
     
     public var maxX: CGFloat {
@@ -245,12 +258,12 @@ public extension UIView {
     
     public var midY: CGFloat {
         get { return frame.midY }
-        set { frame = CGRect(x: minX, y: newValue - height / 2, width: width, height: height) }
+        set { frame = CGRect(x: minX, y: newValue - height / 2.0, width: width, height: height) }
     }
     
     public var centerY: CGFloat {
         get { return frame.midY }
-        set { frame = CGRect(x: minX, y: newValue - height / 2, width: width, height: height) }
+        set { frame = CGRect(x: minX, y: newValue - height / 2.0, width: width, height: height) }
     }
     
     public var maxY: CGFloat {
@@ -274,17 +287,9 @@ public extension UIView {
     }
 } 
 
-// MARK: - Corner & Border
+// MARK: - Border
 
 public extension UIView {
-    public var cornerRadius: CGFloat {
-        get { return layer.cornerRadius }
-        set {
-            layer.masksToBounds = newValue > 0
-            layer.cornerRadius = newValue
-        }
-    }
-    
     public var borderWith: CGFloat {
         get { return layer.borderWidth }
         set { layer.borderWidth = newValue }
@@ -301,88 +306,109 @@ public extension UIView {
         set { layer.borderColor = newValue?.cgColor }
     }
     
-    /// Setup rounding corners radius
-    /// **Note**: Before you invoke this method, ensure `self` already have correct frame.
-    public func setRoundingCorners(
-        corners: UIRectCorner = .allCorners,
-                radius: CGFloat = 3,
-                fillColor: UIColor = UIColor.white,
-                strokeColor: UIColor = UIColor.clear,
-                strokeLineWidth: CGFloat = 0)
-    {
-        if frame.size.equalTo(CGSize.zero) {
-            debugPrint("Could not set rounding corners on zero size view.")
-            return
-        }
-        if nil != layer.contents {
-            return
-        }
-        
-        DispatchQueue.global().async {
-            let backImage = UIImageFrom(
-                color: fillColor,
-                size: self.frame.size,
-                roundingCorners: corners,
-                radius: radius,
-                strokeColor: strokeColor,
-                strokeLineWidth: strokeLineWidth
-            )
-            
-            DispatchQueue.main.async {
-                self.backgroundColor = UIColor.clear
-                self.layer.contents = backImage.cgImage
-            }
-        }
-    }
-    
     /// Setup border width & color.
     public func setBorder(
         width: CGFloat = 1.0 / UIScreen.main.scale,
-        color: UIColor = UIColor.separatorDefaultColor)
+        color: UIColor = UIColor.separator)
     {
         layer.borderWidth = width
         layer.borderColor = color.cgColor
     }
     
-    /// Add dash border wiht width & color & lineDashPattern.
+    /// Add dash border line view using CAShapeLayer.
     /// **Note**: Before you invoke this method, ensure `self` already have correct frame.
-    public func addDashBorder(
+    /// Because using CAShapeLayer, can not remove it, make sure add only once.
+    public func addDashBorderline(
+        for rectEdge: UIRectEdge = .all,
         width: CGFloat = 1.0 / UIScreen.main.scale,
-        color: UIColor = UIColor.separatorDefaultColor,
+        color: UIColor = UIColor.separator,
+        multiplier: CGFloat = 1,
+        constant: CGFloat = 0,
         lineDashPattern: [CGFloat] = [5, 5])
     {
-        let boundLayer = CAShapeLayer()
-        boundLayer.lineDashPattern = lineDashPattern as [NSNumber]?
-        boundLayer.strokeColor = color.cgColor
-        boundLayer.fillColor = UIColor.clear.cgColor
-        boundLayer.lineJoin = kCALineJoinRound
-        boundLayer.lineWidth = width
-        let path = UIBezierPath(rect: bounds)
-        boundLayer.path = path.cgPath
-        layer.addSublayer(boundLayer)
-    }
-    
-    class _BorderLineView: UIView {
-        var edge: UIRectEdge = UIRectEdge()
-    }
-    
-    public func removeBorderLine(rectEdge: UIRectEdge = .all) {
-        if rectEdge == UIRectEdge() {
-            return
+        func makeLineLayerWithWidth(_ width: CGFloat, color: UIColor, lineDashPattern: [CGFloat], startPoint: CGPoint, endPoint: CGPoint) -> CAShapeLayer {
+            let lineLayer = CAShapeLayer()
+            lineLayer.lineDashPattern = lineDashPattern as [NSNumber]?
+            lineLayer.strokeColor = color.cgColor
+            lineLayer.fillColor = UIColor.clear.cgColor
+            lineLayer.lineJoin = kCALineJoinRound
+            lineLayer.lineWidth = width
+            
+            let path = CGMutablePath()
+            path.move(to: CGPoint(x: startPoint.x, y: startPoint.y))
+            path.addLine(to: CGPoint(x: endPoint.x, y: endPoint.y))
+            lineLayer.path = path
+            
+            return lineLayer
         }
         
-        for view in subviews {
-            if let view = view as? _BorderLineView , rectEdge.contains(view.edge) {
-                view.removeFromSuperview()
-            }
+        let w = bounds.size.width
+        let h = bounds.size.height
+        let startX  = 0.5 * w * (1.0 - multiplier) + 0.5 * constant
+        let endX    = 0.5 * w * (1.0 + multiplier) - 0.5 * constant
+        let startY  = 0.5 * h * (1.0 - multiplier) + 0.5 * constant
+        let endY    = 0.5 * h * (1.0 + multiplier) - 0.5 * constant
+        
+        if rectEdge.contains(.top) {
+            let lineLayer = makeLineLayerWithWidth(
+                width, color: color,
+                lineDashPattern: lineDashPattern,
+                startPoint: CGPoint(x: startX, y: 0),
+                endPoint: CGPoint(x: endX, y: 0)
+            )
+            layer.addSublayer(lineLayer)
+        }
+        
+        if rectEdge.contains(.left) {
+            let lineLayer = makeLineLayerWithWidth(
+                width,
+                color: color,
+                lineDashPattern: lineDashPattern,
+                startPoint: CGPoint(x: 0, y: startY),
+                endPoint: CGPoint(x: 0, y: endY)
+            )
+            layer.addSublayer(lineLayer)
+        }
+        
+        if rectEdge.contains(.bottom) {
+            let lineLayer = makeLineLayerWithWidth(
+                width,
+                color: color,
+                lineDashPattern: lineDashPattern,
+                startPoint: CGPoint(x: startX, y: h),
+                endPoint: CGPoint(x: endX, y: h)
+            )
+            layer.addSublayer(lineLayer)
+        }
+        
+        if rectEdge.contains(.right) {
+            let lineLayer = makeLineLayerWithWidth(width,
+                                                   color: color,
+                                                   lineDashPattern: lineDashPattern,
+                                                   startPoint: CGPoint(x: w, y: startY),
+                                                   endPoint: CGPoint(x: w, y: endY)
+            )
+            layer.addSublayer(lineLayer)
+        }
+    }
+
+    fileprivate class _BorderLineView: UIView {
+        fileprivate var edge: UIRectEdge
+        fileprivate init(edge: UIRectEdge) {
+            self.edge = edge
+            super.init(frame: CGRect.zero)
+        }
+        
+        required fileprivate init?(coder aDecoder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
         }
     }
     
     /// Add border line view using Autolayout.
-    public func addBorderLine(
+    public func addBorderline(
+        for rectEdge: UIRectEdge = .all,
         width: CGFloat = 1.0 / UIScreen.main.scale,
-        color: UIColor = UIColor.separatorDefaultColor,
-        rectEdge: UIRectEdge = .all,
+        color: UIColor = UIColor.separator,
         multiplier: CGFloat = 1.0,
         constant: CGFloat = 0)
     {
@@ -395,10 +421,9 @@ public extension UIView {
             multiplier: CGFloat,
             rectEdge: UIRectEdge)
         {
-            let lineView = _BorderLineView()
+            let lineView = _BorderLineView(edge: rectEdge)
             lineView.backgroundColor = color
             lineView.translatesAutoresizingMaskIntoConstraints = false
-            lineView.edge = rectEdge
             addSubview(lineView)
             
             let edge = NSLayoutConstraint(item: lineView, attribute: edgeLayoutAttribute, relatedBy: .equal, toItem: self, attribute: edgeLayoutAttribute, multiplier: 1, constant: 0)
@@ -457,158 +482,76 @@ public extension UIView {
         }
     }
     
-    /// Add border line view using CAShapeLayer.
+    /// Remove added border line view.
+    public func removeBorderline(for rectEdge: UIRectEdge = .all) {
+        if rectEdge == UIRectEdge() {
+            return
+        }
+        
+        for view in subviews {
+            if let view = view as? _BorderLineView , rectEdge.contains(view.edge) {
+                view.removeFromSuperview()
+            }
+        }
+    }
+}
+
+// MARK: - Corner
+
+public extension UIView {
+    public var cornerRadius: CGFloat {
+        get { return layer.cornerRadius }
+        set {
+            layer.masksToBounds = newValue > 0
+            layer.cornerRadius = newValue
+        }
+    }
+    
+    public internal(set) var isRoundingCornersExists: Bool {
+        get {
+            if let value = associatedObject(forKey: &AssociationKey.isRoundingCornersExists) as? Bool {
+                return value
+            }
+            return false
+        }
+        set { associate(assignObject: newValue, forKey: &AssociationKey.isRoundingCornersExists) }
+    }
+    
+    /// Add rounding corners radius.
     /// **Note**: Before you invoke this method, ensure `self` already have correct frame.
-    public func addDashBorderLine(
-        width: CGFloat = 1.0 / UIScreen.main.scale,
-        color: UIColor = UIColor.separatorDefaultColor,
-        rectEdge: UIRectEdge = .all,
-        multiplier: CGFloat = 1,
-        lineDashPattern: [CGFloat] = [5, 5])
+    public func addRoundingCorners(
+        for corners: UIRectCorner = .allCorners,
+        radius: CGFloat = 3,
+        fillColor: UIColor? = nil,
+        strokeColor: UIColor? = nil,
+        strokeLineWidth: CGFloat = 0)
     {
-        func makeLineLayerWithWidth(_ width: CGFloat, color: UIColor, lineDashPattern: [CGFloat], startPoint: CGPoint, endPoint: CGPoint) -> CAShapeLayer {
-            let lineLayer = CAShapeLayer()
-            lineLayer.lineDashPattern = lineDashPattern as [NSNumber]?
-            lineLayer.strokeColor = color.cgColor
-            lineLayer.fillColor = UIColor.clear.cgColor
-            lineLayer.lineJoin = kCALineJoinRound
-            lineLayer.lineWidth = width
-            
-            let path = CGMutablePath()
-            path.move(to: CGPoint(x: startPoint.x, y: startPoint.y))
-            path.addLine(to: CGPoint(x: endPoint.x, y: endPoint.y))
-            lineLayer.path = path
-            
-            return lineLayer
-        }
-    
-        let w = bounds.size.width
-        let h = bounds.size.height
-        let startX = w * (1.0 - multiplier) / 2.0
-        // 0.5 * w * (1 + multiplier)
-        let endX = 0.5 * w * (1 + multiplier)
-        let startY = h * (1.0 - multiplier) / 2.0
-        let endY = 0.5 * h * (1 + multiplier)
-
-        if rectEdge.contains(.top) {
-            let lineLayer = makeLineLayerWithWidth(
-                width, color: color,
-                lineDashPattern: lineDashPattern,
-                startPoint: CGPoint(x: startX, y: 0),
-                endPoint: CGPoint(x: endX, y: 0)
-            )
-            layer.addSublayer(lineLayer)
-        }
-        
-        if rectEdge.contains(.left) {
-            let lineLayer = makeLineLayerWithWidth(
-                width,
-                color: color,
-                lineDashPattern: lineDashPattern,
-                startPoint: CGPoint(x: 0, y: startY),
-                endPoint: CGPoint(x: 0, y: endY)
-            )
-            layer.addSublayer(lineLayer)
-        }
-        
-        if rectEdge.contains(.bottom) {
-            let lineLayer = makeLineLayerWithWidth(
-                width,
-                color: color,
-                lineDashPattern: lineDashPattern,
-                startPoint: CGPoint(x: startX, y: h),
-                endPoint: CGPoint(x: endX, y: h)
-            )
-            layer.addSublayer(lineLayer)
+        if frame.size.equalTo(CGSize.zero) {
+            logging("Could not set rounding corners on zero size view.")
+            return
         }
 
-        if rectEdge.contains(.right) {
-            let lineLayer = makeLineLayerWithWidth(width,
-                color: color,
-                lineDashPattern: lineDashPattern,
-                startPoint: CGPoint(x: w, y: startY),
-                endPoint: CGPoint(x: w, y: endY)
-            )
-            layer.addSublayer(lineLayer)
-        }
-    }
-    
-    // See: https://github.com/bestswifter/MySampleCode/blob/master/CornerRadius%2FCornerRadius%2FKtCorner.swift
-    public func addCorner(
-        radius: CGFloat,
-        borderWidth: CGFloat = 1.0 / UIScreen.main.scale,
-        backgroundColor: UIColor = UIColor.clear,
-        borderColor: UIColor = UIColor.black)
-    {
-        let imageView = UIImageView(image: drawRectWithRoundedCorner(
+        DispatchQueue.global().async {
+            let backImage = UIImage.make(
+                color: fillColor ?? self.backgroundColor ?? UIColor.white,
+                size: self.frame.size,
+                roundingCorners: corners,
                 radius: radius,
-                borderWidth: borderWidth,
-                backgroundColor: backgroundColor,
-                borderColor: borderColor
+                strokeColor: strokeColor ?? self.backgroundColor ?? UIColor.clear,
+                strokeLineWidth: strokeLineWidth
             )
-        )
-        insertSubview(imageView, at: 0)
+            DispatchQueue.main.async {
+                self.backgroundColor = UIColor.clear
+                self.layer.contents = backImage?.cgImage
+                self.isRoundingCornersExists = true
+            }
+        }
     }
     
-    public func drawRectWithRoundedCorner(
-        radius: CGFloat,
-        borderWidth: CGFloat,
-        backgroundColor: UIColor,
-        borderColor: UIColor) -> UIImage?
-    {
-        
-        func ceilbyunit(_ num: Double, _ unit: inout Double) -> Double {
-            return num - modf(num, &unit) + unit
-        }
-        
-        func floorbyunit(_ num: Double, _ unit: inout Double) -> Double {
-            return num - modf(num, &unit)
-        }
-
-        func roundbyunit(_ num: Double, _ unit: inout Double) -> Double {
-            let remain = modf(num, &unit)
-            if (remain > unit / 2.0) {
-                return ceilbyunit(num, &unit)
-            } else {
-                return floorbyunit(num, &unit)
-            }
-        }
-        
-        func pixel(_ num: Double) -> Double {
-            var unit: Double
-            switch Int(UIScreen.main.scale) {
-            case 1: unit = 1.0 / 1.0
-            case 2: unit = 1.0 / 2.0
-            case 3: unit = 1.0 / 3.0
-            default: unit = 0.0
-            }
-            return roundbyunit(num, &unit)
-        }
-    
-        let sizeToFit = CGSize(width: pixel(Double(bounds.size.width)), height: Double(bounds.size.height))
-        let halfBorderWidth = CGFloat(borderWidth / 2.0)
-        
-        UIGraphicsBeginImageContextWithOptions(sizeToFit, false, 0)
-        guard let context = UIGraphicsGetCurrentContext() else {
-            return nil
-        }
-        
-        context.setLineWidth(borderWidth)
-        context.setStrokeColor(borderColor.cgColor)
-        context.setFillColor(backgroundColor.cgColor)
-        
-        let width = sizeToFit.width, height = sizeToFit.height
-        context.move(to: CGPoint(x: width - halfBorderWidth, y: radius + halfBorderWidth))  // 开始坐标右边开始
-        context.addArc(tangent1End: CGPoint(x: width - halfBorderWidth, y: height - halfBorderWidth), tangent2End: CGPoint(x: width - radius - halfBorderWidth, y: height - halfBorderWidth), radius: radius) // 右下角角度
-        context.addArc(tangent1End: CGPoint(x: halfBorderWidth, y: height - halfBorderWidth), tangent2End: CGPoint(x: halfBorderWidth, y: height - radius - halfBorderWidth), radius: radius) // 左下角角度
-        context.addArc(tangent1End: CGPoint(x: halfBorderWidth, y: halfBorderWidth), tangent2End: CGPoint(x: width - halfBorderWidth, y: halfBorderWidth), radius: radius) // 左上角
-        context.addArc(tangent1End: CGPoint(x: width - halfBorderWidth, y: halfBorderWidth), tangent2End: CGPoint(x: width - halfBorderWidth, y: radius + halfBorderWidth), radius: radius) // 右上角
-
-        context.drawPath(using: .fillStroke)
-        
-        let output = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return output!
+    /// This will remove all added rounding corners on self
+    public func removeRoundingCorners() {
+        layer.contents = nil
+        isRoundingCornersExists = false
     }
 }
 
@@ -660,79 +603,48 @@ public extension UIView {
 // MARK: - UIActivityIndicatorView
 
 public extension UIView {
-    public func startActivityIndicatorViewAnimating(onCenter center: CGPoint? = nil, yShift: CGFloat = 0, color: UIColor = UIColor.lightGray) {
+    fileprivate var activityIndicatorView: UIActivityIndicatorView? {
+        get { return associatedObject(forKey: &AssociationKey.activityIndicatorView) as? UIActivityIndicatorView }
+        set { associate(assignObject: newValue, forKey: &AssociationKey.activityIndicatorView) }
+    }
+    
+    fileprivate func correspondCenter(dy: CGFloat) -> CGPoint {
+        var _center = center
+        _center.y += dy
+        return _center
+    }
+
+    /// Add activity indicator animation.
+    public func satrtActivityIndicatorAnimation(indicatorColor color: UIColor = UIColor.lightGray, dy: CGFloat = 0) {
+        if isActivityIndicatorAnimating {
+            return
+        }
         if let activityIndicatorView = activityIndicatorView {
             activityIndicatorView.color = color
-            activityIndicatorView.center = center ?? correspondingCenterForYShift(yShift)
+            activityIndicatorView.center = correspondCenter(dy: dy)
+            activityIndicatorView.isHidden = false
             activityIndicatorView.startAnimating()
             return
         }
         
         let _activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .white)
         _activityIndicatorView.color = color
-        _activityIndicatorView.center = center ?? correspondingCenterForYShift(yShift)
+        _activityIndicatorView.center = correspondCenter(dy: dy)
+        _activityIndicatorView.isUserInteractionEnabled = false
+        _activityIndicatorView.clipsToBounds = true
         addSubview(_activityIndicatorView)
-        
-        activityIndicatorView = _activityIndicatorView
         _activityIndicatorView.startAnimating()
+        activityIndicatorView = _activityIndicatorView
     }
 
-    public func stopActivityIndicatorViewAnimating() {
-        guard let _ = activityIndicatorView else { return }
-        activityIndicatorView.stopAnimating()
+    public func stopActivityIndicatorAnimation() {
+        activityIndicatorView?.stopAnimating()
+        activityIndicatorView?.isHidden = true
     }
     
-    public func isActivityIndicatorViewAnimating() -> Bool {
+    public var isActivityIndicatorAnimating: Bool {
         if let activityIndicatorView = activityIndicatorView {
             return activityIndicatorView.isAnimating
-        } else {
-            return false
-        }
-    }
-    
-    fileprivate var activityIndicatorView: UIActivityIndicatorView! {
-        get { return associatedObject(forKey: &AssociationKey.activityIndicatorView) as? UIActivityIndicatorView }
-        set { associate(assignObject: newValue, forKey: &AssociationKey.activityIndicatorView) }
-    }
-    
-    fileprivate func correspondingCenterForYShift(_ yShift: CGFloat) -> CGPoint {
-        var _center = center
-        _center.y += yShift
-        return _center
-    }
-}
-
-public extension UIView {
-    fileprivate var executeConainerView: UIView? {
-        get { return associatedObject(forKey: &AssociationKey.executeConainerView) as? UIView }
-        set { associate(assignObject: newValue, forKey: &AssociationKey.executeConainerView) }
-    }
-    
-    public func startExecute(backgroundColor: UIColor = UIColor.clear, indicatorColor: UIColor = UIColor.lightGray) {
-        if let executeConainerView = executeConainerView {
-            executeConainerView.backgroundColor = backgroundColor
-            executeConainerView.isHidden = false
-            executeConainerView.startActivityIndicatorViewAnimating(color: indicatorColor)
-            return
-        }
-        
-        let _executeConainerView = UIView(frame: bounds)
-        _executeConainerView.backgroundColor = backgroundColor
-        addSubview(_executeConainerView)
-        executeConainerView = _executeConainerView
-        
-        _executeConainerView.startActivityIndicatorViewAnimating(color: indicatorColor)
-    }
-
-    public func stopExecute() {
-        guard let executeConainerView = executeConainerView else { return }
-        executeConainerView.stopActivityIndicatorViewAnimating()
-        executeConainerView.isHidden = true
-    }
-    
-    public func isExexuting() -> Bool {
-        if let executeConainerView = executeConainerView {
-            return executeConainerView.isActivityIndicatorViewAnimating()
         } else {
             return false
         }
@@ -778,7 +690,7 @@ public extension UIView {
         return animation
     }
     
-    public func addArcIndicatorLayerAnimated(duration: CFTimeInterval = 3, lineWidth: CGFloat = 2, lineColor: UIColor = UIColor.lightGray) {
+    public func addArcIndicatorLayerAnimation(duration: CFTimeInterval = 3, lineWidth: CGFloat = 2, lineColor: UIColor = UIColor.lightGray) {
         if let arcIndicatorLayer = arcIndicatorLayer {
             arcIndicatorLayer.removeAnimation(forKey: stokeAnimationKey)
             arcIndicatorLayer.isHidden = false
@@ -795,14 +707,14 @@ public extension UIView {
         _arcIndicatorLayer.add(stokeAnimation, forKey: stokeAnimationKey)
     }
     
-    public func removeArcIndicatorLayer() {
+    public func removeArcIndicatorLayerAnimation() {
         guard let arcIndicatorLayer = arcIndicatorLayer else { return }
         
         arcIndicatorLayer.removeAnimation(forKey: stokeAnimationKey)
         arcIndicatorLayer.isHidden = true
     }
     
-    public func isArcIndicatorLayerVisible() -> Bool {
+    public var isArcIndicatorLayerAnimating: Bool {
         if let arcIndicatorLayer = arcIndicatorLayer {
             return !arcIndicatorLayer.isHidden
         } else {
@@ -846,5 +758,29 @@ public extension UIView {
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
        return image
+    }
+}
+
+// MARK: - ExtendTouchRect
+
+public extension UIView {
+    public var touchExtendInsets: UIEdgeInsets {
+        get {
+            if let value = associatedObject(forKey: &AssociationKey.touchExtendInsets) as? NSValue {
+                return value.uiEdgeInsetsValue
+            }
+            return UIEdgeInsets.zero
+        }
+        set { associate(retainObject: NSValue(uiEdgeInsets: newValue), forKey: &AssociationKey.touchExtendInsets) }
+    }
+    
+    func _ek_point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        if let control = self as? UIControl, !control.isEnabled || isHidden || touchExtendInsets == UIEdgeInsets.zero {
+            return _ek_point(inside: point, with: event)
+        }
+        var hitFrame = UIEdgeInsetsInsetRect(bounds, touchExtendInsets)
+        hitFrame.size.width = max(hitFrame.size.width, 0)
+        hitFrame.size.height = max(hitFrame.size.height, 0)
+        return hitFrame.contains(point)
     }
 }

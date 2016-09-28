@@ -29,16 +29,16 @@ import UIKit
 // MARK: - RegEx
 
 public extension String {
-    public func isMatchRegEx(_ regEx: String) -> Bool {
+    public func isMatch(regEx: String) -> Bool {
         return NSPredicate(format: "SELF MATCHES %@", regEx).evaluate(with: self)
     }
     
     public var isPhoneNumber: Bool {
-        return isMatchRegEx("^(1[345789])\\d{9}")
+        return isMatch(regEx: "^(1[345789])\\d{9}")
     }
     
     public var isEmail: Bool {
-        return isMatchRegEx("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$")
+        return isMatch(regEx: "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$")
     }
 }
 
@@ -57,26 +57,30 @@ public extension String {
         return trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
     }
     
-    public func sizeFrom(font: UIFont, preferredMaxLayoutWidth: CGFloat = UIScreen.width) -> CGSize {
+    public func layoutSize(font: UIFont, preferredMaxLayoutWidth: CGFloat = UIScreen.width) -> CGSize {
         let str = self as NSString
-        let options: NSStringDrawingOptions = [.usesLineFragmentOrigin, .usesFontLeading, .truncatesLastVisibleLine]
-        return str.boundingRect(with: CGSize(width: preferredMaxLayoutWidth, height: CGFloat.greatestFiniteMagnitude), options: options, attributes: [NSFontAttributeName: font], context: nil).size
+        return str.boundingRect(
+            with: CGSize(width: preferredMaxLayoutWidth, height: CGFloat.greatestFiniteMagnitude),
+            options: [.usesLineFragmentOrigin, .usesFontLeading, .truncatesLastVisibleLine],
+            attributes: [NSFontAttributeName: font],
+            context: nil
+        ).size
     }
     
     public subscript(range: Range<Index>) -> String {
-        return self.substring(with: range)
+        return substring(with: range)
     }
     
     public func substring(fromIndex minIndex: Int, toIndex maxIndex: Int) -> String {
         let start = characters.index(startIndex, offsetBy: minIndex)
         let end = characters.index(startIndex, offsetBy: maxIndex, limitedBy: endIndex)
         let range = Range<String.Index>(start ..< end!)
-        return self.substring(with: range)
+        return substring(with: range)
     }
     
     public func substring(fromIndex minIndex: Int) -> String {
         let start = characters.index(startIndex, offsetBy: minIndex)
-        return self.substring(from: start)
+        return substring(from: start)
     }
     
     public func substring(toIndex index: Int) -> String {
@@ -86,6 +90,16 @@ public extension String {
     
     public static var uniqueIdentifier: String {
         return UUID().uuidString.replacingOccurrences(of: "-", with: "")
+    }
+}
+
+public extension NSAttributedString {
+    public func layoutSize(preferredMaxLayoutWidth: CGFloat = UIScreen.width) -> CGSize {
+        return boundingRect(
+            with: CGSize(width: preferredMaxLayoutWidth, height: CGFloat.greatestFiniteMagnitude),
+            options: [.usesLineFragmentOrigin, .usesFontLeading, .truncatesLastVisibleLine],
+            context: nil
+        ).size
     }
 }
 

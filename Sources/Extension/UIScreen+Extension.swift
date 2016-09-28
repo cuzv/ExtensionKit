@@ -24,109 +24,16 @@
 //  THE SOFTWARE.
 //
 
-import UIKit
-fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-  switch (lhs, rhs) {
-  case let (l?, r?):
-    return l < r
-  case (nil, _?):
-    return true
-  default:
-    return false
-  }
-}
-
-fileprivate func >= <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-  switch (lhs, rhs) {
-  case let (l?, r?):
-    return l >= r
-  default:
-    return !(lhs < rhs)
-  }
-}
-
-
 public extension UIScreen {
-    fileprivate static let _sharedApplication  = UIApplication.shared
-    fileprivate static let _isLandscape        = UIInterfaceOrientationIsLandscape(_sharedApplication.statusBarOrientation)
-    fileprivate static let _iOS8Plus           = Float(UIDevice.sysVersion) >= 8.0
-    fileprivate static let _mainScreen         = UIScreen.main
-
-    fileprivate static let _nativeBounds       = _mainScreen.nativeBounds
-    fileprivate static let _nativeBoundsSize   = _nativeBounds.size
-    fileprivate static let _nativeBoundsHeight = _nativeBoundsSize.height
-    fileprivate static let _nativeBoundsWidth  = _nativeBoundsSize.width
-    fileprivate static let _nativeScale        = _mainScreen.nativeScale
-
-    fileprivate static let _bounds             = _mainScreen.bounds
-    fileprivate static let _boundsSize         = _bounds.size
-    fileprivate static let _boundsHeight       = _boundsSize.height
-    fileprivate static let _boundsWidth        = _boundsSize.width
-
-    fileprivate static let _statusBarWidth       = _sharedApplication.statusBarFrame.size.width
-    fileprivate static let _statusBarHeight     = _sharedApplication.statusBarFrame.size.height
-    
-    fileprivate class func screenWidth() -> CGFloat {
-        if _isLandscape {
-            if _iOS8Plus {
-                return _nativeBoundsHeight / _nativeScale
-            } else {
-                return _boundsHeight
-            }
-        } else {
-            if _iOS8Plus {
-                return _nativeBoundsWidth / _nativeScale
-            } else {
-                return _boundsWidth
-            }
-        }
-    }
-    
-    fileprivate class func screenHeight() -> CGFloat {
-        if _isLandscape {
-            if _iOS8Plus {
-                if _statusBarWidth > 20 {
-                    return _nativeBoundsWidth / _nativeScale - 20
-                }
-                return _nativeBoundsWidth / _nativeScale
-            } else {
-                if _statusBarWidth > 20 {
-                    return _boundsWidth - 20
-                }
-                return _boundsWidth
-            }
-        } else {
-            if _iOS8Plus {
-                if _statusBarHeight > 20 {
-                    return _nativeBoundsHeight / _nativeScale - 20
-                }
-                return _nativeBoundsHeight / _nativeScale
-            } else {
-                if _statusBarHeight > 20 {
-                    return _boundsHeight - 20
-                }
-                return _boundsHeight
-            }
-        }
-    }
-    
-    fileprivate class func screenScale() -> CGFloat {
-        if _iOS8Plus {
-            return _nativeScale
-        } else {
-            return UIScreen.main.scale
-        }
-    }
-    
     public class var width: CGFloat {
-        return UIScreen.screenWidth()
+        return UIScreen.main.bounds.size.width
     }
     
     public class var height: CGFloat {
-        return UIScreen.screenHeight()
+        return UIScreen.main.bounds.size.height
     }
     
-    public class var scale_var: CGFloat {
-        return UIScreen.screenScale()
+    public class var scaleValue: CGFloat {
+        return UIKit.UIScreen.main.scale
     }
 }

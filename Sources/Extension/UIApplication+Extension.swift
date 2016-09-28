@@ -13,42 +13,34 @@ import UIKit
 public extension UIApplication {
     fileprivate static let _sharedApplication = UIApplication.shared
     
-    public class func openURL(_ URL: Foundation.URL) {
+    public class func open(URL: Foundation.URL) {
         if _sharedApplication.canOpenURL(URL) {
            _sharedApplication.openURL(URL)
         } else {
-            debugPrint("Can not execute the given action.")
+            logging("Can not execute the given action.")
         }
     }
     
-    public class func openURLPath(_ urlPath: String) {
+    public class func open(urlPath: String) {
         if let URL = URL(string: urlPath) {
-            UIApplication.openURL(URL)
+            UIApplication.open(URL: URL)
         }
     }
     
-    public class func makePhone(_ phoneNumber: String) {
-        if let URL = URL(string: "telprompt:\(phoneNumber)") {
-            UIApplication.openURL(URL)
-        }
+    public class func makePhone(to phoneNumber: String) {
+        open(urlPath: "telprompt:\(phoneNumber)")
     }
     
-    public class func sendMessageTo(_ phoneNumber: String) {
-        if let URL = URL(string: "sms:\(phoneNumber)") {
-            UIApplication.openURL(URL)
-        }
+    public class func sendMessage(to phoneNumber: String) {
+        open(urlPath: "sms:\(phoneNumber)")
     }
     
-    public class func emailTo(_ email: String) {
-        if let URL = URL(string: "mailto:\(email)") {
-            UIApplication.openURL(URL)
-        }
+    public class func email(to email: String) {
+        open(urlPath: "mailto:\(email)")
     }
     
-    public class func chatToQQ(_ qq: String) {
-        if let URL = URL(string: "mqq://im/chat?chat_type=wpa&uin=\(qq)&version=1&src_type=iOS") {
-            UIApplication.openURL(URL)
-        }
+    public class func chatQQ(to qq: String) {
+        open(urlPath: "mqq://im/chat?chat_type=wpa&uin=\(qq)&version=1&src_type=iOS")
     }
     
     public class func clearIconBadge() {
@@ -73,40 +65,14 @@ public extension UIApplication {
         
         return false
     }
-}
-
-public func doOpenURL(_ URL: Foundation.URL) {
-    UIApplication.openURL(URL)
-}
-
-public func doMakePhone(_ phoneNumber: String) {
-    UIApplication.makePhone(phoneNumber)
-}
-
-public func doSendMessageTo(_ phoneNumber: String) {
-    UIApplication.sendMessageTo(phoneNumber)
-}
-
-public func doMailTo(_ email: String) {
-    UIApplication.emailTo(email)
-}
-
-public func doChatToQQ(_ qq: String) {
-    UIApplication.chatToQQ(qq)
-}
-
-public func doSendAction(_ action: Selector, fromSender sender: AnyObject?, forEvent event: UIEvent? = nil) -> Bool {
-    return UIApplication.sendAction(action, fromSender: sender, forEvent: event)
-}
-
-// MARK: - Properties
-
-/// Setting the statusBarStyle does nothing if your application is using the default UIViewController-based status bar system.
-public func doMakeStatusBarDark() {
-    UIApplication.shared.statusBarStyle = .default
-}
-
-/// Setting the statusBarStyle does nothing if your application is using the default UIViewController-based status bar system.
-public func doMakeStatusBarLight() {
-    UIApplication.shared.statusBarStyle = .lightContent
+    
+    /// Setting the statusBarStyle does nothing if your application is using the default UIViewController-based status bar system.
+    public class func makeStatusBarDark() {
+        UIApplication.shared.statusBarStyle = .default
+    }
+    
+    /// Setting the statusBarStyle does nothing if your application is using the default UIViewController-based status bar system.
+    public class func makeStatusBarLight() {
+        UIApplication.shared.statusBarStyle = .lightContent
+    }
 }

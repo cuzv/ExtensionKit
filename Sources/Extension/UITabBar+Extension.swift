@@ -30,11 +30,10 @@ public extension UITabBar {
     /// Not tested
     public var hairline: UIView? {
         for subview in subviews {
-            if subview is UIImageView && subview.frame.size.height == 1.0 / UIScreen.scale_var {
+            if subview is UIImageView && subview.frame.size.height == 1.0 / UIScreen.main.scale {
                 return subview
             }
         }
-        
         return nil
     }
     

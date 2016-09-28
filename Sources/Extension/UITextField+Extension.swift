@@ -29,7 +29,50 @@ import UIKit
 // MARK: - AssociationKey
 
 private struct AssociationKey {
-    fileprivate static var textFieldTextObserver: String = "textFieldTextObserver"
+    fileprivate static var textFieldTextObserver: String = "com.mochxiao.uitextfield.textFieldTextObserver"
+    fileprivate static var contentInsets: String = "com.mochxiao.uitextfield.contentInsets"
+}
+
+// MARK: - Swizzle
+
+extension UITextField {
+    override open class func initialize() {
+        if self != UITextField.self {
+            return
+        }
+        swizzleInstanceMethod(forClass: UITextField.self, originalSelector: #selector(getter: intrinsicContentSize), overrideSelector: #selector(getter: _ek_intrinsicContentSize))
+        swizzleInstanceMethod(forClass: UITextField.self, originalSelector: #selector(textRect(forBounds:)), overrideSelector: #selector(_ek_textRect(forBounds:)))
+        swizzleInstanceMethod(forClass: UITextField.self, originalSelector: #selector(editingRect(forBounds:)), overrideSelector: #selector(_ek_editingRect(forBounds:)))
+    }
+}
+
+// MARK: - 
+
+public extension UITextField {
+    public var contentInsets: UIEdgeInsets {
+        get {
+            if let value = associatedObject(forKey: &AssociationKey.contentInsets) as? NSValue {
+                return value.uiEdgeInsetsValue
+            }
+            return UIEdgeInsets.zero
+        }
+        set { associate(retainObject: NSValue(uiEdgeInsets: newValue), forKey: &AssociationKey.contentInsets) }
+    }
+    
+    var _ek_intrinsicContentSize: CGSize {
+        let size = sizeThatFits(CGSize(width: bounds.size.width, height: bounds.size.height))
+        let width = size.width + contentInsets.left + contentInsets.right
+        let height = size.height + contentInsets.top + contentInsets.bottom
+        return CGSize(width: width, height: height)
+    }
+    
+    func _ek_textRect(forBounds bounds: CGRect) -> CGRect {
+        return UIEdgeInsetsInsetRect(bounds, contentInsets)
+    }
+    
+    func _ek_editingRect(forBounds bounds: CGRect) -> CGRect {
+        return UIEdgeInsetsInsetRect(bounds, contentInsets)
+    }
 }
 
 // MARK: - TextObserver Extension
@@ -46,7 +89,7 @@ public extension UITextField {
         let textObserver = TextObserver(maxLength: maxLength) { (remainCount) -> () in
             actionHandler?(remainCount)
         }
-        textObserver.observe(self)
+        textObserver.observe(textField: self)
         textFieldTextObserver = textObserver
     }
 }

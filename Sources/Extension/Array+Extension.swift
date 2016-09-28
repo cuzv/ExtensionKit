@@ -29,11 +29,14 @@ import Foundation
 // MARK: - Array
 
 public extension Array {
-    public mutating func exchange(atIndex index: Int, withIndex otherIndex: Int) {
+    public mutating func exchange(lhs index: Int, rhs otherIndex: Int) {
         if count <= index || count <= otherIndex  {
             fatalError("Index beyond boundary.")
         }
-        
+        if index >= otherIndex {
+            fatalError("lhs must less than rhs.")
+        }
+
         let firstItemData = self[index]
         let firstRange = Range(index ..< index + 1)
         
@@ -44,7 +47,7 @@ public extension Array {
         replaceSubrange(secondaryRange, with: [firstItemData])
     }
     
-    public mutating func replace(atIndex index: Int, with element: Element) {
+    public mutating func replace(at index: Int, with element: Element) {
         if count <= index {
             fatalError("Index beyond boundary.")
         }
@@ -53,11 +56,11 @@ public extension Array {
     }
     
     public mutating func replaceLast(_ element: Element) {
-        replace(atIndex: count - 1, with: element)
+        replace(at: count - 1, with: element)
     }
     
     public mutating func replaceFirst(_ element: Element) {
-        replace(atIndex: 0, with: element)
+        replace(at: 0, with: element)
     }
     
     public var prettyDebugDescription: String {

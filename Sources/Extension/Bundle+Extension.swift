@@ -1,5 +1,5 @@
 //
-//  NSBundle+Extension.swift
+//  Bundle+Extension.swift
 //  ExtensionKit
 //
 //  Created by Moch Xiao on 12/31/15.

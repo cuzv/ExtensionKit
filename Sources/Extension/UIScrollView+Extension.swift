@@ -141,10 +141,10 @@ public extension UIScrollView {
 
 public extension UIScrollView {
     fileprivate struct AssociationKey {
-        fileprivate static var refreshControl: String = "UIScrollView.RefreshControl"
+        fileprivate static var refreshControl: String = "com.mochxiao.uiscrollview.RefreshControl"
     }
     
-    public var refreshContrl: UIRefreshControl? {
+    public private(set) var refreshContrl: UIRefreshControl? {
         get { return associatedObject(forKey: &AssociationKey.refreshControl) as? UIRefreshControl }
         set { associate(assignObject: newValue, forKey: &AssociationKey.refreshControl) }
     }
@@ -169,7 +169,7 @@ public extension UIScrollView {
         refreshContrl = _refreshContrl
     }
     
-    public var refreshControlEnabled: Bool {
+    public private(set) var refreshControlEnabled: Bool {
         get {
             if let refreshContrl = refreshContrl {
                 return refreshContrl.isEnabled

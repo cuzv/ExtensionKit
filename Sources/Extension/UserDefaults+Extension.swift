@@ -1,5 +1,5 @@
 //
-//  NSUserDefaults+Extension.swift
+//  UserDefaults+Extension.swift
 //  ExtensionKit
 //
 //  Created by Moch Xiao on 1/5/16.
@@ -64,53 +64,7 @@ public extension Foundation.UserDefaults {
     }
     
     /// Unarchive object for specific key.
-    public func unarchiveObject(forKey key: String) -> AnyObject? {
+    public func unarchivedObject(forKey key: String) -> AnyObject? {
         return data(forKey: key).flatMap { NSKeyedUnarchiver.unarchiveObject(with: $0) as AnyObject }
-    }
-    
-    
-    /// Get the Int value for key.
-    public func intValue(forKey key: String) -> Int? {
-        if let value = self[key], let intValue = value as? Int {
-            return intValue
-        } else {
-            return nil
-        }
-    }
-    
-    /// Get the Double value for key.
-    public func doubleValue(forKey key: String) -> Double? {
-        if let value = self[key], let doubleValue = value as? Double {
-            return doubleValue
-        } else {
-            return nil
-        }
-    }
-    
-    /// Get the Bool value for key.
-    public func boolValue(forKey key: String) -> Bool {
-        if let value = self["Key"], let boolValue = value as? Bool  {
-            return boolValue
-        } else {
-            return false
-        }
-    }
-    
-    /// Get the NSURL value for key.
-    public func urlValue(forKey  key: String) -> URL? {
-        if let value = self[key], let urlValue = value as? URL {
-            return urlValue
-        } else {
-            return nil
-        }
-    }
-    
-    /// Get the NSObject value for key.
-    public func objectValue(forKey key: String) -> NSObject? {
-        if let value = self[key], let objectValue = value as? NSObject {
-            return objectValue
-        } else {
-            return nil
-        }
     }
 }

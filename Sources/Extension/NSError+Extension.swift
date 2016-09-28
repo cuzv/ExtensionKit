@@ -27,19 +27,17 @@
 import Foundation
 
 public extension NSError {
-    public class func errorWithMessage(_ message: String) -> NSError {
-        return NSError(domain: "com.mochxiao.error.maker", code: 999, userInfo: [NSLocalizedDescriptionKey: message, NSLocalizedFailureReasonErrorKey: message])
-    }
-    
-    public class func empty() -> NSError {
+    public class var emptyErrorDomain: String { return "com.mochxiao.error.default" }
+    public class var emptyErrorCode: Int { return 1024 }
+    public class var empty: NSError {
         return NSError(domain: emptyErrorDomain, code: emptyErrorCode, userInfo: nil)
     }
     
-    public static var emptyErrorDomain: String { return "com.mochxiao.error.default" }
-    public static var emptyErrorCode: Int { return 1024 }
+    public class func make(message: String) -> NSError {
+        return NSError(domain: "com.mochxiao.error.maker", code: 999, userInfo: [NSLocalizedDescriptionKey: message, NSLocalizedFailureReasonErrorKey: message])
+    }
 }
 
-public func NSErrorFrom(_ message: String) -> NSError {
-    return NSError.errorWithMessage(message)
+public func NSErrorFrom(message: String) -> NSError {
+    return NSError.make(message: message)
 }
-

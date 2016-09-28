@@ -38,7 +38,7 @@ public extension Dictionary {
     }
     
     public var JSONString: String? {
-        if let data = NSDataFrom(self as AnyObject) {
+        if let data = Data.make(fromJSONObject: self as AnyObject) {
             return String(data: data, encoding: String.Encoding.utf8)
         }
         return nil

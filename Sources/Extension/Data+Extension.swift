@@ -1,8 +1,8 @@
 //
-//  Cocoa+Extension.swift
+//  Data+Extension.swift
 //  ExtensionKit
 //
-//  Created by Moch Xiao on 1/8/16.
+//  Created by Moch Xiao on 1/3/16.
 //  Copyright © @2016 Moch Xiao (https://github.com/cuzv).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,33 +24,26 @@
 //  THE SOFTWARE.
 //
 
-import UIKit
+import Foundation
 
-// MARK: - Swifty Target & Action
-// See: https://www.mikeash.com/pyblog/friday-qa-2015-12-25-swifty-targetaction.html
-
-final public class ActionTrampoline<T>: NSObject {
-    fileprivate let action: ((T) -> ())
-    
-    public init(action: @escaping ((T) -> ())) {
-        self.action = action
-    }
-    
-    @objc public func action(_ sender: AnyObject) {
-        // UIControl: add(target: AnyObject?, action: Selector, forControlEvents controlEvents: UIControlEvents)
-        if let sender = sender as? T {
-            action(sender)
-        }
-        // UIGestureRecognizer: add(target: AnyObject, action: Selector)
-        else if let sender = sender as? UIGestureRecognizer {
-            action(sender.view as! T)
+public extension Data {
+    /// Create a Foundation object from JSON data.
+    public var JSONObject: AnyObject? {
+        do {
+            return try JSONSerialization.jsonObject(with: self, options: JSONSerialization.ReadingOptions.mutableLeaves) as AnyObject
+        } catch let error as NSError {
+            logging("Deserialized JSON string failed with error: \(error)")
+            return nil
         }
     }
     
-    #if DEBUG
-    deinit {
-        debugPrint("\(#file):\(#line):\(type(of: self)):\(#function)")
+    /// Generate JSON data from a Foundation object
+    public static func make(fromJSONObject obj: AnyObject) -> Data? {
+        do {
+            return try JSONSerialization.data(withJSONObject: obj, options: JSONSerialization.WritingOptions.prettyPrinted)
+        } catch let error as NSError {
+            logging("Serialized JSON string failed with error: \(error)")
+            return nil
+        }
     }
-    #endif
 }
-
