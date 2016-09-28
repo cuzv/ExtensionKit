@@ -29,9 +29,12 @@ private let isolation_queue_label = "com.mochxiao.isolation.queue"
 
 open class AsyncSerialWorker {
     public init() {}
-    fileprivate let serialQueue = DispatchQueue(label: serial_queue_label, attributes: [])
+    fileprivate let serialQueue = DispatchQueue(
+        label: serial_queue_label,
+        attributes: []
+    )
     
-    open func enqueueWork(_ work: @escaping (() -> ()) -> ()) {
+    open func enqueue(work: @escaping (() -> ()) -> ()) {
         serialQueue.async {
             let semaphore = DispatchSemaphore(value: 0)
             work {
@@ -43,14 +46,17 @@ open class AsyncSerialWorker {
 }
 
 open class LimitedWorker {
-    fileprivate let concurrentQueue = DispatchQueue(label: concurrent_queue_label, attributes: DispatchQueue.Attributes.concurrent)
+    fileprivate let concurrentQueue = DispatchQueue(
+        label: concurrent_queue_label,
+        attributes: DispatchQueue.Attributes.concurrent
+    )
     fileprivate let semaphore: DispatchSemaphore
     
     public init(limit: Int) {
         semaphore = DispatchSemaphore(value: limit)
     }
     
-    open func enqueueWork(_ work: @escaping () -> ()) {
+    open func enqueue(work: @escaping () -> ()) {
         concurrentQueue.async {
             _ = self.semaphore.wait(timeout: DispatchTime.distantFuture)
             work()
@@ -61,9 +67,12 @@ open class LimitedWorker {
 
 open class IdentityMap<T: Identifiable> {
     var dictionary = [String: T]()
-    let accessQueue = DispatchQueue(label: isolation_queue_label, attributes: DispatchQueue.Attributes.concurrent)
+    let accessQueue = DispatchQueue(
+        label: isolation_queue_label,
+        attributes: DispatchQueue.Attributes.concurrent
+    )
     
-    func objectWithIdentifier(_ identifier: String) -> T? {
+    func object(withIdentifier identifier: String) -> T? {
         var result: T? = nil
         accessQueue.sync {
             result = self.dictionary[identifier] as T?
@@ -71,9 +80,9 @@ open class IdentityMap<T: Identifiable> {
         return result
     }
     
-    func addObject(_ object: T) {
-        accessQueue.async(flags: .barrier, execute: {
+    func add(_ object: T) {
+        accessQueue.async(flags: .barrier) {
             self.dictionary[object.identifier] = object
-        }) 
+        }
     }
 }

@@ -93,7 +93,10 @@ public typealias Task = ((_ cancel: Bool) -> ())
 @discardableResult
 public func delay(interval time: TimeInterval, task: @escaping (() -> ())) -> Task? {
     func dispatch_later(_ block: @escaping () -> ()) {
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(time * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: block)
+        DispatchQueue.main.asyncAfter(
+            deadline: DispatchTime.now() + Double(Int64(time * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC),
+            execute: block
+        )
     }
     
     var closure: (() -> ())? = task
@@ -125,7 +128,7 @@ public func cancel(_ task: Task?) {
     task?(true)
 }
 
-public func mainThreadAsync(execute work: @escaping ()->()) {
+public func mainThreadAsync(execute work: @escaping () -> ()) {
     if Thread.isMainThread {
         work()
         return
@@ -133,7 +136,7 @@ public func mainThreadAsync(execute work: @escaping ()->()) {
     DispatchQueue.main.async(execute: work)
 }
 
-public func backgroundThreadAsync(execute work: @escaping ()->()) {
+public func backgroundThreadAsync(execute work: @escaping () -> ()) {
     if !Thread.isMainThread {
         work()
         return
@@ -152,24 +155,52 @@ public func synchronized(lock: AnyObject, work: () -> ()) {
 // MARK: - Method swizzle
 
 /// Should be placed in dispatch_once
-public func swizzleInstanceMethod(forClass cls: AnyClass, originalSelector: Selector, overrideSelector: Selector) {
-    let originalMethod = class_getInstanceMethod(cls, originalSelector)
-    let overrideMethod = class_getInstanceMethod(cls, overrideSelector)
+public func swizzleInstanceMethod(
+    for cls: AnyClass,
+    original: Selector,
+    override: Selector)
+{
+    let originalMethod = class_getInstanceMethod(cls, original)
+    let overrideMethod = class_getInstanceMethod(cls, override)
     
-    if class_addMethod(cls, originalSelector, method_getImplementation(overrideMethod), method_getTypeEncoding(overrideMethod)) {
-        class_replaceMethod(cls, overrideSelector, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod))
+    if class_addMethod(
+        cls,
+        original,
+        method_getImplementation(overrideMethod),
+        method_getTypeEncoding(overrideMethod))
+    {
+        class_replaceMethod(
+            cls,
+            override,
+            method_getImplementation(originalMethod),
+            method_getTypeEncoding(originalMethod)
+        )
     } else {
         method_exchangeImplementations(originalMethod, overrideMethod)
     }
 }
 
 /// Should be placed in dispatch_once
-public func swizzleClassMethod(forClass cls: AnyClass, originalSelector: Selector, overrideSelector: Selector) {
-    let originalMethod = class_getClassMethod(cls, originalSelector)
-    let overrideMethod = class_getClassMethod(cls, overrideSelector)
+public func swizzleClassMethod(
+    for cls: AnyClass,
+    original: Selector,
+    override: Selector)
+{
+    let originalMethod = class_getClassMethod(cls, original)
+    let overrideMethod = class_getClassMethod(cls, override)
     
-    if class_addMethod(cls, originalSelector, method_getImplementation(overrideMethod), method_getTypeEncoding(overrideMethod)) {
-        class_replaceMethod(cls, overrideSelector, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod))
+    if class_addMethod(
+        cls,
+        original,
+        method_getImplementation(overrideMethod),
+        method_getTypeEncoding(overrideMethod))
+    {
+        class_replaceMethod(
+            cls,
+            override,
+            method_getImplementation(originalMethod),
+            method_getTypeEncoding(originalMethod)
+        )
     } else {
         method_exchangeImplementations(originalMethod, overrideMethod)
     }
@@ -248,6 +279,9 @@ final public class ClosureDecorator<T>: NSObject {
 
 final public class ActionTrampoline<T>: NSObject {
     fileprivate let action: ((T) -> ())
+    public var selector: Selector? {
+        return NSSelectorFromString("action:")
+    }
     
     public init(action: @escaping ((T) -> ())) {
         self.action = action

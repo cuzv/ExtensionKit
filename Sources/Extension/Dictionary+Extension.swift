@@ -43,7 +43,10 @@ public extension Dictionary {
 }
 
 /// Combine two `Dictionary` to one.
-public func += <KeyType, ValueType> (lhs: inout Dictionary<KeyType, ValueType>, rhs: Dictionary<KeyType, ValueType>) {
+public func += <KeyType, ValueType>(
+    lhs: inout Dictionary<KeyType, ValueType>,
+    rhs: Dictionary<KeyType, ValueType>)
+{
     for (key, value) in rhs {
         lhs.updateValue(value, forKey: key)
     }

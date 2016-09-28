@@ -45,7 +45,10 @@ public extension UIImageView {
         }
         
         DispatchQueue.global().async {
-            let scale = max(image.size.width / self.frame.size.width, image.size.height / self.frame.size.height)
+            let scale = max(
+                image.size.width / self.frame.size.width,
+                image.size.height / self.frame.size.height
+            )
             let relatedRadius = scale * radius
             let relatedStockLineWidth = scale * strokeLineWidth
             let newImage = image.remake(

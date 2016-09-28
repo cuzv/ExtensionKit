@@ -151,7 +151,12 @@ public extension UIScrollView {
             return
         }
         
-        let _refreshContrl = UIRefreshControl(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 64))
+        let _refreshContrl = UIRefreshControl(frame: CGRect(
+            x: 0,
+            y: 0,
+            width: UIScreen.main.bounds.width,
+            height: 64
+        ))
         addSubview(_refreshContrl)
         sendSubview(toBack: _refreshContrl)
         _refreshContrl.addControlEvents(.valueChanged) { [weak self] (_) in

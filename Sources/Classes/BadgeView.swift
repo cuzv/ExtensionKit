@@ -131,8 +131,24 @@ public extension UIView {
         }
         removeConstraints(needsRemove)
         
-        addConstraint(NSLayoutConstraint(item: badgeView, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1, constant: offset.horizontal))
-        addConstraint(NSLayoutConstraint(item: badgeView, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: offset.vertical))
+        addConstraint(NSLayoutConstraint(
+            item: badgeView,
+            attribute: .centerX,
+            relatedBy: .equal,
+            toItem: self,
+            attribute: .right,
+            multiplier: 1,
+            constant: offset.horizontal
+        ))
+        addConstraint(NSLayoutConstraint(
+            item: badgeView,
+            attribute: .centerY,
+            relatedBy: .equal,
+            toItem: self,
+            attribute: .top,
+            multiplier: 1,
+            constant: offset.vertical
+        ))
     }
     
     fileprivate func addBadgeView() {
@@ -141,9 +157,24 @@ public extension UIView {
         badgeView.backgroundColor = UIColor.red
         
         addSubview(badgeView)
-        addConstraint(NSLayoutConstraint(item: badgeView, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1, constant: 0))
-        addConstraint(NSLayoutConstraint(item: badgeView, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 0))
-
+        addConstraint(NSLayoutConstraint(
+            item: badgeView,
+            attribute: .centerX,
+            relatedBy: .equal,
+            toItem: self,
+            attribute: .right,
+            multiplier: 1,
+            constant: 0
+        ))
+        addConstraint(NSLayoutConstraint(
+            item: badgeView,
+            attribute: .centerY,
+            relatedBy: .equal,
+            toItem: self,
+            attribute: .top,
+            multiplier: 1,
+            constant: 0
+        ))
         self.badgeView = badgeView
     }
     

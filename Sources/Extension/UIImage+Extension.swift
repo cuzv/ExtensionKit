@@ -22,26 +22,6 @@
 //
 
 import UIKit
-fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-    switch (lhs, rhs) {
-    case let (l?, r?):
-        return l < r
-    case (nil, _?):
-        return true
-    default:
-        return false
-    }
-}
-
-fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-    switch (lhs, rhs) {
-    case let (l?, r?):
-        return l > r
-    default:
-        return rhs < lhs
-    }
-}
-
 
 // MARK: - Load image
 
@@ -52,7 +32,7 @@ public extension UIImage {
             return Bundle.main.path(forResource: fileName, ofType: ofType)
         }
         
-        if UIScreen.width > 375 {
+        if UIScreen.main.bounds.width > 375.0 {
             if let filePath = pathForResource("\(fileName)@3x", ofType: extensionType) {
                 return UIImage(contentsOfFile: filePath)
             }
@@ -90,7 +70,10 @@ public extension UIImage {
     }
     
     /// Compress image as possible to target size kb.
-    public func compressingAsPossible(capacity: Int = 50, targetSize: CGSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)) -> Data? {
+    public func compressingAsPossible(
+        capacity: Int = 50,
+        targetSize: CGSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)) -> Data?
+    {
         let currentRepresention = size.width * size.height
         let targetRepresention = targetSize.width * targetSize.height
         var scaledImage = self
@@ -100,9 +83,14 @@ public extension UIImage {
         
         var compressionQuality: CGFloat = 0.5
         let minBytes = capacity * 1024
-        var compressedImageData = UIImageJPEGRepresentation(scaledImage, compressionQuality)
-        while compressedImageData?.count > minBytes && compressionQuality >= 0.1 {
-            compressedImageData = UIImageJPEGRepresentation(scaledImage, compressionQuality)
+        guard var compressedImageData = UIImageJPEGRepresentation(scaledImage, compressionQuality) else {
+            return nil
+        }
+        while compressedImageData.count > minBytes && compressionQuality >= 0.1 {
+            guard let newCompressedImageData = UIImageJPEGRepresentation(scaledImage, compressionQuality) else {
+                return compressedImageData
+            }
+            compressedImageData = newCompressedImageData
             compressionQuality -= 0.1
         }
         
@@ -205,8 +193,16 @@ public extension UIImage {
         context.setLineWidth(strokeLineWidth)
         context.setStrokeColor(strokeColor.cgColor)
         
-        let roundedRect = CGRect(x: strokeLineWidth, y: strokeLineWidth, width: rect.width - strokeLineWidth * 2, height: rect.height - strokeLineWidth * 2)
-        let path = UIBezierPath(roundedRect: roundedRect, byRoundingCorners: roundingCorners, cornerRadii: CGSize(width: radius, height: radius))
+        let roundedRect = CGRect(
+            x: strokeLineWidth,
+            y: strokeLineWidth,
+            width: rect.width - strokeLineWidth * 2,
+            height: rect.height - strokeLineWidth * 2)
+        let path = UIBezierPath(
+            roundedRect: roundedRect,
+            byRoundingCorners: roundingCorners,
+            cornerRadii: CGSize(width: radius, height: radius)
+        )
         context.addPath(path.cgPath)
         
         context.drawPath(using: .fillStroke)
@@ -229,7 +225,11 @@ public extension UIImage {
         UIGraphicsBeginImageContextWithOptions(rect.size, false, 0)
         guard let context = UIGraphicsGetCurrentContext() else { fatalError() }
         
-        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        let path = UIBezierPath(
+            roundedRect: rect,
+            byRoundingCorners: corners,
+            cornerRadii: CGSize(width: radius, height: radius)
+        )
         context.addPath(path.cgPath)
         
         context.clip()
@@ -237,8 +237,16 @@ public extension UIImage {
         
         context.setLineWidth(strokeLineWidth)
         context.setStrokeColor(strokeColor.cgColor)
-        let roundedRect = CGRect(x: strokeLineWidth, y: strokeLineWidth, width: rect.width - strokeLineWidth * 2, height: rect.height - strokeLineWidth * 2)
-        let roundedPath = UIBezierPath(roundedRect: roundedRect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        let roundedRect = CGRect(
+            x: strokeLineWidth,
+            y: strokeLineWidth,
+            width: rect.width - strokeLineWidth * 2,
+            height: rect.height - strokeLineWidth * 2)
+        let roundedPath = UIBezierPath(
+            roundedRect: roundedRect,
+            byRoundingCorners: corners,
+            cornerRadii: CGSize(width: radius, height: radius)
+        )
         roundedPath.stroke()
         
         guard let output = UIGraphicsGetImageFromCurrentImageContext() else {
@@ -301,7 +309,12 @@ public extension UIImage {
     }
     
     /// Watermarking
-    public func watermarking(text: String, font: UIFont, color: UIColor = UIColor.white, rotate: Double = M_PI_4 ) -> UIImage? {
+    public func watermarking(
+        text: String,
+        font: UIFont,
+        color: UIColor = UIColor.white,
+        rotate: Double = M_PI_4 ) -> UIImage?
+    {
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
         let context = UIGraphicsGetCurrentContext()
         
@@ -320,7 +333,10 @@ public extension UIImage {
         
         // Draw the string, using a blend mode
         context!.setBlendMode(.normal)
-        (text as NSString).draw(in: stringRect, withAttributes: [NSForegroundColorAttributeName: color])
+        (text as NSString).draw(
+            in: stringRect,
+            withAttributes: [NSForegroundColorAttributeName: color]
+        )
         
         // Retrieve the new image
         guard let output = UIGraphicsGetImageFromCurrentImageContext() else {
@@ -353,8 +369,10 @@ public extension UIImage {
     @available(iOS 8.0, *)
     public var isQRCode: Bool {
         if let CIImage = CIImage(image: self) {
-            let detector = CIDetector(ofType: CIDetectorTypeQRCode, context: nil,
-                                      options: [CIDetectorAccuracy : CIDetectorAccuracyHigh])
+            let detector = CIDetector(
+                ofType: CIDetectorTypeQRCode, context: nil,
+                options: [CIDetectorAccuracy : CIDetectorAccuracyHigh]
+            )
             let features = detector!.features(in: CIImage)
             if let first = features.first as? CIQRCodeFeature {
                 return first.messageString!.length > 0

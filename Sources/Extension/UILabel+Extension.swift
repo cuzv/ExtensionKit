@@ -34,8 +34,16 @@ extension UILabel {
         if self != UILabel.self {
             return
         }
-        swizzleInstanceMethod(forClass: UILabel.self, originalSelector: #selector(getter: intrinsicContentSize), overrideSelector: #selector(getter: _ek_intrinsicContentSize))
-        swizzleInstanceMethod(forClass: UILabel.self, originalSelector: #selector(drawText(in:)), overrideSelector: #selector(_ek_drawText(in:)))
+        swizzleInstanceMethod(
+            for: UILabel.self,
+            original: #selector(getter: intrinsicContentSize),
+            override: #selector(getter: _ek_intrinsicContentSize)
+        )
+        swizzleInstanceMethod(
+            for: UILabel.self,
+            original: #selector(drawText(in:)),
+            override: #selector(_ek_drawText(in:))
+        )
     }
 }
 

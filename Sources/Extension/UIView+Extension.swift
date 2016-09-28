@@ -46,7 +46,11 @@ extension UIView {
         if self != UIButton.self {
             return
         }
-        swizzleInstanceMethod(forClass: UIView.self, originalSelector: #selector(UIView.point(inside:with:)), overrideSelector: #selector(UIView._ek_point(inside:with:)))
+        swizzleInstanceMethod(
+            for: UIView.self,
+            original: #selector(UIView.point(inside:with:)),
+            override: #selector(UIView._ek_point(inside:with:))
+        )
     }
 }
 
@@ -67,7 +71,10 @@ public extension UIView {
     public func tapAction(_ action: @escaping ((UIView, UIGestureRecognizer?) -> ())) {
         isUserInteractionEnabled = true
         
-        let tapGesureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIView.handleGestureRecognizerAction(_:)))
+        let tapGesureRecognizer = UITapGestureRecognizer(
+            target: self,
+            action: #selector(UIView.handleGestureRecognizerAction(_:))
+        )
         checkRequireGestureRecognizerToFailForSingleTapGesureRecognizer(tapGesureRecognizer)
         addGestureRecognizer(tapGesureRecognizer)
         tapGesureRecognizer.gestureRecognizerWrapper = ClosureDecorator(action)
@@ -78,7 +85,10 @@ public extension UIView {
     public func doubleTapsAction(_ action: @escaping (UIView, UIGestureRecognizer?) -> ()) {
         isUserInteractionEnabled = true
         
-        let doubleTapGesureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIView.handleGestureRecognizerAction(_:)))
+        let doubleTapGesureRecognizer = UITapGestureRecognizer(
+            target: self,
+            action: #selector(UIView.handleGestureRecognizerAction(_:))
+        )
         doubleTapGesureRecognizer.numberOfTapsRequired = 2
         checkRequireGestureRecognizerToFailForDoubleTapGesureRecognizer(doubleTapGesureRecognizer)
         addGestureRecognizer(doubleTapGesureRecognizer)
@@ -89,7 +99,10 @@ public extension UIView {
     public func longPressAction(_ action: @escaping (UIView, UIGestureRecognizer?) -> ()) {
         isUserInteractionEnabled = true
         
-        let longPressGesureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(UIView.handleGestureRecognizerAction(_:)))
+        let longPressGesureRecognizer = UILongPressGestureRecognizer(
+            target: self,
+            action: #selector(UIView.handleGestureRecognizerAction(_:))
+        )
         addGestureRecognizer(longPressGesureRecognizer)
         longPressGesureRecognizer.gestureRecognizerWrapper = ClosureDecorator(action)
     }
@@ -105,7 +118,7 @@ private extension UIView {
     func checkRequireGestureRecognizerToFailForSingleTapGesureRecognizer(_ tapGesureRecognizer: UITapGestureRecognizer) {
         if let gestureRecognizers = gestureRecognizers {
             for gestureRecognizer in gestureRecognizers {
-                if let tapGestureRecognizer = gestureRecognizer as? UITapGestureRecognizer , tapGestureRecognizer.numberOfTapsRequired > 1 {
+                if let tapGestureRecognizer = gestureRecognizer as? UITapGestureRecognizer, tapGestureRecognizer.numberOfTapsRequired > 1 {
                     tapGesureRecognizer.require(toFail: gestureRecognizer)
                 } else if gestureRecognizer is UILongPressGestureRecognizer {
                     tapGesureRecognizer.require(toFail: gestureRecognizer)
@@ -137,7 +150,10 @@ public extension UIGestureRecognizerFunctionProtocol where Self: UIView {
         isUserInteractionEnabled = true
         
         let trampoline = ActionTrampoline(action: action)
-        let tapGestureRecognizer = UITapGestureRecognizer(target: trampoline, action: NSSelectorFromString("action:"))
+        let tapGestureRecognizer = UITapGestureRecognizer(
+            target: trampoline,
+            action: trampoline.selector
+        )
         checkRequireGestureRecognizerToFailForSingleTapGesureRecognizer(tapGestureRecognizer)
         addGestureRecognizer(tapGestureRecognizer)
         associate(retainObject: trampoline, forKey: &AssociationKey.singleTapGestureRecognizer)
@@ -149,7 +165,10 @@ public extension UIGestureRecognizerFunctionProtocol where Self: UIView {
         isUserInteractionEnabled = true
 
         let trampoline = ActionTrampoline(action: action)
-        let doubleTapGesureRecognizer = UITapGestureRecognizer(target: trampoline, action: NSSelectorFromString("action:"))
+        let doubleTapGesureRecognizer = UITapGestureRecognizer(
+            target: trampoline,
+            action: trampoline.selector
+        )
         doubleTapGesureRecognizer.numberOfTapsRequired = 2
         checkRequireGestureRecognizerToFailForDoubleTapGesureRecognizer(doubleTapGesureRecognizer)
         addGestureRecognizer(doubleTapGesureRecognizer)
@@ -162,7 +181,10 @@ public extension UIGestureRecognizerFunctionProtocol where Self: UIView {
         isUserInteractionEnabled = true
         
         let trampoline = ActionTrampoline(action: action)
-        let doubleTapGesureRecognizer = UITapGestureRecognizer(target: trampoline, action: NSSelectorFromString("action:"))
+        let doubleTapGesureRecognizer = UITapGestureRecognizer(
+            target: trampoline,
+            action: trampoline.selector
+        )
         doubleTapGesureRecognizer.numberOfTapsRequired = 3
         checkRequireGestureRecognizerToFailForDoubleTapGesureRecognizer(doubleTapGesureRecognizer)
         addGestureRecognizer(doubleTapGesureRecognizer)
@@ -175,7 +197,10 @@ public extension UIGestureRecognizerFunctionProtocol where Self: UIView {
         isUserInteractionEnabled = true
         
         let trampoline = ActionTrampoline(action: action)
-        let doubleTapGesureRecognizer = UITapGestureRecognizer(target: trampoline, action: NSSelectorFromString("action:"))
+        let doubleTapGesureRecognizer = UITapGestureRecognizer(
+            target: trampoline,
+            action: trampoline.selector
+        )
         doubleTapGesureRecognizer.numberOfTapsRequired = taps
         checkRequireGestureRecognizerToFailForDoubleTapGesureRecognizer(doubleTapGesureRecognizer)
         addGestureRecognizer(doubleTapGesureRecognizer)
@@ -187,7 +212,10 @@ public extension UIGestureRecognizerFunctionProtocol where Self: UIView {
         isUserInteractionEnabled = true
         
         let trampoline = ActionTrampoline(action: action)
-        let longPressGesureRecognizer = UILongPressGestureRecognizer(target: trampoline, action: NSSelectorFromString("action:"))
+        let longPressGesureRecognizer = UILongPressGestureRecognizer(
+            target: trampoline,
+            action: trampoline.selector
+        )
         addGestureRecognizer(longPressGesureRecognizer)
         associate(retainObject: trampoline, forKey: &AssociationKey.longPressGestureRecognizer)
     }
@@ -323,7 +351,13 @@ public extension UIView {
         constant: CGFloat = 0,
         lineDashPattern: [CGFloat] = [5, 5])
     {
-        func makeLineLayerWithWidth(_ width: CGFloat, color: UIColor, lineDashPattern: [CGFloat], startPoint: CGPoint, endPoint: CGPoint) -> CAShapeLayer {
+        func makeLineLayer(
+            width: CGFloat,
+            color: UIColor,
+            lineDashPattern: [CGFloat],
+            startPoint: CGPoint,
+            endPoint: CGPoint) -> CAShapeLayer
+        {
             let lineLayer = CAShapeLayer()
             lineLayer.lineDashPattern = lineDashPattern as [NSNumber]?
             lineLayer.strokeColor = color.cgColor
@@ -347,8 +381,9 @@ public extension UIView {
         let endY    = 0.5 * h * (1.0 + multiplier) - 0.5 * constant
         
         if rectEdge.contains(.top) {
-            let lineLayer = makeLineLayerWithWidth(
-                width, color: color,
+            let lineLayer = makeLineLayer(
+                width: width,
+                color: color,
                 lineDashPattern: lineDashPattern,
                 startPoint: CGPoint(x: startX, y: 0),
                 endPoint: CGPoint(x: endX, y: 0)
@@ -357,8 +392,8 @@ public extension UIView {
         }
         
         if rectEdge.contains(.left) {
-            let lineLayer = makeLineLayerWithWidth(
-                width,
+            let lineLayer = makeLineLayer(
+                width: width,
                 color: color,
                 lineDashPattern: lineDashPattern,
                 startPoint: CGPoint(x: 0, y: startY),
@@ -368,8 +403,8 @@ public extension UIView {
         }
         
         if rectEdge.contains(.bottom) {
-            let lineLayer = makeLineLayerWithWidth(
-                width,
+            let lineLayer = makeLineLayer(
+                width: width,
                 color: color,
                 lineDashPattern: lineDashPattern,
                 startPoint: CGPoint(x: startX, y: h),
@@ -379,11 +414,12 @@ public extension UIView {
         }
         
         if rectEdge.contains(.right) {
-            let lineLayer = makeLineLayerWithWidth(width,
-                                                   color: color,
-                                                   lineDashPattern: lineDashPattern,
-                                                   startPoint: CGPoint(x: w, y: startY),
-                                                   endPoint: CGPoint(x: w, y: endY)
+            let lineLayer = makeLineLayer(
+                width: width,
+                color: color,
+                lineDashPattern: lineDashPattern,
+                startPoint: CGPoint(x: w, y: startY),
+                endPoint: CGPoint(x: w, y: endY)
             )
             layer.addSublayer(lineLayer)
         }
@@ -409,10 +445,10 @@ public extension UIView {
         multiplier: CGFloat = 1.0,
         constant: CGFloat = 0)
     {
-        func addLineViewConstraint(
-            edgeLayoutAttribute: NSLayoutAttribute,
-            centerLayoutAttribute: NSLayoutAttribute,
-            sizeLayoutAttribute: NSLayoutAttribute,
+        func addLineViewConstraints(
+            edge: NSLayoutAttribute,
+            center: NSLayoutAttribute,
+            size: NSLayoutAttribute,
             visualFormat: String,
             color: UIColor,
             multiplier: CGFloat,
@@ -423,12 +459,41 @@ public extension UIView {
             lineView.translatesAutoresizingMaskIntoConstraints = false
             addSubview(lineView)
             
-            let edge = NSLayoutConstraint(item: lineView, attribute: edgeLayoutAttribute, relatedBy: .equal, toItem: self, attribute: edgeLayoutAttribute, multiplier: 1, constant: 0)
-            let center = NSLayoutConstraint(item: lineView, attribute: centerLayoutAttribute, relatedBy: .equal, toItem: self, attribute: centerLayoutAttribute, multiplier: 1, constant: 0)
-            let size = NSLayoutConstraint(item: lineView, attribute: sizeLayoutAttribute, relatedBy: .equal, toItem: self, attribute: sizeLayoutAttribute, multiplier: multiplier, constant: constant)
-            addConstraints([edge, center, size])
+            let edgeConstraint = NSLayoutConstraint(
+                item: lineView,
+                attribute: edge,
+                relatedBy: .equal,
+                toItem: self,
+                attribute: edge,
+                multiplier: 1,
+                constant: 0
+            )
+            let centerConstraint = NSLayoutConstraint(
+                item: lineView,
+                attribute: center,
+                relatedBy: .equal,
+                toItem: self,
+                attribute: center,
+                multiplier: 1,
+                constant: 0
+            )
+            let sizeConstraint = NSLayoutConstraint(
+                item: lineView,
+                attribute: size,
+                relatedBy: .equal,
+                toItem: self,
+                attribute: size,
+                multiplier: multiplier,
+                constant: constant
+            )
+            addConstraints([edgeConstraint, centerConstraint, sizeConstraint])
             
-            let constraints = NSLayoutConstraint.constraints(withVisualFormat: visualFormat, options: NSLayoutFormatOptions(), metrics: nil, views: ["lineView": lineView])
+            let constraints = NSLayoutConstraint.constraints(
+                withVisualFormat: visualFormat,
+                options: .directionLeadingToTrailing,
+                metrics: nil,
+                views: ["lineView": lineView]
+            )
             addConstraints(constraints)
         }
         
@@ -441,41 +506,53 @@ public extension UIView {
                 return
             }
         }
-        
-        var edgeLayoutAttribute: NSLayoutAttribute = .notAnAttribute
-        var centerLayoutAttribute: NSLayoutAttribute = .notAnAttribute
-        var sizeLayoutAttribute: NSLayoutAttribute = .notAnAttribute
-        
+
         if rectEdge.contains(.top) {
-            edgeLayoutAttribute = .top;
-            centerLayoutAttribute = .centerX;
-            sizeLayoutAttribute = .width;
-            let visualFormat = "V:[lineView(\(width))]"
-            addLineViewConstraint(edgeLayoutAttribute: edgeLayoutAttribute, centerLayoutAttribute: centerLayoutAttribute, sizeLayoutAttribute: sizeLayoutAttribute, visualFormat: visualFormat, color: color, multiplier: multiplier, rectEdge: .top)
+            addLineViewConstraints(
+                edge: .top,
+                center: .centerX,
+                size: .width,
+                visualFormat: "V:[lineView(\(width))]",
+                color: color,
+                multiplier: multiplier,
+                rectEdge: .top
+            )
         }
         
         if rectEdge.contains(.left) {
-            edgeLayoutAttribute = .left
-            centerLayoutAttribute = .centerY;
-            sizeLayoutAttribute = .height;
-            let visualFormat = "[lineView(\(width))]"
-            addLineViewConstraint(edgeLayoutAttribute: edgeLayoutAttribute, centerLayoutAttribute: centerLayoutAttribute, sizeLayoutAttribute: sizeLayoutAttribute, visualFormat: visualFormat, color: color, multiplier: multiplier, rectEdge: .left)
+            addLineViewConstraints(
+                edge: .left,
+                center: .centerY,
+                size: .height,
+                visualFormat: "[lineView(\(width))]",
+                color: color,
+                multiplier: multiplier,
+                rectEdge: .left
+            )
         }
         
         if rectEdge.contains(.bottom) {
-            edgeLayoutAttribute = .bottom
-            centerLayoutAttribute = .centerX
-            sizeLayoutAttribute = .width
-            let visualFormat = "V:[lineView(\(width))]"
-            addLineViewConstraint(edgeLayoutAttribute: edgeLayoutAttribute, centerLayoutAttribute: centerLayoutAttribute, sizeLayoutAttribute: sizeLayoutAttribute, visualFormat: visualFormat, color: color, multiplier: multiplier, rectEdge: .bottom)
+            addLineViewConstraints(
+                edge: .bottom,
+                center: .centerX,
+                size: .width,
+                visualFormat: "V:[lineView(\(width))]",
+                color: color,
+                multiplier: multiplier,
+                rectEdge: .bottom
+            )
         }
         
         if rectEdge.contains(.right) {
-            edgeLayoutAttribute = .right
-            centerLayoutAttribute = .centerY
-            sizeLayoutAttribute = .height
-            let visualFormat = "[lineView(\(width))]"
-            addLineViewConstraint(edgeLayoutAttribute: edgeLayoutAttribute, centerLayoutAttribute: centerLayoutAttribute, sizeLayoutAttribute: sizeLayoutAttribute, visualFormat: visualFormat, color: color, multiplier: multiplier, rectEdge: .right)
+            addLineViewConstraints(
+                edge: .right,
+                center: .centerY,
+                size: .height,
+                visualFormat: "[lineView(\(width))]",
+                color: color,
+                multiplier: multiplier,
+                rectEdge: .right
+            )
         }
     }
     
@@ -569,8 +646,18 @@ public extension UIView {
         addSubview(blurView)
         if useAutolayout {
             blurView.translatesAutoresizingMaskIntoConstraints = false
-            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "|[blurView]|", options: NSLayoutFormatOptions(), metrics: nil, views: ["blurView": blurView]))
-            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[blurView]|", options: NSLayoutFormatOptions(), metrics: nil, views: ["blurView": blurView]))
+            addConstraints(NSLayoutConstraint.constraints(
+                withVisualFormat: "|[blurView]|",
+                options: .directionLeadingToTrailing,
+                metrics: nil,
+                views: ["blurView": blurView]
+            ))
+            addConstraints(NSLayoutConstraint.constraints(
+                withVisualFormat: "V:|[blurView]|",
+                options: .directionLeadingToTrailing,
+                metrics: nil,
+                views: ["blurView": blurView]
+            ))
         }
         
         return blurView
@@ -590,8 +677,18 @@ public extension UIView {
         speclEffectView.frame = bounds
         if useAutolayout {
             speclEffectView.translatesAutoresizingMaskIntoConstraints = false
-            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "|[speclEffectView]|", options: NSLayoutFormatOptions(), metrics: nil, views: ["speclEffectView": speclEffectView]))
-            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[speclEffectView]|", options: NSLayoutFormatOptions(), metrics: nil, views: ["speclEffectView": speclEffectView]))
+            addConstraints(NSLayoutConstraint.constraints(
+                withVisualFormat: "|[speclEffectView]|",
+                options: .directionLeadingToTrailing,
+                metrics: nil,
+                views: ["speclEffectView": speclEffectView]
+            ))
+            addConstraints(NSLayoutConstraint.constraints(
+                withVisualFormat: "V:|[speclEffectView]|",
+                options: .directionLeadingToTrailing,
+                metrics: nil,
+                views: ["speclEffectView": speclEffectView]
+            ))
         }
         return speclEffectView
     }
@@ -606,9 +703,9 @@ public extension UIView {
     }
     
     fileprivate func correspondCenter(dy: CGFloat) -> CGPoint {
-        var _center = center
-        _center.y += dy
-        return _center
+        var newCenter = center
+        newCenter.y += dy
+        return newCenter
     }
 
     /// Add activity indicator animation.
@@ -616,7 +713,7 @@ public extension UIView {
         if isActivityIndicatorAnimating {
             return
         }
-        if let activityIndicatorView = activityIndicatorView {
+        if let activityIndicatorView = self.activityIndicatorView {
             activityIndicatorView.color = color
             activityIndicatorView.center = correspondCenter(dy: dy)
             activityIndicatorView.isHidden = false
@@ -624,14 +721,14 @@ public extension UIView {
             return
         }
         
-        let _activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .white)
-        _activityIndicatorView.color = color
-        _activityIndicatorView.center = correspondCenter(dy: dy)
-        _activityIndicatorView.isUserInteractionEnabled = false
-        _activityIndicatorView.clipsToBounds = true
-        addSubview(_activityIndicatorView)
-        _activityIndicatorView.startAnimating()
-        activityIndicatorView = _activityIndicatorView
+        let activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .white)
+        activityIndicatorView.color = color
+        activityIndicatorView.center = correspondCenter(dy: dy)
+        activityIndicatorView.isUserInteractionEnabled = false
+        activityIndicatorView.clipsToBounds = true
+        addSubview(activityIndicatorView)
+        activityIndicatorView.startAnimating()
+        self.activityIndicatorView = activityIndicatorView
     }
 
     public func stopActivityIndicatorAnimation() {
@@ -688,7 +785,7 @@ public extension UIView {
     }
     
     public func addArcIndicatorLayerAnimation(duration: CFTimeInterval = 3, lineWidth: CGFloat = 2, lineColor: UIColor = UIColor.lightGray) {
-        if let arcIndicatorLayer = arcIndicatorLayer {
+        if let arcIndicatorLayer = self.arcIndicatorLayer {
             arcIndicatorLayer.removeAnimation(forKey: stokeAnimationKey)
             arcIndicatorLayer.isHidden = false
             let stokeAnimation = makeStrokeAnimation(duration: duration)
@@ -696,19 +793,16 @@ public extension UIView {
             return
         }
         
-        let _arcIndicatorLayer = makeArcIndicatorLayer(lineWidth: lineWidth, lineColor: lineColor)
-        layer.addSublayer(_arcIndicatorLayer)
-        arcIndicatorLayer = _arcIndicatorLayer
-        
+        let arcIndicatorLayer = makeArcIndicatorLayer(lineWidth: lineWidth, lineColor: lineColor)
         let stokeAnimation = makeStrokeAnimation(duration: duration)
-        _arcIndicatorLayer.add(stokeAnimation, forKey: stokeAnimationKey)
+        arcIndicatorLayer.add(stokeAnimation, forKey: stokeAnimationKey)
+        layer.addSublayer(arcIndicatorLayer)
+        self.arcIndicatorLayer = arcIndicatorLayer
     }
     
     public func removeArcIndicatorLayerAnimation() {
-        guard let arcIndicatorLayer = arcIndicatorLayer else { return }
-        
-        arcIndicatorLayer.removeAnimation(forKey: stokeAnimationKey)
-        arcIndicatorLayer.isHidden = true
+        arcIndicatorLayer?.removeAnimation(forKey: stokeAnimationKey)
+        arcIndicatorLayer?.isHidden = true
     }
     
     public var isArcIndicatorLayerAnimating: Bool {

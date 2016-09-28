@@ -53,16 +53,16 @@ final public class TextObserver {
             forName: NSNotification.Name.UITextFieldTextDidChange,
             object: object,
             queue: OperationQueue.main) { [weak self] (notification) -> Void in
-                guard let _self = self else { return }
+                guard let this = self else { return }
                 guard let textField = notification.object as? UITextField else { return }
                 guard let text = textField.text else { return }
                 
                 let textLenght = text.length
-                if textLenght > _self.maxLength && nil == textField.markedTextRange {
-                    textField.text = text.substring(toIndex: _self.maxLength)
+                if textLenght > this.maxLength && nil == textField.markedTextRange {
+                    textField.text = text.substring(toIndex: this.maxLength)
                 }
                 
-                _self.actionHandler(_self.maxLength - (textField.text ?? "").length)
+                this.actionHandler(this.maxLength - (textField.text ?? "").length)
             }
     }
     
@@ -73,16 +73,16 @@ final public class TextObserver {
             forName: NSNotification.Name.UITextViewTextDidChange,
             object: object,
             queue: OperationQueue.main) { [weak self] (notification) -> Void in
-                guard let _self = self else { return }
+                guard let this = self else { return }
                 guard let textView = notification.object as? UITextView else { return }
                 guard let text = textView.text else { return }
                 
                 let textLenght = text.length
-                if textLenght > _self.maxLength && nil == textView.markedTextRange {
-                    textView.text = text.substring(toIndex: _self.maxLength)
+                if textLenght > this.maxLength && nil == textView.markedTextRange {
+                    textView.text = text.substring(toIndex: this.maxLength)
                 }
                 
-                _self.actionHandler(_self.maxLength - (textView.text ?? "").length)
+                this.actionHandler(this.maxLength - (textView.text ?? "").length)
                 textView.scrollCursorToVisible()
             }
     }

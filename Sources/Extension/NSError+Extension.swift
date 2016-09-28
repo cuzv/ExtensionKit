@@ -31,7 +31,11 @@ public extension NSError {
     }
     
     public class func make(message: String) -> NSError {
-        return NSError(domain: "com.mochxiao.error.maker", code: 999, userInfo: [NSLocalizedDescriptionKey: message, NSLocalizedFailureReasonErrorKey: message])
+        return NSError(
+            domain: "com.mochxiao.error.maker",
+            code: 999,
+            userInfo: [NSLocalizedDescriptionKey: message, NSLocalizedFailureReasonErrorKey: message]
+        )
     }
 }
 

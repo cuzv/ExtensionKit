@@ -27,14 +27,14 @@ public extension Bundle {
     fileprivate static let _mainBundle = Bundle.main
     
     public class var build: String {
-        return (_mainBundle.infoDictionary?["CFBundleVersion"] ?? "") as! String
+        return _mainBundle.infoDictionary?["CFBundleVersion"] as? String ?? ""
     }
     
     public class var ver: String {
-        return (_mainBundle.infoDictionary?["CFBundleShortVersionString"] ?? "") as! String
+        return _mainBundle.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
     }
     
     public class var displayName: String {
-        return (_mainBundle.infoDictionary?["CFBundleDisplayName"] ?? "") as! String
+        return _mainBundle.infoDictionary?["CFBundleDisplayName"] as? String ?? ""
     }
 }

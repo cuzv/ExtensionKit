@@ -27,7 +27,10 @@ public extension Data {
     /// Create a Foundation object from JSON data.
     public var JSONObject: AnyObject? {
         do {
-            return try JSONSerialization.jsonObject(with: self, options: JSONSerialization.ReadingOptions.mutableLeaves) as AnyObject
+            return try JSONSerialization.jsonObject(
+                with: self,
+                options: JSONSerialization.ReadingOptions.mutableLeaves
+            ) as AnyObject
         } catch let error as NSError {
             logging("Deserialized JSON string failed with error: \(error)")
             return nil
@@ -37,7 +40,10 @@ public extension Data {
     /// Generate JSON data from a Foundation object
     public static func make(fromJSONObject obj: AnyObject) -> Data? {
         do {
-            return try JSONSerialization.data(withJSONObject: obj, options: JSONSerialization.WritingOptions.prettyPrinted)
+            return try JSONSerialization.data(
+                withJSONObject: obj,
+                options: JSONSerialization.WritingOptions.prettyPrinted
+            )
         } catch let error as NSError {
             logging("Serialized JSON string failed with error: \(error)")
             return nil

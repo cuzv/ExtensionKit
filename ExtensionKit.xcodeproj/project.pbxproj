@@ -31,7 +31,6 @@
 		4603E2B51CC07EE40030EDA0 /* UIDevice+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E28D1CC07EE40030EDA0 /* UIDevice+Extension.swift */; };
 		4603E2B61CC07EE40030EDA0 /* UIFont+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E28E1CC07EE40030EDA0 /* UIFont+Extension.swift */; };
 		4603E2B71CC07EE40030EDA0 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E28F1CC07EE40030EDA0 /* UIImage+Extension.swift */; };
-		4603E2B91CC07EE40030EDA0 /* UIKit+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E2911CC07EE40030EDA0 /* UIKit+Extension.swift */; };
 		4603E2BA1CC07EE40030EDA0 /* UILabel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E2921CC07EE40030EDA0 /* UILabel+Extension.swift */; };
 		4603E2BB1CC07EE40030EDA0 /* UINavigationBar+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E2931CC07EE40030EDA0 /* UINavigationBar+Extension.swift */; };
 		4603E2BC1CC07EE40030EDA0 /* UIResponder+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E2941CC07EE40030EDA0 /* UIResponder+Extension.swift */; };
@@ -79,7 +78,6 @@
 		4603E28D1CC07EE40030EDA0 /* UIDevice+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIDevice+Extension.swift"; sourceTree = "<group>"; };
 		4603E28E1CC07EE40030EDA0 /* UIFont+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIFont+Extension.swift"; sourceTree = "<group>"; };
 		4603E28F1CC07EE40030EDA0 /* UIImage+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "UIImage+Extension.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		4603E2911CC07EE40030EDA0 /* UIKit+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIKit+Extension.swift"; sourceTree = "<group>"; };
 		4603E2921CC07EE40030EDA0 /* UILabel+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "UILabel+Extension.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		4603E2931CC07EE40030EDA0 /* UINavigationBar+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UINavigationBar+Extension.swift"; sourceTree = "<group>"; };
 		4603E2941CC07EE40030EDA0 /* UIResponder+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIResponder+Extension.swift"; sourceTree = "<group>"; };
@@ -177,7 +175,6 @@
 				4603E28E1CC07EE40030EDA0 /* UIFont+Extension.swift */,
 				4603E28F1CC07EE40030EDA0 /* UIImage+Extension.swift */,
 				466B95661CD9DE2B001507F3 /* UIImageView+Extension.swift */,
-				4603E2911CC07EE40030EDA0 /* UIKit+Extension.swift */,
 				4603E2921CC07EE40030EDA0 /* UILabel+Extension.swift */,
 				4603E2931CC07EE40030EDA0 /* UINavigationBar+Extension.swift */,
 				4603E2941CC07EE40030EDA0 /* UIResponder+Extension.swift */,
@@ -284,7 +281,6 @@
 				4603E2A21CC07EE40030EDA0 /* TextObserver.swift in Sources */,
 				4603E2B01CC07EE40030EDA0 /* String+Extension.swift in Sources */,
 				4603E29D1CC07EE40030EDA0 /* DashlineView.swift in Sources */,
-				4603E2B91CC07EE40030EDA0 /* UIKit+Extension.swift in Sources */,
 				4631CE291CCB9F6700CFCBCD /* CustomHeightNavigationBar.swift in Sources */,
 				4603E2BB1CC07EE40030EDA0 /* UINavigationBar+Extension.swift in Sources */,
 				4603E2A41CC07EE40030EDA0 /* Array+Extension.swift in Sources */,

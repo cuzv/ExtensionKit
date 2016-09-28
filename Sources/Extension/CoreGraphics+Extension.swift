@@ -25,37 +25,6 @@ import Foundation
 import CoreGraphics
 import UIKit
 
-// MARK: - Functions
-
-/// Flip context by supplying the size
-public func FlipContextVertically(_ context: CGContext, _ size: CGSize) {
-    context.textMatrix = CGAffineTransform.identity
-    context.translateBy(x: 0, y: size.height)
-    context.scaleBy(x: 1.0, y: -1.0)
-}
-
-/// Flip context by retrieving image
-public func FlipImageContextVertically(_ context: CGContext) {
-    FlipContextVertically(context, UIGraphicsGetImageFromCurrentImageContext()!.size)
-}
-
-/// Query context for size and use screen scale to map from Quartz pixels to UIKit points
-public func GetUIKitContextSize() -> CGSize {
-    guard let context = UIGraphicsGetCurrentContext() else {
-        return CGSize.zero
-    }
-    
-    let size = CGSize(
-        width: CGFloat(context.width),
-        height: CGFloat(context.height)
-    )
-    let scale: CGFloat = UIScreen.main.scale
-    return CGSize(
-        width: size.width / scale,
-        height: size.height / scale
-    )
-}
-
 // MARK: -
 
 public extension Double {
@@ -469,11 +438,11 @@ public extension UIBezierPath {
         scale(xFactor: factor, yFactor: factor)
     }
     
-    public func horizontalRotation() {
+    public func horizontalInverst() {
         centering(transform: CGAffineTransform(scaleX: -1, y: 1))
     }
     
-    public func verticalRotation() {
+    public func verticalInverst() {
         centering(transform: CGAffineTransform(scaleX: 1, y: -1))
     }
     
@@ -561,3 +530,55 @@ public extension UIBezierPath {
     }
 }
 
+/// Query context for size and use screen scale to map from Quartz pixels to UIKit points
+public func UIKitGetContextSize() -> CGSize {
+    guard let context = UIGraphicsGetCurrentContext() else {
+        return CGSize.zero
+    }
+    
+    let size = CGSize(
+        width: CGFloat(context.width),
+        height: CGFloat(context.height)
+    )
+    let scale: CGFloat = UIScreen.main.scale
+    return CGSize(
+        width: size.width / scale,
+        height: size.height / scale
+    )
+}
+
+public extension CGContext {
+    /// Horizontal flip context by supplying the size
+    public func horizontalInverst(size: CGSize) {
+        textMatrix = CGAffineTransform.identity
+        translateBy(x: size.width, y: 0)
+        scaleBy(x: -1.0, y: 1.0)
+    }
+    
+    /// Vertical flip context by supplying the size
+    public func verticalInverst(size: CGSize) {
+        textMatrix = CGAffineTransform.identity
+        translateBy(x: 0, y: size.height)
+        scaleBy(x: 1.0, y: -1.0)
+    }
+
+    /// Flip context by retrieving image
+    @discardableResult
+    public func horizontalInverstImage() -> Bool {
+        if let image = UIGraphicsGetImageFromCurrentImageContext() {
+            horizontalInverst(size: image.size)
+            return true
+        }
+        return false
+    }
+    
+    /// Flip context by retrieving image
+    @discardableResult
+    public func verticalInverstImage() -> Bool {
+        if let image = UIGraphicsGetImageFromCurrentImageContext() {
+            verticalInverst(size: image.size)
+            return true
+        }
+        return false
+    }
+}

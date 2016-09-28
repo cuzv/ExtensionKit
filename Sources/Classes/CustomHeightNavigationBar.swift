@@ -61,12 +61,11 @@ open class CustomHeightNavigationBar: UINavigationBar {
         let classNamesToReposition = ["_UINavigationBarBackground"]
         for view in subviews {
             if classNamesToReposition.contains(NSStringFromClass(type(of: view))) {
-                let _bounds = bounds
-                var _frame = view.frame
-                let _statusBarHeight = UIApplication.shared.statusBarFrame.size.height
-                _frame.origin.y = _bounds.origin.y + customHeight - defaultHeight - _statusBarHeight
-                _frame.size.height = _bounds.size.height + _statusBarHeight
-                view.frame = _frame
+                var newFrame = view.frame
+                let statusBarHeight = UIApplication.shared.statusBarFrame.size.height
+                newFrame.origin.y = bounds.origin.y + customHeight - defaultHeight - statusBarHeight
+                newFrame.size.height = bounds.size.height + statusBarHeight
+                view.frame = newFrame
             }
         }
     }

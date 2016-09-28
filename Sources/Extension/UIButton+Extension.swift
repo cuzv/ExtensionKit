@@ -33,8 +33,8 @@ private struct AssociationKey {
 
 public extension UIButton {
     public var title: String? {
-        get { return self.title(for: UIControlState()) }
-        set { setTitle(newValue, for: UIControlState()) }
+        get { return self.title(for: .normal) }
+        set { setTitle(newValue, for: .normal) }
     }
     
     public var titleFont: UIFont? {
@@ -43,14 +43,14 @@ public extension UIButton {
     }
     
     public var attributedTitle: NSAttributedString? {
-        get { return self.attributedTitle(for: UIControlState()) }
-        set { setAttributedTitle(newValue, for: UIControlState()) }
+        get { return self.attributedTitle(for: .normal) }
+        set { setAttributedTitle(newValue, for: .normal) }
     }
     
     public var titleColor: UIColor? {
-        get { return self.titleColor(for: UIControlState()) }
+        get { return self.titleColor(for: .normal) }
         set {
-            setTitleColor(newValue, for: UIControlState())
+            setTitleColor(newValue, for: .normal)
             setTitleColor(newValue?.withAlphaComponent(0.5), for: .disabled)
             setTitleColor(newValue, for: .selected)
             if buttonType == .custom {
@@ -60,18 +60,18 @@ public extension UIButton {
     }
     
     public var titleShadowColor: UIColor? {
-        get { return self.titleShadowColor(for: UIControlState()) }
+        get { return self.titleShadowColor(for: .normal) }
         set {
-            setTitleShadowColor(newValue, for: UIControlState())
+            setTitleShadowColor(newValue, for: .normal)
             setTitleShadowColor(newValue?.withAlphaComponent(0.5), for: .disabled)
             setTitleShadowColor(newValue, for: .selected)
         }
     }
     
     public var image: UIImage? {
-        get { return self.image(for: UIControlState()) }
+        get { return self.image(for: .normal) }
         set {
-            setImage(newValue?.withRenderingMode(.alwaysOriginal), for: UIControlState())
+            setImage(newValue?.withRenderingMode(.alwaysOriginal), for: .normal)
         }
     }
     
@@ -81,10 +81,10 @@ public extension UIButton {
     }
     
     public var backgroundImage: UIImage? {
-        get { return self.backgroundImage(for: UIControlState()) }
+        get { return self.backgroundImage(for: .normal) }
         set {
             let image = newValue?.withRenderingMode(.alwaysOriginal)
-            setBackgroundImage(image, for: UIControlState())
+            setBackgroundImage(image, for: .normal)
             if buttonType == .custom {
                 setBackgroundImage(image?.remake(alpha: 0.5), for: .highlighted)
                 setBackgroundImage(image?.remake(alpha: 0.5), for: .disabled)
@@ -241,7 +241,7 @@ public extension UIButton {
     }
     
     public override func satrtActivityIndicatorAnimation(indicatorColor color: UIColor = UIColor.lightGray, dy: CGFloat = 0) {
-        if let activityIndicatorContainerView = activityIndicatorContainerView {
+        if let activityIndicatorContainerView = self.activityIndicatorContainerView {
             if activityIndicatorContainerView.isActivityIndicatorAnimating {
                 return
             }
@@ -254,14 +254,14 @@ public extension UIButton {
         if bgColor == nil, let backgroundImage = backgroundImage {
             bgColor = backgroundImage.color(atPixel: CGPoint(x: backgroundImage.size.width / 2.0, y: backgroundImage.size.height / 2.0))
         }
-        let _activityIndicatorContainerView = UIView(frame: bounds)
-        _activityIndicatorContainerView.backgroundColor = bgColor
-        _activityIndicatorContainerView.isUserInteractionEnabled = false
-        _activityIndicatorContainerView.clipsToBounds = true
-        _activityIndicatorContainerView.cornerRadius = cornerRadius
-        _activityIndicatorContainerView.satrtActivityIndicatorAnimation(indicatorColor: color, dy: dy)
-        addSubview(_activityIndicatorContainerView)
-        activityIndicatorContainerView = _activityIndicatorContainerView
+        let activityIndicatorContainerView = UIView(frame: bounds)
+        activityIndicatorContainerView.backgroundColor = bgColor
+        activityIndicatorContainerView.isUserInteractionEnabled = false
+        activityIndicatorContainerView.clipsToBounds = true
+        activityIndicatorContainerView.cornerRadius = cornerRadius
+        activityIndicatorContainerView.satrtActivityIndicatorAnimation(indicatorColor: color, dy: dy)
+        addSubview(activityIndicatorContainerView)
+        self.activityIndicatorContainerView = activityIndicatorContainerView
     }
 
     public override func stopActivityIndicatorAnimation() {
@@ -281,13 +281,13 @@ public extension UIButton {
 
 public extension UIButton {
     public func performToggleSelectStateImageAnimation() {
-        guard let normalImage = self.image(for: UIControlState()) else { return }
+        guard let normalImage = self.image(for: .normal) else { return }
         guard let selectedImage = self.image(for: .selected) else { return }
         guard let _imageView = imageView else { return }
         
         // Clear image
         {
-            setImage(nil, for: UIControlState())
+            setImage(nil, for: .normal)
             setImage(nil, for: .selected)
         }()
         
@@ -299,7 +299,7 @@ public extension UIButton {
             UIView.animate(withDuration: 0.2, delay: 0, options: .beginFromCurrentState, animations: {
                 animatedImageView.transform = CGAffineTransform.identity
             }, completion: { (finished: Bool) in
-                self.setImage(normalImage, for: UIControlState())
+                self.setImage(normalImage, for: .normal)
                 self.setImage(selectedImage, for: .selected)
                 self.isSelected = !self.isSelected
                 animatedImageView.removeFromSuperview()

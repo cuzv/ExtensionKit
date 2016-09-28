@@ -37,9 +37,21 @@ extension UITextField {
         if self != UITextField.self {
             return
         }
-        swizzleInstanceMethod(forClass: UITextField.self, originalSelector: #selector(getter: intrinsicContentSize), overrideSelector: #selector(getter: _ek_intrinsicContentSize))
-        swizzleInstanceMethod(forClass: UITextField.self, originalSelector: #selector(textRect(forBounds:)), overrideSelector: #selector(_ek_textRect(forBounds:)))
-        swizzleInstanceMethod(forClass: UITextField.self, originalSelector: #selector(editingRect(forBounds:)), overrideSelector: #selector(_ek_editingRect(forBounds:)))
+        swizzleInstanceMethod(
+            for: UITextField.self,
+            original: #selector(getter: intrinsicContentSize),
+            override: #selector(getter: _ek_intrinsicContentSize)
+        )
+        swizzleInstanceMethod(
+            for: UITextField.self,
+            original: #selector(textRect(forBounds:)),
+            override: #selector(_ek_textRect(forBounds:))
+        )
+        swizzleInstanceMethod(
+            for: UITextField.self,
+            original: #selector(editingRect(forBounds:)),
+            override: #selector(_ek_editingRect(forBounds:))
+        )
     }
 }
 
