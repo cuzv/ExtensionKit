@@ -203,7 +203,7 @@ final public class ClosureDecorator<T>: NSObject {
         self.closure = closure
     }
     
-    func invoke(param: T) {
+    public func invoke(param: T) {
         if let closure = closure as? () -> () {
             closure()
         } else if let closure = closure as? (T) -> () {
