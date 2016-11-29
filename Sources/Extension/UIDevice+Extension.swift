@@ -1,9 +1,6 @@
 //
 //  UIDevice+Extension.swift
-//  ExtensionKit
-//
-//  Created by Moch Xiao on 12/31/15.
-//  Copyright © @2015 Moch Xiao (https://github.com/cuzv).
+//  Copyright (c) 2015-2016 Moch Xiao (http://mochxiao.com).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -27,28 +24,38 @@
 import UIKit
 
 public extension UIDevice {
-    private static let _currentDevice = UIDevice.currentDevice()
+    fileprivate static let _currentDevice = UIDevice.current
     
     public class var sysVersion: String {
         return _currentDevice.systemVersion
     }
     
     public class var majorVersion: Int {
-        return Int(UIDevice.sysVersion.componentsSeparatedByString(".").first!)!
-    }
-
-    private static let _iOS7Plus = Float(UIDevice.sysVersion) >= 7.0
-    public class var iOS7Plus: Bool {
-        return _iOS7Plus
-    }
-
-    private static let _iOS8Plus = Float(UIDevice.sysVersion) >= 8.0
-    public class var iOS8Plus: Bool {
-        return _iOS8Plus
+        return Int(UIDevice.sysVersion.components(separatedBy: ".").first!)!
     }
     
-    private static func deviceOrientation(result: (UIDeviceOrientation) -> ()) {
-        if !_currentDevice.generatesDeviceOrientationNotifications {
+    public class var iOS7x: Bool {
+        return majorVersion >= 7
+    }
+    
+    public class var iOS8x: Bool {
+        return majorVersion >= 8
+    }
+    
+    public class var iOS9x: Bool {
+        return majorVersion >= 9
+    }
+    
+    public class var iOS10x: Bool {
+        return majorVersion >= 10
+    }
+    
+    public class var iOS11x: Bool {
+        return majorVersion >= 11
+    }
+
+    fileprivate static func deviceOrientation(_ result: (UIDeviceOrientation) -> ()) {
+        if !_currentDevice.isGeneratingDeviceOrientationNotifications {
             _currentDevice.beginGeneratingDeviceOrientationNotifications()
         }
         result(_currentDevice.orientation)

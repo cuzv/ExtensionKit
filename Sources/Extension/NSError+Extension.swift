@@ -1,9 +1,6 @@
 //
 //  NSError+Extension.swift
-//  ExtensionKit
-//
-//  Created by Moch Xiao on 12/26/15.
-//  Copyright © 2015 Moch Xiao (https://github.com/cuzv).
+//  Copyright (c) 2015-2016 Moch Xiao (http://mochxiao.com).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -27,19 +24,21 @@
 import Foundation
 
 public extension NSError {
-    public class func errorWithMessage(message: String) -> NSError {
-        return NSError(domain: "com.mochxiao.error.maker", code: 999, userInfo: [NSLocalizedDescriptionKey: message, NSLocalizedFailureReasonErrorKey: message])
-    }
-    
-    public class func empty() -> NSError {
+    public class var emptyErrorDomain: String { return "com.mochxiao.error.default" }
+    public class var emptyErrorCode: Int { return 1024 }
+    public class var empty: NSError {
         return NSError(domain: emptyErrorDomain, code: emptyErrorCode, userInfo: nil)
     }
     
-    public static var emptyErrorDomain: String { return "com.mochxiao.error.default" }
-    public static var emptyErrorCode: Int { return 1024 }
+    public class func make(message: String) -> NSError {
+        return NSError(
+            domain: "com.mochxiao.error.maker",
+            code: 999,
+            userInfo: [NSLocalizedDescriptionKey: message, NSLocalizedFailureReasonErrorKey: message]
+        )
+    }
 }
 
 public func NSErrorFrom(message: String) -> NSError {
-    return NSError.errorWithMessage(message)
+    return NSError.make(message: message)
 }
-

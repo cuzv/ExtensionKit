@@ -1,9 +1,6 @@
 //
 //  UIControl+Extension.swift
-//  ExtensionKit
-//
-//  Created by Moch Xiao on 1/4/16.
-//  Copyright © @2016 Moch Xiao (https://github.com/cuzv).
+//  Copyright (c) 2015-2016 Moch Xiao (http://mochxiao.com).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -27,26 +24,26 @@
 import UIKit
 
 private struct AssociationKey {
-    private static var touchDownHandlerWrapper: String = "touchDownHandlerWrapper"
-    private static var touchDownRepeatHandlerWrapper: String = "touchDownRepeatHandlerWrapper"
-    private static var touchDragInsideHandlerWrapper: String = "touchDragInsideHandlerWrapper"
-    private static var touchDragOutsideHandlerWrapper: String = "touchDragOutsideHandlerWrapper"
-    private static var touchDragEnterHandlerWrapper: String = "touchDragEnterHandlerWrapper"
-    private static var touchDragExitHandlerWrapper: String = "touchDragExitHandlerWrapper"
-    private static var touchUpInsideHandlerWrapper: String = "touchUpInsideHandlerWrapper"
-    private static var touchUpOutsideHandlerWrapper: String = "touchUpOutsideHandlerWrapper"
-    private static var touchCancelHandlerWrapper: String = "touchCancelHandlerWrapper"
-    private static var valueChangedHandlerWrapper: String = "valueChangedHandlerWrapper"
-    private static var primaryActionTriggeredHandlerWrapper: String = "primaryActionTriggeredHandlerWrapper"
-    private static var editingDidBeginHandlerWrapper: String = "editingDidBeginHandlerWrapper"
-    private static var editingChangedHandlerWrapper: String = "editingChangedHandlerWrapper"
-    private static var editingDidEndHandlerWrapper: String = "editingDidEndHandlerWrapper"
-    private static var editingDidEndOnExitHandlerWrapper: String = "editingDidEndOnExitHandlerWrapper"
-    private static var allTouchEventsHandlerWrapper: String = "allTouchEventsHandlerWrapper"
-    private static var allEditingEventsHandlerWrapper: String = "allEditingEventsHandlerWrapper"
-    private static var applicationReservedHandlerWrapper: String = "applicationReservedHandlerWrapper"
-    private static var systemReservedHandlerWrapper: String = "systemReservedHandlerWrapper"
-    private static var allEventsHandlerWrapper: String = "allEventsHandlerWrapper"
+    fileprivate static var touchDownHandlerWrapper: String = "com.mochxiao.uicontrol.touchDownHandlerWrapper"
+    fileprivate static var touchDownRepeatHandlerWrapper: String = "com.mochxiao.uicontrol.touchDownRepeatHandlerWrapper"
+    fileprivate static var touchDragInsideHandlerWrapper: String = "com.mochxiao.uicontrol.touchDragInsideHandlerWrapper"
+    fileprivate static var touchDragOutsideHandlerWrapper: String = "com.mochxiao.uicontrol.touchDragOutsideHandlerWrapper"
+    fileprivate static var touchDragEnterHandlerWrapper: String = "com.mochxiao.uicontrol.touchDragEnterHandlerWrapper"
+    fileprivate static var touchDragExitHandlerWrapper: String = "com.mochxiao.uicontrol.touchDragExitHandlerWrapper"
+    fileprivate static var touchUpInsideHandlerWrapper: String = "com.mochxiao.uicontrol.touchUpInsideHandlerWrapper"
+    fileprivate static var touchUpOutsideHandlerWrapper: String = "com.mochxiao.uicontrol.touchUpOutsideHandlerWrapper"
+    fileprivate static var touchCancelHandlerWrapper: String = "com.mochxiao.uicontrol.touchCancelHandlerWrapper"
+    fileprivate static var valueChangedHandlerWrapper: String = "com.mochxiao.uicontrol.valueChangedHandlerWrapper"
+    fileprivate static var primaryActionTriggeredHandlerWrapper: String = "com.mochxiao.uicontrol.primaryActionTriggeredHandlerWrapper"
+    fileprivate static var editingDidBeginHandlerWrapper: String = "com.mochxiao.uicontrol.editingDidBeginHandlerWrapper"
+    fileprivate static var editingChangedHandlerWrapper: String = "com.mochxiao.uicontrol.editingChangedHandlerWrapper"
+    fileprivate static var editingDidEndHandlerWrapper: String = "com.mochxiao.uicontrol.editingDidEndHandlerWrapper"
+    fileprivate static var editingDidEndOnExitHandlerWrapper: String = "com.mochxiao.uicontrol.editingDidEndOnExitHandlerWrapper"
+    fileprivate static var allTouchEventsHandlerWrapper: String = "com.mochxiao.uicontrol.allTouchEventsHandlerWrapper"
+    fileprivate static var allEditingEventsHandlerWrapper: String = "com.mochxiao.uicontrol.allEditingEventsHandlerWrapper"
+    fileprivate static var applicationReservedHandlerWrapper: String = "com.mochxiao.uicontrol.applicationReservedHandlerWrapper"
+    fileprivate static var systemReservedHandlerWrapper: String = "com.mochxiao.uicontrol.systemReservedHandlerWrapper"
+    fileprivate static var allEventsHandlerWrapper: String = "com.mochxiao.uicontrol.allEventsHandlerWrapper"
 }
 
 // MARK: - UIControl Action
@@ -55,55 +52,73 @@ public protocol UIControlActionFunctionProtocol {}
 extension UIControl: UIControlActionFunctionProtocol {}
 
 public extension UIControlActionFunctionProtocol where Self: UIControl {
-    public func addControlEvents(events: UIControlEvents, handler: Self -> ()) {
+    public func addControlEvents(_ events: UIControlEvents, handler: @escaping (Self) -> ()) {
         let trampoline = ActionTrampoline(action: handler)
-        addTarget(trampoline, action: NSSelectorFromString("action:"), forControlEvents: events)
+        addTarget(trampoline, action: NSSelectorFromString("action:"), for: events)
         associate(object: trampoline, forEvents: events)
     }
     
-    private func associate(object object: AnyObject, forEvents events: UIControlEvents) {
-        if events == .TouchDown {
+    fileprivate func associate(object: AnyObject, forEvents events: UIControlEvents) {
+        if events.contains(.touchDown) {
             associate(retainObject: object, forKey: &AssociationKey.touchDownHandlerWrapper)
-        } else if events == .TouchDownRepeat {
+        }
+        if events.contains(.touchDownRepeat) {
             associate(retainObject: object, forKey: &AssociationKey.touchDownRepeatHandlerWrapper)
-        } else if events == .TouchDragInside {
+        }
+        if events.contains(.touchDragInside)  {
             associate(retainObject: object, forKey: &AssociationKey.touchDragInsideHandlerWrapper)
-        } else if events == .TouchDragOutside {
+        }
+        if events.contains(.touchDragOutside) {
             associate(retainObject: object, forKey: &AssociationKey.touchDragOutsideHandlerWrapper)
-        } else if events == .TouchDragEnter {
+        }
+        if events.contains(.touchDragEnter) {
             associate(retainObject: object, forKey: &AssociationKey.touchDragEnterHandlerWrapper)
-        } else if events == .TouchDragExit {
+        }
+        if events.contains(.touchDragExit) {
             associate(retainObject: object, forKey: &AssociationKey.touchDragExitHandlerWrapper)
-        } else if events == .TouchUpInside {
+        }
+        if events.contains(.touchUpInside) {
             associate(retainObject: object, forKey: &AssociationKey.touchUpInsideHandlerWrapper)
-        } else if events == .TouchUpOutside {
+        }
+        if events.contains(.touchUpOutside) {
             associate(retainObject: object, forKey: &AssociationKey.touchUpOutsideHandlerWrapper)
-        } else if events == .TouchCancel {
+        }
+        if events.contains(.touchCancel) {
             associate(retainObject: object, forKey: &AssociationKey.touchCancelHandlerWrapper)
-        } else if events == .ValueChanged {
+        }
+        if events.contains(.valueChanged) {
             associate(retainObject: object, forKey: &AssociationKey.valueChangedHandlerWrapper)
-        } else if events == .EditingDidBegin {
+        }
+        if events.contains(.editingDidBegin) {
             associate(retainObject: object, forKey: &AssociationKey.editingDidBeginHandlerWrapper)
-        } else if events == .EditingChanged {
+        }
+        if events.contains(.editingChanged) {
             associate(retainObject: object, forKey: &AssociationKey.editingChangedHandlerWrapper)
-        } else if events == .EditingDidEnd {
+        }
+        if events.contains(.editingDidEnd) {
             associate(retainObject: object, forKey: &AssociationKey.editingDidEndHandlerWrapper)
-        } else if events == .AllTouchEvents {
+        }
+        if events.contains(.allTouchEvents) {
             associate(retainObject: object, forKey: &AssociationKey.allTouchEventsHandlerWrapper)
-        } else if events == .EditingDidEndOnExit {
+        }
+        if events.contains(.editingDidEndOnExit) {
             associate(retainObject: object, forKey: &AssociationKey.editingDidEndOnExitHandlerWrapper)
-        } else if events == .AllEditingEvents {
+        }
+        if events.contains(.allEditingEvents) {
             associate(retainObject: object, forKey: &AssociationKey.allEditingEventsHandlerWrapper)
-        } else if events == .ApplicationReserved {
+        }
+        if events.contains(.applicationReserved) {
             associate(retainObject: object, forKey: &AssociationKey.applicationReservedHandlerWrapper)
-        } else if events == .SystemReserved {
+        }
+        if events.contains(.systemReserved) {
             associate(retainObject: object, forKey: &AssociationKey.systemReservedHandlerWrapper)
-        } else if events == .AllEvents {
+        }
+        if events.contains(.allEvents) {
             associate(retainObject: object, forKey: &AssociationKey.allEventsHandlerWrapper)
         }
         
         if #available(iOS 9.0, *) {
-            if events == .PrimaryActionTriggered {
+            if events.contains(.primaryActionTriggered) {
                 associate(retainObject: object, forKey: &AssociationKey.primaryActionTriggeredHandlerWrapper)
             }
         }

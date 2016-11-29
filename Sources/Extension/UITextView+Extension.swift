@@ -1,9 +1,6 @@
 //
 //  UITextView+Extension.swift
-//  ExtensionKit
-//
-//  Created by Moch Xiao on 1/5/16.
-//  Copyright © @2016 Moch Xiao (https://github.com/cuzv).
+//  Copyright (c) 2015-2016 Moch Xiao (http://mochxiao.com).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -29,24 +26,24 @@ import UIKit
 // MARK: - AssociationKey
 
 private struct AssociationKey {
-    private static var textViewTextObserver: String = "textViewTextObserver"
+    fileprivate static var textViewTextObserver: String = "com.mochxiao.uitextview.textViewTextObserver"
 }
 
 // MARK: - TextObserver Extension
 
 private extension UITextView {
-    private var textViewTextObserver: TextObserver {
+    var textViewTextObserver: TextObserver {
         get { return associatedObject(forKey: &AssociationKey.textViewTextObserver) as! TextObserver }
         set { associate(retainObject: newValue, forKey: &AssociationKey.textViewTextObserver) }
     }
 }
 
 public extension UITextView {
-    public func setupTextObserver(maxLength maxLength: Int = 100, actionHandler: ((Int) -> ())? = nil) {
+    public func setupTextObserver(maxLength: Int = 100, actionHandler: ((Int) -> ())? = nil) {
         let textObserver = TextObserver(maxLength: maxLength) { (remainCount) -> () in
             actionHandler?(remainCount)
         }
-        textObserver.observe(self)
+        textObserver.observe(textView: self)
         textViewTextObserver = textObserver
     }
 }

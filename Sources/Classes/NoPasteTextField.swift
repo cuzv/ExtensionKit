@@ -1,9 +1,6 @@
 //
 //  NoPasteTextField.swift
-//  ExtensionKit
-//
-//  Created by Moch Xiao on 1/5/16.
-//  Copyright © @2016 Moch Xiao (https://github.com/cuzv).
+//  Copyright (c) 2015-2016 Moch Xiao (http://mochxiao.com).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -27,8 +24,8 @@
 import UIKit
 
 final public class NoPasteTextField: UITextField {
-    public override func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
-        UIMenuController.sharedMenuController().menuVisible = false
+    public override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        UIMenuController.shared.isMenuVisible = false
         return false
     }
 }

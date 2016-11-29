@@ -1,9 +1,6 @@
 //
 //  UIImageView+Extension.swift
-//  ExtensionKit
-//
-//  Created by Moch Xiao on 5/4/16.
-//  Copyright © 2016 Moch Xiao (http://mochxiao.com).
+//  Copyright (c) 2015-2016 Moch Xiao (http://mochxiao.com).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -27,33 +24,43 @@
 import UIKit
 
 public extension UIImageView {
-    /// Setup rounding corners radius
+    /// Setup rounding corners radius, fillColor will not be used.
     /// **Note**: Before you invoke this method, ensure `self` already have correct frame and image.
-    public override func setRoundingCorners(
-        corners corners: UIRectCorner = .AllCorners,
+    public override func addRoundingCorners(
+        for corners: UIRectCorner = .allCorners,
         radius: CGFloat = 3,
-        fillColor: UIColor = UIColor.whiteColor(),
-        strokeColor: UIColor = UIColor.clearColor(),
+        fillColor: UIColor? = nil,
+        strokeColor: UIColor? = nil,
         strokeLineWidth: CGFloat = 0)
     {
-        if CGSizeEqualToSize(frame.size, CGSize.zero) {
-            debugPrint("Could not set rounding corners on zero size view.")
+        if frame.size.equalTo(CGSize.zero) {
+            logging("Could not set rounding corners on zero size view.")
             return
         }
         if nil != layer.contents {
             return
         }
-        guard let _image = image else { return }
+        guard let image = image else {
+            return
+        }
         
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-            let scale = max(_image.size.width / self.frame.size.width, _image.size.height / self.frame.size.height)
+        DispatchQueue.global().async {
+            let scale = max(
+                image.size.width / self.frame.size.width,
+                image.size.height / self.frame.size.height
+            )
             let relatedRadius = scale * radius
             let relatedStockLineWidth = scale * strokeLineWidth
-            
-            let newImage = _image.imageWith(roundingCorners: corners, radius: relatedRadius, strokeColor: strokeColor, strokeLineWidth: relatedStockLineWidth)
-            dispatch_async(dispatch_get_main_queue()) {
-                self.backgroundColor = UIColor.clearColor()
+            let newImage = image.remake(
+                roundingCorners: corners,
+                radius: relatedRadius,
+                strokeColor: strokeColor ?? UIColor.clear,
+                strokeLineWidth: relatedStockLineWidth
+            )
+            DispatchQueue.main.async {
+                self.backgroundColor = UIColor.clear
                 self.image = newImage
+                self.isRoundingCornersExists = true
             }
         }
     }

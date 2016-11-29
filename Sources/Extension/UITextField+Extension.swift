@@ -1,9 +1,6 @@
 //
 //  UITextField+Extension.swift
-//  ExtensionKit
-//
-//  Created by Moch Xiao on 12/31/15.
-//  Copyright © @2015 Moch Xiao (https://github.com/cuzv).
+//  Copyright (c) 2015-2016 Moch Xiao (http://mochxiao.com).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -29,24 +26,79 @@ import UIKit
 // MARK: - AssociationKey
 
 private struct AssociationKey {
-    private static var textFieldTextObserver: String = "textFieldTextObserver"
+    fileprivate static var textFieldTextObserver: String = "com.mochxiao.uitextfield.textFieldTextObserver"
+    fileprivate static var contentInsets: String = "com.mochxiao.uitextfield.contentInsets"
+}
+
+// MARK: - Swizzle
+
+extension UITextField {
+    override open class func initialize() {
+        if self != UITextField.self {
+            return
+        }
+        swizzleInstanceMethod(
+            for: UITextField.self,
+            original: #selector(getter: intrinsicContentSize),
+            override: #selector(getter: _ek_intrinsicContentSize)
+        )
+        swizzleInstanceMethod(
+            for: UITextField.self,
+            original: #selector(textRect(forBounds:)),
+            override: #selector(_ek_textRect(forBounds:))
+        )
+        swizzleInstanceMethod(
+            for: UITextField.self,
+            original: #selector(editingRect(forBounds:)),
+            override: #selector(_ek_editingRect(forBounds:))
+        )
+    }
+}
+
+// MARK: - 
+
+public extension UITextField {
+    public var contentInsets: UIEdgeInsets {
+        get {
+            if let value = associatedObject(forKey: &AssociationKey.contentInsets) as? NSValue {
+                return value.uiEdgeInsetsValue
+            }
+            return UIEdgeInsets.zero
+        }
+        set { associate(retainObject: NSValue(uiEdgeInsets: newValue), forKey: &AssociationKey.contentInsets) }
+    }
+    
+    var _ek_intrinsicContentSize: CGSize {
+        let size = sizeThatFits(CGSize(width: bounds.size.width, height: bounds.size.height))
+        let width = size.width + contentInsets.left + contentInsets.right
+        let height = size.height + contentInsets.top + contentInsets.bottom
+        return CGSize(width: width, height: height)
+    }
+    
+    func _ek_textRect(forBounds bounds: CGRect) -> CGRect {
+        return UIEdgeInsetsInsetRect(bounds, contentInsets)
+    }
+    
+    func _ek_editingRect(forBounds bounds: CGRect) -> CGRect {
+        return UIEdgeInsetsInsetRect(bounds, contentInsets)
+    }
 }
 
 // MARK: - TextObserver Extension
 
 private extension UITextField {
-    private var textFieldTextObserver: TextObserver {
+    var textFieldTextObserver: TextObserver {
         get { return associatedObject(forKey: &AssociationKey.textFieldTextObserver) as! TextObserver }
         set { associate(retainObject: newValue, forKey: &AssociationKey.textFieldTextObserver) }
     }
 }
 
 public extension UITextField {
-    public func setupTextObserver(maxLength maxLength: Int = 100, actionHandler: ((Int) -> ())? = nil) {
+    public func setupTextObserver(maxLength: Int = 100, actionHandler: ((Int) -> ())? = nil) {
         let textObserver = TextObserver(maxLength: maxLength) { (remainCount) -> () in
             actionHandler?(remainCount)
         }
-        textObserver.observe(self)
+        textObserver.observe(textField: self)
         textFieldTextObserver = textObserver
     }
 }

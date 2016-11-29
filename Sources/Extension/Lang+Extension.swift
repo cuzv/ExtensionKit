@@ -1,9 +1,6 @@
 //
 //  Lang+Extension.swift
-//  ExtensionKit
-//
-//  Created by Moch Xiao on 11/16/15.
-//  Copyright © 2015 Moch Xiao (https://github.com/cuzv).
+//  Copyright (c) 2015-2016 Moch Xiao (http://mochxiao.com).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -26,56 +23,89 @@
 
 import Foundation
 
+public func +(lhs: UIEdgeInsets, rhs: UIEdgeInsets) -> UIEdgeInsets {
+    return UIEdgeInsetsMake(lhs.top + rhs.top, lhs.left + rhs.left, lhs.bottom + rhs.bottom, lhs.right + rhs.right)
+}
+
 /// Find out the geiven object is some type or not.
-public func objectIsType<T>(object: Any, someObjectOfType: T.Type) -> Bool {
+public func objectIsType<T>(_ object: Any, _ someObjectOfType: T.Type) -> Bool {
     return object is T
 }
 
-/// Log func.
-public func log<T>(message: T,
-    file: String = #file,
-    method: String = #function,
-    line: Int = #line)
-{
-    debugPrint("\((file as NSString).lastPathComponent)[\(line)], \(method): \(message)")
+/**
+ See: https://gist.githubusercontent.com/Abizern/a81f31a75e1ad98ff80d/raw/85b85cbb9bcdeb8cdbf2521ac935e3d2cb4cdd4f/loggingPrint.swift
+ 
+ Prints the filename, function name, line number and textual representation of `object` and a newline character into
+ the standard output if the build setting for "Other Swift Flags" defines `-D DEBUG`.
+ 
+ The current thread is a prefix on the output. <UI> for the main thread, <BG> for anything else.
+ 
+ Only the first parameter needs to be passed to this funtion.
+ 
+ The textual representation is obtained from the `object` using its protocol conformances, in the following
+ order of preference: `CustomDebugStringConvertible` and `CustomStringConvertible`. Do not overload this function for
+ your type. Instead, adopt one of the protocols mentioned above.
+ 
+ :param: object   The object whose textual representation will be printed. If this is an expression, it is lazily evaluated.
+ :param: file     The name of the file, defaults to the current file without the ".swift" extension.
+ :param: function The name of the function, defaults to the function within which the call is made.
+ :param: line     The line number, defaults to the line number within the file that the call is made.
+ */
+func logging<T>(_ object: @autoclosure () -> T, _ file: String = #file, _ function: String = #function, _ line: Int = #line) {
+    #if DEBUG
+        let value = object()
+        let stringRepresentation: String
+        
+        if let value = value as? CustomDebugStringConvertible {
+            stringRepresentation = value.debugDescription
+        } else if let value = value as? CustomStringConvertible {
+            stringRepresentation = value.description
+        } else {
+            stringRepresentation = "\(value)"
+        }
+        let fileURL = NSURL(string: file)?.lastPathComponent ?? "Unknown file"
+        let queue = Thread.isMainThread ? "UI" : "BG"
+        print("<\(queue)> \(fileURL) \(function)[\(line)]: " + stringRepresentation)
+    #endif
 }
 
 /// Get value from `any` instance like KVC
-public func valueFrom(object: Any, forKey key: String) -> Any? {
+public func value(from object: Any, forKey key: String) -> Any? {
     let mirror = Mirror(reflecting: object)
-    for i in mirror.children.startIndex ..< mirror.children.endIndex {
-        let (targetKey, targetMirror) = mirror.children[i]
+    for (targetKey, targetMirror) in mirror.children {
         if key == targetKey {
             return targetMirror
         }
     }
-    
     return nil
 }
 
 /// Generate random number in range
-public func randomIn(range: Range<Int>) -> Int {
-    let count = UInt32(range.endIndex - range.startIndex)
-    return  Int(arc4random_uniform(count)) + range.startIndex
+public func random(in range: Range<Int>) -> Int {
+    let count = UInt32(range.upperBound - range.lowerBound)
+    return  Int(arc4random_uniform(count)) + range.lowerBound
 }
-
 
 // MARK: - GCD
 
-public typealias Task = (cancel: Bool) -> ()
+public typealias Task = ((_ cancel: Bool) -> ())
 
-public func delay(time: NSTimeInterval, task: () -> ()) -> Task? {
-    func dispatch_later(block: () -> ()) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(time * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), block)
+@discardableResult
+public func delay(interval time: TimeInterval, task: @escaping (() -> ())) -> Task? {
+    func dispatch_later(_ block: @escaping () -> ()) {
+        DispatchQueue.main.asyncAfter(
+            deadline: DispatchTime.now() + Double(Int64(time * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC),
+            execute: block
+        )
     }
     
-    var closure: dispatch_block_t? = task
+    var closure: (() -> ())? = task
     var result: Task?
     
     let delayedClosure: Task = {
         if let internalClosure = closure {
             if $0 == false {
-                dispatch_async(dispatch_get_main_queue(), internalClosure)
+                DispatchQueue.main.async(execute: internalClosure)
             }
         }
         
@@ -87,62 +117,90 @@ public func delay(time: NSTimeInterval, task: () -> ()) -> Task? {
     
     dispatch_later {
         if let delayedClosure = result {
-            delayedClosure(cancel: false)
+            delayedClosure(false)
         }
     }
     
     return result
 }
 
-public func cancel(task: Task?) {
-    task?(cancel: true)
+public func cancel(_ task: Task?) {
+    task?(true)
 }
 
-public func UIThreadAsyncAction(block: dispatch_block_t) {
-    if NSThread.isMainThread() {
-        block()
+public func mainThreadAsync(execute work: @escaping () -> ()) {
+    if Thread.isMainThread {
+        work()
         return
     }
-    dispatch_async(dispatch_get_main_queue(), block)
+    DispatchQueue.main.async(execute: work)
 }
 
-public func BackgroundThreadAsyncAction(block: dispatch_block_t) {
-    if !NSThread.isMainThread() {
-        block()
+public func backgroundThreadAsync(execute work: @escaping () -> ()) {
+    if !Thread.isMainThread {
+        work()
         return
     }
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), block)
+    DispatchQueue.global().async(execute: work)
 }
 
 // MARK: - synchronized
 
-public func synchronized(lock: AnyObject, closure: () -> ()) {
+public func synchronized(lock: AnyObject, work: () -> ()) {
     objc_sync_enter(lock)
-    closure()
+    work()
     objc_sync_exit(lock)
 }
 
 // MARK: - Method swizzle
 
 /// Should be placed in dispatch_once
-public func swizzleInstanceMethod(forClass cls: AnyClass, originalSelector: Selector, overrideSelector: Selector) {
-    let originalMethod = class_getInstanceMethod(cls, originalSelector)
-    let overrideMethod = class_getInstanceMethod(cls, overrideSelector)
+public func swizzleInstanceMethod(
+    for cls: AnyClass,
+    original: Selector,
+    override: Selector)
+{
+    let originalMethod = class_getInstanceMethod(cls, original)
+    let overrideMethod = class_getInstanceMethod(cls, override)
     
-    if class_addMethod(cls, originalSelector, method_getImplementation(overrideMethod), method_getTypeEncoding(overrideMethod)) {
-        class_replaceMethod(cls, overrideSelector, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod))
+    if class_addMethod(
+        cls,
+        original,
+        method_getImplementation(overrideMethod),
+        method_getTypeEncoding(overrideMethod))
+    {
+        class_replaceMethod(
+            cls,
+            override,
+            method_getImplementation(originalMethod),
+            method_getTypeEncoding(originalMethod)
+        )
     } else {
         method_exchangeImplementations(originalMethod, overrideMethod)
     }
 }
 
 /// Should be placed in dispatch_once
-public func swizzleClassMethod(forClass cls: AnyClass, originalSelector: Selector, overrideSelector: Selector) {
-    let originalMethod = class_getClassMethod(cls, originalSelector)
-    let overrideMethod = class_getClassMethod(cls, overrideSelector)
+public func swizzleClassMethod(
+    for cls: AnyClass,
+    original: Selector,
+    override: Selector)
+{
+    let originalMethod = class_getClassMethod(cls, original)
+    let overrideMethod = class_getClassMethod(cls, override)
     
-    if class_addMethod(cls, originalSelector, method_getImplementation(overrideMethod), method_getTypeEncoding(overrideMethod)) {
-        class_replaceMethod(cls, overrideSelector, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod))
+    if class_addMethod(
+        cls,
+        original,
+        method_getImplementation(overrideMethod),
+        method_getTypeEncoding(overrideMethod))
+    {
+        class_replaceMethod(
+            cls,
+            override,
+            method_getImplementation(originalMethod),
+            method_getTypeEncoding(originalMethod)
+        )
     } else {
         method_exchangeImplementations(originalMethod, overrideMethod)
     }
@@ -151,63 +209,97 @@ public func swizzleClassMethod(forClass cls: AnyClass, originalSelector: Selecto
 // MARK: - C Pointers
 
 /// Convert a `void *` type to Swift type, use this function carefully
-public func convertUnsafePointerToSwiftType<T>(value: UnsafePointer<Void>) -> T {
-    return unsafeBitCast(value, UnsafePointer<T>.self).memory
+public func convertUnsafePointerToSwiftType<T>(_ value: UnsafeRawPointer) -> T {
+    return unsafeBitCast(value, to: UnsafePointer<T>.self).pointee
 }
 
 // MARK: - Sandbox
 
-private func searchPathForDirectory(directory: NSSearchPathDirectory) -> String? {
-    return NSSearchPathForDirectoriesInDomains(directory, NSSearchPathDomainMask.UserDomainMask, true).first
+private func searchPath(for directory: FileManager.SearchPathDirectory) -> String? {
+    return NSSearchPathForDirectoriesInDomains(directory, FileManager.SearchPathDomainMask.userDomainMask, true).first
 }
 
 public func directoryForDocument() -> String? {
-    return searchPathForDirectory(.DocumentDirectory)
+    return searchPath(for: .documentDirectory)
 }
 
 public func directoryForCache() -> String? {
-    return searchPathForDirectory(.CachesDirectory)
+    return searchPath(for: .cachesDirectory)
 }
 
 public func directoryForDownloads() -> String? {
-    return searchPathForDirectory(.DownloadsDirectory)
+    return searchPath(for: .downloadsDirectory)
 }
 
 public func directoryForMovies() -> String? {
-    return searchPathForDirectory(.MoviesDirectory)
+    return searchPath(for: .moviesDirectory)
 }
 
 public func directoryForMusic() -> String? {
-    return searchPathForDirectory(.MusicDirectory)
+    return searchPath(for: .musicDirectory)
 }
 
 public func directoryForPictures() -> String? {
-    return searchPathForDirectory(.PicturesDirectory)
+    return searchPath(for: .picturesDirectory)
 }
 
 // MARK: - ClosureDecorator
 
 /// ClosureDecorator, make use closure like a NSObject, aka objc_asscoiateXXX.
 final public class ClosureDecorator<T>: NSObject {
-    private let closure: Any
+    fileprivate let closure: Any
     
-    private override init() {
+    fileprivate override init() {
         fatalError("Use init(action:) instead.")
     }
     
-    public init(_ closure: () -> ()) {
+    public init(_ closure: @escaping (() -> ())) {
         self.closure = closure
     }
     
-    public init(_ closure: (T) -> ()) {
+    public init(_ closure: @escaping ((T) -> ())) {
         self.closure = closure
     }
     
-    public func invoke(param: T) {
-        if let closure = closure as? () -> () {
+    func invoke(_ param: T) {
+        if let closure = closure as? (() -> ()) {
             closure()
-        } else if let closure = closure as? (T) -> () {
+        } else if let closure = closure as? ((T) -> ()) {
             closure(param)
         }
     }
+    
+    deinit {
+        logging("\(#file):\(#line):\(type(of: self)):\(#function)")
+    }
 }
+
+// MARK: - Swifty Target & Action
+// See: https://www.mikeash.com/pyblog/friday-qa-2015-12-25-swifty-targetaction.html
+
+final public class ActionTrampoline<T>: NSObject {
+    fileprivate let action: ((T) -> ())
+    public var selector: Selector? {
+        return NSSelectorFromString("action:")
+    }
+    
+    public init(action: @escaping ((T) -> ())) {
+        self.action = action
+    }
+    
+    @objc public func action(_ sender: AnyObject) {
+        // UIControl: add(target: AnyObject?, action: Selector, forControlEvents controlEvents: UIControlEvents)
+        if let sender = sender as? T {
+            action(sender)
+        }
+        // UIGestureRecognizer: add(target: AnyObject, action: Selector)
+        else if let sender = sender as? UIGestureRecognizer {
+            action(sender.view as! T)
+        }
+    }
+    
+    deinit {
+        logging("\(#file):\(#line):\(type(of: self)):\(#function)")
+    }
+}
+

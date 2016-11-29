@@ -1,9 +1,6 @@
 //
 //  UILabel+Extension.swift
-//  ExtensionKit
-//
-//  Created by Moch Xiao on 12/31/15.
-//  Copyright © @2015 Moch Xiao (https://github.com/cuzv).
+//  Copyright (c) 2015-2016 Moch Xiao (http://mochxiao.com).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -26,48 +23,97 @@
 
 import UIKit
 
-private class _LabelBackgroundImageView: UIImageView {}
+private struct AssociationKey {
+    fileprivate static var contentInsets: String = "com.mochxiao.uilabel.contentInsets"
+}
+
+// MARK: - Swizzle
+
+extension UILabel {
+    override open class func initialize() {
+        if self != UILabel.self {
+            return
+        }
+        swizzleInstanceMethod(
+            for: UILabel.self,
+            original: #selector(getter: intrinsicContentSize),
+            override: #selector(getter: _ek_intrinsicContentSize)
+        )
+        swizzleInstanceMethod(
+            for: UILabel.self,
+            original: #selector(drawText(in:)),
+            override: #selector(_ek_drawText(in:))
+        )
+    }
+}
 
 public extension UILabel {
-    public override func setRoundingCorners(
-        corners corners: UIRectCorner = .AllCorners,
+    public var contentInsets: UIEdgeInsets {
+        get {
+            if let value = associatedObject(forKey: &AssociationKey.contentInsets) as? NSValue {
+                return value.uiEdgeInsetsValue
+            }
+            return UIEdgeInsets.zero
+        }
+        set { associate(retainObject: NSValue(uiEdgeInsets: newValue), forKey: &AssociationKey.contentInsets) }
+    }
+    
+    var _ek_intrinsicContentSize: CGSize {
+        let size = sizeThatFits(CGSize(width: bounds.size.width, height: bounds.size.height))
+        let width = size.width + contentInsets.left + contentInsets.right
+        let height = size.height + contentInsets.top + contentInsets.bottom
+        return CGSize(width: width, height: height)
+    }
+    
+    func _ek_drawText(in rect: CGRect) {
+        _ek_drawText(in: UIEdgeInsetsInsetRect(rect, contentInsets))
+    }
+}
+
+// MARK: - 
+
+public extension UILabel {
+    /// Setup rounding corners radius.
+    /// **Note**: Before you invoke this method, ensure `self` already have correct frame and image.
+    public override func addRoundingCorners(
+        for corners: UIRectCorner = .allCorners,
         radius: CGFloat = 3,
-        fillColor: UIColor = UIColor.whiteColor(),
-        strokeColor: UIColor = UIColor.clearColor(),
+        fillColor: UIColor? = nil,
+        strokeColor: UIColor? = nil,
         strokeLineWidth: CGFloat = 0)
     {
-        if CGSizeEqualToSize(frame.size, CGSize.zero) {
-            debugPrint("Could not set rounding corners on zero size view.")
+        if frame.size.equalTo(CGSize.zero) {
+            logging("Could not set rounding corners on zero size view.")
+            return
+        }
+        if nil == superview {
             return
         }
 
-        if let superview = superview {
-            for sub in superview.subviews {
-                if sub.isMemberOfClass(_LabelBackgroundImageView.self) {
-                    return
-                }
-            }
-        }
-        
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-            let backImage = UIImageFrom(
-                color: fillColor,
+        DispatchQueue.global().async {
+            let backImage = UIImage.make(
+                color: fillColor ?? self.backgroundColor ?? UIColor.white,
                 size: self.frame.size,
                 roundingCorners: corners,
                 radius: radius,
-                strokeColor: strokeColor,
+                strokeColor: strokeColor ?? self.backgroundColor ?? UIColor.clear,
                 strokeLineWidth: strokeLineWidth
             )
-            
-            dispatch_async(dispatch_get_main_queue()) {
-                let backImageView = _LabelBackgroundImageView(image: backImage)
+            DispatchQueue.main.async {
+                let backImageView = UIImageView(image: backImage)
                 backImageView.frame = self.frame
                 self.superview?.addSubview(backImageView)
-                self.superview?.sendSubviewToBack(backImageView)
-
-                self.backgroundColor = UIColor.clearColor()
+                self.superview?.sendSubview(toBack: backImageView)
+                self.backgroundColor = UIColor.clear
+                self.isRoundingCornersExists = true
             }
         }
+    }
+    
+    /// This will remove all added rounding corners on label's superview
+    public override func removeRoundingCorners() {
+        superview?.removeRoundingCorners()
+        isRoundingCornersExists = false
     }
 }
 

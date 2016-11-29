@@ -1,9 +1,6 @@
 //
-//  CGFloat+Extension.swift
-//  ExtensionKit
-//
-//  Created by Moch Xiao on 1/3/16.
-//  Copyright © @2015 Moch Xiao (https://github.com/cuzv).
+//  Bundle+Extension.swift
+//  Copyright (c) 2015-2016 Moch Xiao (http://mochxiao.com).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -24,24 +21,20 @@
 //  THE SOFTWARE.
 //
 
-import UIKit
+import Foundation
 
-public extension CGFloat {
-    public var radian: CGFloat {
-        return CGFloat(Double(native / 180.0) * M_PI)
-    }
-
-    public var angle: CGFloat {
-        return CGFloat(Double(native) / M_PI * 180.0)
-    }
-}
-
-public extension Double {
-    public var radian: CGFloat {
-        return CGFloat(self / 180.0 * M_PI)
+public extension Bundle {
+    fileprivate static let _mainBundle = Bundle.main
+    
+    public class var build: String {
+        return _mainBundle.infoDictionary?["CFBundleVersion"] as? String ?? ""
     }
     
-    public var angle: CGFloat {
-        return CGFloat(self / M_PI * 180.0)
+    public class var ver: String {
+        return _mainBundle.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
+    }
+    
+    public class var displayName: String {
+        return _mainBundle.infoDictionary?["CFBundleDisplayName"] as? String ?? ""
     }
 }
