@@ -1,9 +1,6 @@
 //
-//  Cocoa+Extension.swift
-//  ExtensionKit
-//
-//  Created by Moch Xiao on 1/8/16.
-//  Copyright © @2016 Moch Xiao (https://github.com/cuzv).
+//  ViewController.swift
+//  Copyright (c) 2015-2016 Moch Xiao (http://mochxiao.com).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -26,31 +23,37 @@
 
 import UIKit
 
-// MARK: - Swifty Target & Action
-// See: https://www.mikeash.com/pyblog/friday-qa-2015-12-25-swifty-targetaction.html
+class ViewController: UIViewController {
 
-final public class ActionTrampoline<T>: NSObject {
-    private let action: T -> ()
-    
-    public init(action: T -> ()) {
-        self.action = action
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view, typically from a nib.
+        
+        let value = "value"
+        UserDefaults["some"] = value
+        
     }
-    
-    @objc public func action(sender: AnyObject) {
-        // UIControl: add(target: AnyObject?, action: Selector, forControlEvents controlEvents: UIControlEvents)
-        if let sender = sender as? T {
-            action(sender)
-        }
-            // UIGestureRecognizer: add(target: AnyObject, action: Selector)
-        else if let sender = sender as? UIGestureRecognizer {
-            action(sender.view as! T)
-        }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
     }
-    
-    #if DEBUG
-    deinit {
-        debugPrint("\(#file):\(#line):\(self.dynamicType):\(#function)")
-    }
-    #endif
+
+
 }
+
+
+enum Color {
+    case Red
+    case Green
+    
+    var rawValue: UIColor {
+        switch self {
+        case .Red: return UIColor.redColor()
+        case .Green: return UIColor.greenColor()
+        }
+    }
+}
+
+let color = Color.Red.rawValue
 

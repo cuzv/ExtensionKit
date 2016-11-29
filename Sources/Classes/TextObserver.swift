@@ -1,9 +1,6 @@
 //
 //  TextObserver.swift
-//  ExtensionKit
-//
-//  Created by Moch Xiao on 1/5/16.
-//  Copyright © @2016 Moch Xiao (https://github.com/cuzv).
+//  Copyright (c) 2015-2016 Moch Xiao (http://mochxiao.com).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -29,63 +26,63 @@ import UIKit
 // MARK: - TextObserver
 
 final public class TextObserver {
-    private let maxLength: Int
-    private let actionHandler: ((Int) -> ())
-    private var textFieldObserver: NSObjectProtocol?
-    private var textViewObserver: NSObjectProtocol?
+    fileprivate let maxLength: Int
+    fileprivate let actionHandler: ((Int) -> ())
+    fileprivate var textFieldObserver: NSObjectProtocol?
+    fileprivate var textViewObserver: NSObjectProtocol?
     
-    public init(maxLength: Int, actionHandler: ((Int) -> ())) {
+    public init(maxLength: Int, actionHandler: @escaping ((Int) -> ())) {
         self.maxLength = maxLength
         self.actionHandler = actionHandler
     }
     
     deinit {        
         if let textFieldObserver = textFieldObserver {
-            NSNotificationCenter.defaultCenter().removeObserver(textFieldObserver)
+            NotificationCenter.default.removeObserver(textFieldObserver)
         }
         
         if let textViewObserver = textViewObserver {
-            NSNotificationCenter.defaultCenter().removeObserver(textViewObserver)
+            NotificationCenter.default.removeObserver(textViewObserver)
         }
     }
     
     // MARK: - UITextField
     
-    public func observe(object: UITextField) {
-        textFieldObserver = NSNotificationCenter.defaultCenter().addObserverForName(
-            UITextFieldTextDidChangeNotification,
+    public func observe(textField object: UITextField) {
+        textFieldObserver = NotificationCenter.default.addObserver(
+            forName: NSNotification.Name.UITextFieldTextDidChange,
             object: object,
-            queue: NSOperationQueue.mainQueue()) { [weak self] (notification) -> Void in
-                guard let _self = self else { return }
+            queue: OperationQueue.main) { [weak self] (notification) -> Void in
+                guard let this = self else { return }
                 guard let textField = notification.object as? UITextField else { return }
                 guard let text = textField.text else { return }
                 
                 let textLenght = text.length
-                if textLenght > _self.maxLength && nil == textField.markedTextRange {
-                    textField.text = text.substring(toIndex: _self.maxLength)
+                if textLenght > this.maxLength && nil == textField.markedTextRange {
+                    textField.text = text.substring(toIndex: this.maxLength)
                 }
                 
-                _self.actionHandler(_self.maxLength - (textField.text ?? "").length)
+                this.actionHandler(this.maxLength - (textField.text ?? "").length)
             }
     }
     
     // MARK: - UITextView
     
-    public func observe(object: UITextView) {
-        textViewObserver = NSNotificationCenter.defaultCenter().addObserverForName(
-            UITextViewTextDidChangeNotification,
+    public func observe(textView object: UITextView) {
+        textViewObserver = NotificationCenter.default.addObserver(
+            forName: NSNotification.Name.UITextViewTextDidChange,
             object: object,
-            queue: NSOperationQueue.mainQueue()) { [weak self] (notification) -> Void in
-                guard let _self = self else { return }
+            queue: OperationQueue.main) { [weak self] (notification) -> Void in
+                guard let this = self else { return }
                 guard let textView = notification.object as? UITextView else { return }
                 guard let text = textView.text else { return }
                 
                 let textLenght = text.length
-                if textLenght > _self.maxLength && nil == textView.markedTextRange {
-                    textView.text = text.substring(toIndex: _self.maxLength)
+                if textLenght > this.maxLength && nil == textView.markedTextRange {
+                    textView.text = text.substring(toIndex: this.maxLength)
                 }
                 
-                _self.actionHandler(_self.maxLength - (textView.text ?? "").length)
+                this.actionHandler(this.maxLength - (textView.text ?? "").length)
                 textView.scrollCursorToVisible()
             }
     }

@@ -1,9 +1,6 @@
 //
 //  Number+Extension.swift
-//  ExtensionKit
-//
-//  Created by Moch Xiao on 12/31/15.
-//  Copyright © @2015 Moch Xiao (https://github.com/cuzv).
+//  Copyright (c) 2015-2016 Moch Xiao (http://mochxiao.com).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +26,7 @@ import Foundation
 // MARK: - Double -> String
 
 public extension Double {
-    public var price:  String {
+    public var price: String {
         let str = String(format: "%.2f", self)
         if str.hasSuffix("00") {
             return String(format: "%.0f", self)
@@ -39,20 +36,12 @@ public extension Double {
         }
         return str
     }
-    public var CNYString: String {
+    public var CNY: String {
         return "¥" + price
     }
 
-    public var CNYShortString: String {
-        return String(format: "¥%.0f", self)
-    }
-
-    public var USDString: String {
+    public var USD: String {
         return "$" + price
-    }
-    
-    public var USDShortString: String {
-        return String(format: "$%.0f", self)
     }
     
     public var string: String {
@@ -64,24 +53,24 @@ public extension Double {
 
 public extension Double {
     var formattedDate: String {
-        let formatter = NSDateFormatter()
+        let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
-        let date = NSDate(timeIntervalSince1970: self)
-        return formatter.stringFromDate(date)
+        let date = Date(timeIntervalSince1970: self)
+        return formatter.string(from: date)
     }
     
     var formattedTime: String {
-        let formatter = NSDateFormatter()
+        let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm"
-        let date = NSDate(timeIntervalSince1970: self)
-        return formatter.stringFromDate(date)
+        let date = Date(timeIntervalSince1970: self)
+        return formatter.string(from: date)
     }
 
     var formattedDateTime: String {
-        let formatter = NSDateFormatter()
+        let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm"
-        let date = NSDate(timeIntervalSince1970: self)
-        return formatter.stringFromDate(date)
+        let date = Date(timeIntervalSince1970: self)
+        return formatter.string(from: date)
     }
 }
 

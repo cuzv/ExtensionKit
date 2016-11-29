@@ -1,9 +1,6 @@
 //
 //  UITableView+Extension.swift
-//  ExtensionKit
-//
-//  Created by Moch Xiao on 4/29/16.
-//  Copyright © 2016 Moch Xiao (http://mochxiao.com).
+//  Copyright (c) 2015-2016 Moch Xiao (http://mochxiao.com).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -27,18 +24,17 @@
 import UIKit
 
 public extension UITableView {
-    public func scrollToTop(animated animated: Bool = true) {
-        if let indexPath = indexPathForRowAtPoint(CGPointMake(CGRectGetMidX(bounds), 2)) where !isEmpty {
-            scrollToRowAtIndexPath(indexPath, atScrollPosition: .Top, animated: animated)
+    public func scrollToTop(animated: Bool = true) {
+        if let indexPath = indexPathForRow(at: CGPoint(x: bounds.midX, y: 2)) , !isEmpty {
+            scrollToRow(at: indexPath, at: .top, animated: animated)
         }
     }
     
     public var isEmpty: Bool {
         var count = 0
         for section in 0 ..< numberOfSections {
-            count += numberOfRowsInSection(section)
+            count += numberOfRows(inSection: section)
         }
-        
         return count == 0
     }
 }

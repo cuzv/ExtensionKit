@@ -1,76 +1,87 @@
 //
 //  CGD.swift
-//  ExtensionKit
+//  Copyright (c) 2015-2016 Moch Xiao (http://mochxiao.com).
 //
-//  Created by Moch Xiao on 5/4/16.
-//  Copyright © 2016 Moch. All rights reserved.
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
 //
 
-// See: http://khanlou.com/2016/04/the-GCD-handbook/
 import Foundation
 
 private let serial_queue_label = "com.mochxiao.queue.serial"
 private let concurrent_queue_label = "com.mochxiao.queue.concurrent"
 private let isolation_queue_label = "com.mochxiao.isolation.queue"
 
-public class AsyncSerialWorker {
+open class AsyncSerialWorker {
     public init() {}
-    private let serialQueue = dispatch_queue_create(serial_queue_label, DISPATCH_QUEUE_SERIAL)
+    fileprivate let serialQueue = DispatchQueue(
+        label: serial_queue_label,
+        attributes: []
+    )
     
-    public func enqueueWork(work: (() -> ()) -> ()) {
-        dispatch_async(serialQueue) {
-            let semaphore = dispatch_semaphore_create(0)
+    open func enqueue(work: @escaping (() -> ()) -> ()) {
+        serialQueue.async {
+            let semaphore = DispatchSemaphore(value: 0)
             work {
-                dispatch_semaphore_signal(semaphore)
+                semaphore.signal()
             }
-            dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+            _ = semaphore.wait(timeout: DispatchTime.distantFuture)
         }
     }
 }
 
-public class LimitedWorker {
-    private let concurrentQueue = dispatch_queue_create(concurrent_queue_label, DISPATCH_QUEUE_CONCURRENT)
-    private let semaphore: dispatch_semaphore_t
+open class LimitedWorker {
+    fileprivate let concurrentQueue = DispatchQueue(
+        label: concurrent_queue_label,
+        attributes: DispatchQueue.Attributes.concurrent
+    )
+    fileprivate let semaphore: DispatchSemaphore
     
     public init(limit: Int) {
-        semaphore = dispatch_semaphore_create(limit)
+        semaphore = DispatchSemaphore(value: limit)
     }
     
-    public func enqueueWork(work: () -> ()) {
-        dispatch_async(concurrentQueue) {
-            dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER)
+    open func enqueue(work: @escaping () -> ()) {
+        concurrentQueue.async {
+            _ = self.semaphore.wait(timeout: DispatchTime.distantFuture)
             work()
-            dispatch_semaphore_signal(self.semaphore)
+            self.semaphore.signal()
         }
     }
 }
 
-public protocol Identifiable {
-    var identifier: String { get }
-}
-
-extension Identifiable {
-    var identifier: String { return NSUUID().UUIDString }
-}
-
-extension NSObject: Identifiable {
-    public var identifier: String { return "\(hash)" }
-}
-
-public class IdentityMap<T: Identifiable> {
+open class IdentityMap<T: Identifiable> {
     var dictionary = [String: T]()
-    let accessQueue = dispatch_queue_create(isolation_queue_label, DISPATCH_QUEUE_CONCURRENT)
+    let accessQueue = DispatchQueue(
+        label: isolation_queue_label,
+        attributes: DispatchQueue.Attributes.concurrent
+    )
     
-    func objectWithIdentifier(identifier: String) -> T? {
+    func object(withIdentifier identifier: String) -> T? {
         var result: T? = nil
-        dispatch_sync(accessQueue) {
+        accessQueue.sync {
             result = self.dictionary[identifier] as T?
         }
         return result
     }
     
-    func addObject(object: T) {
-        dispatch_barrier_async(accessQueue) {
+    func add(_ object: T) {
+        accessQueue.async(flags: .barrier) {
             self.dictionary[object.identifier] = object
         }
     }

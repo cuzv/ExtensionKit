@@ -1,9 +1,6 @@
 //
 //  UIScrollView+Extension.swift
-//  ExtensionKit
-//
-//  Created by Moch Xiao on 1/4/16.
-//  Copyright © 2016 Moch Xiao (https://github.com/cuzv).
+//  Copyright (c) 2015-2016 Moch Xiao (http://mochxiao.com).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -140,24 +137,29 @@ public extension UIScrollView {
 // MARK: - RefreshControl
 
 public extension UIScrollView {
-    private struct AssociationKey {
-        private static var refreshControl: String = "UIScrollView.RefreshControl"
+    fileprivate struct AssociationKey {
+        fileprivate static var refreshControl: String = "com.mochxiao.uiscrollview.RefreshControl"
     }
     
-    public var refreshContrl: UIRefreshControl? {
+    public private(set) var refreshContrl: UIRefreshControl? {
         get { return associatedObject(forKey: &AssociationKey.refreshControl) as? UIRefreshControl }
         set { associate(assignObject: newValue, forKey: &AssociationKey.refreshControl) }
     }
     
-    public func addRefreshControl(withActionHandler handler: ((UIScrollView) -> ())) {
+    public func addRefreshControl(withActionHandler handler: @escaping ((UIScrollView) -> ())) {
         if let _ = refreshContrl {
             return
         }
         
-        let _refreshContrl = UIRefreshControl(frame: CGRectMake(0, 0, CGRectGetWidth(UIScreen.mainScreen().bounds), 64))
+        let _refreshContrl = UIRefreshControl(frame: CGRect(
+            x: 0,
+            y: 0,
+            width: UIScreen.main.bounds.width,
+            height: 64
+        ))
         addSubview(_refreshContrl)
-        sendSubviewToBack(_refreshContrl)
-        _refreshContrl.addControlEvents(.ValueChanged) { [weak self] (_) in
+        sendSubview(toBack: _refreshContrl)
+        _refreshContrl.addControlEvents(.valueChanged) { [weak self] (_) in
             if let this = self {
                 if this.refreshControlEnabled {
                     handler(this)
@@ -169,16 +171,16 @@ public extension UIScrollView {
         refreshContrl = _refreshContrl
     }
     
-    public var refreshControlEnabled: Bool {
+    public private(set) var refreshControlEnabled: Bool {
         get {
             if let refreshContrl = refreshContrl {
-                return refreshContrl.enabled
+                return refreshContrl.isEnabled
             }
             return false
         }
         set {
             if let refreshContrl = refreshContrl {
-                refreshContrl.enabled = newValue
+                refreshContrl.isEnabled = newValue
                 refreshContrl.alpha = newValue ? 1 : 0
             }
         }
@@ -194,7 +196,7 @@ public extension UIScrollView {
     
     public var refreshing: Bool {
         if let refreshContrl = refreshContrl {
-            return refreshContrl.refreshing
+            return refreshContrl.isRefreshing
         }
         return false
     }

@@ -1,9 +1,6 @@
 //
 //  Array+Extension.swift
-//  ExtensionKit
-//
-//  Created by Moch Xiao on 1/7/16.
-//  Copyright © @2016 Moch Xiao (https://github.com/cuzv).
+//  Copyright (c) 2015-2016 Moch Xiao (http://mochxiao.com).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -29,35 +26,38 @@ import Foundation
 // MARK: - Array
 
 public extension Array {
-    public mutating func exchange(atIndex index: Int, withIndex otherIndex: Int) {
+    public mutating func exchange(lhs index: Int, rhs otherIndex: Int) {
         if count <= index || count <= otherIndex  {
             fatalError("Index beyond boundary.")
         }
-        
+        if index >= otherIndex {
+            fatalError("lhs must less than rhs.")
+        }
+
         let firstItemData = self[index]
         let firstRange = Range(index ..< index + 1)
         
         let secondaryItemData = self[otherIndex]
         let secondaryRange = Range(otherIndex ..< otherIndex + 1)
         
-        replaceRange(firstRange, with: [secondaryItemData])
-        replaceRange(secondaryRange, with: [firstItemData])
+        replaceSubrange(firstRange, with: [secondaryItemData])
+        replaceSubrange(secondaryRange, with: [firstItemData])
     }
     
-    public mutating func replace(atIndex index: Int, with element: Element) {
+    public mutating func replace(at index: Int, with element: Element) {
         if count <= index {
             fatalError("Index beyond boundary.")
         }
         let range = Range(index ..< index + 1)
-        replaceRange(range, with: [element])
+        replaceSubrange(range, with: [element])
     }
     
-    public mutating func replaceLast(element: Element) {
-        replace(atIndex: count - 1, with: element)
+    public mutating func replaceLast(_ element: Element) {
+        replace(at: count - 1, with: element)
     }
     
-    public mutating func replaceFirst(element: Element) {
-        replace(atIndex: 0, with: element)
+    public mutating func replaceFirst(_ element: Element) {
+        replace(at: 0, with: element)
     }
     
     public var prettyDebugDescription: String {
@@ -67,7 +67,7 @@ public extension Array {
             output.append("\(index): \(item)")
             index += 1
         }
-        return output.joinWithSeparator("\n")
+        return output.joined(separator: "\n")
     }
     
     public var second: Element? {

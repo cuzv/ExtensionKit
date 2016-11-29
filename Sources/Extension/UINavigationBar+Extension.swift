@@ -1,9 +1,6 @@
 //
 //  UINavigationBar+Extension.swift
-//  ExtensionKit
-//
-//  Created by Moch Xiao on 12/28/15.
-//  Copyright © 2015 Moch Xiao (https://github.com/cuzv).
+//  Copyright (c) 2015-2016 Moch Xiao (http://mochxiao.com).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -30,12 +27,12 @@ import UIKit
 
 public extension UINavigationBar {
     /// Only effect when `translucent` is true.
-    public func setBackgroundVisible(visible: Bool) {
-        if !translucent {
-            debugPrint("`translucent` must be true if you wanna change background visible.")
+    public func setBackgroundVisible(_ visible: Bool) {
+        if !isTranslucent {
+            logging("`translucent` must be true if you wanna change background visible.")
         }
         
-        setBackgroundImage(visible ? nil : UIImage(), forBarMetrics: .Default)
+        setBackgroundImage(visible ? nil : UIImage(), for: .default)
         shadowImage = visible ? nil : UIImage()
     }
 }
@@ -46,23 +43,20 @@ public extension UINavigationBar {
     /// The hairline view.
     public var hairline: UIView? {
         guard let cls = NSClassFromString("_UINavigationBarBackground") else { return nil }
-        
         for subview in subviews {
-            if subview.isKindOfClass(cls) {
+            if subview.isKind(of: cls) {
                 for view in subview.subviews {
-                    if view is UIImageView && view.frame.size.height == 1.0 / UIScreen.scale_var {
+                    if view is UIImageView && view.frame.size.height == 1.0 / UIScreen.main.scale {
                         return view
                     }
                 }
             }
         }
-        
         return nil
     }
     
     /// Remove the hairline view.
     public func removeHairline() {
-        guard let hairline = hairline else { return }
-        hairline.removeFromSuperview()
+        hairline?.removeFromSuperview()
     }
 }

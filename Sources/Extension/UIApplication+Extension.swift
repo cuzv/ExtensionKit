@@ -1,9 +1,24 @@
 //
 //  UIApplication+Extension.swift
-//  ExtensionKit
+//  Copyright (c) 2015-2016 Moch Xiao (http://mochxiao.com).
 //
-//  Created by Moch Xiao on 12/30/15.
-//  Copyright © 2015 foobar. All rights reserved.
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
 //
 
 import UIKit
@@ -11,44 +26,36 @@ import UIKit
 // MARK: - Actions
 
 public extension UIApplication {
-    private static let _sharedApplication = UIApplication.sharedApplication()
+    fileprivate static let _sharedApplication = UIApplication.shared
     
-    public class func openURL(URL: NSURL) {
+    public class func open(URL: Foundation.URL) {
         if _sharedApplication.canOpenURL(URL) {
            _sharedApplication.openURL(URL)
         } else {
-            debugPrint("Can not execute the given action.")
+            logging("Can not execute the given action.")
         }
     }
     
-    public class func openURLPath(urlPath: String) {
-        if let URL = NSURL(string: urlPath) {
-            UIApplication.openURL(URL)
+    public class func open(urlPath: String) {
+        if let URL = URL(string: urlPath) {
+            UIApplication.open(URL: URL)
         }
     }
     
-    public class func makePhone(phoneNumber: String) {
-        if let URL = NSURL(string: "telprompt:\(phoneNumber)") {
-            UIApplication.openURL(URL)
-        }
+    public class func makePhone(to phoneNumber: String) {
+        open(urlPath: "telprompt:\(phoneNumber)")
     }
     
-    public class func sendMessageTo(phoneNumber: String) {
-        if let URL = NSURL(string: "sms:\(phoneNumber)") {
-            UIApplication.openURL(URL)
-        }
+    public class func sendMessage(to phoneNumber: String) {
+        open(urlPath: "sms:\(phoneNumber)")
     }
     
-    public class func emailTo(email: String) {
-        if let URL = NSURL(string: "mailto:\(email)") {
-            UIApplication.openURL(URL)
-        }
+    public class func email(to email: String) {
+        open(urlPath: "mailto:\(email)")
     }
     
-    public class func chatToQQ(qq: String) {
-        if let URL = NSURL(string: "mqq://im/chat?chat_type=wpa&uin=\(qq)&version=1&src_type=iOS") {
-            UIApplication.openURL(URL)
-        }
+    public class func chatQQ(to qq: String) {
+        open(urlPath: "mqq://im/chat?chat_type=wpa&uin=\(qq)&version=1&src_type=iOS")
     }
     
     public class func clearIconBadge() {
@@ -59,54 +66,28 @@ public extension UIApplication {
         _sharedApplication.applicationIconBadgeNumber = badgeNumber
     }
     
-    public class func sendAction(action: Selector, fromSender sender: AnyObject?, forEvent event: UIEvent? = nil) -> Bool {
+    public class func sendAction(_ action: Selector, fromSender sender: AnyObject?, forEvent event: UIEvent? = nil) -> Bool {
         // Get the target in the responder chain
         var target = sender
         
-        while let _target = target where !_target.canPerformAction(action, withSender: sender) {
-            target = _target.nextResponder()
+        while let _target = target , !_target.canPerformAction(action, withSender: sender) {
+            target = _target.next
         }
         
         if let _target  = target {
-            return UIApplication.sharedApplication().sendAction(action, to: _target, from: sender, forEvent: event)
+            return UIApplication.shared.sendAction(action, to: _target, from: sender, for: event)
         }
         
         return false
     }
-}
-
-public func doOpenURL(URL: NSURL) {
-    UIApplication.openURL(URL)
-}
-
-public func doMakePhone(phoneNumber: String) {
-    UIApplication.makePhone(phoneNumber)
-}
-
-public func doSendMessageTo(phoneNumber: String) {
-    UIApplication.sendMessageTo(phoneNumber)
-}
-
-public func doMailTo(email: String) {
-    UIApplication.emailTo(email)
-}
-
-public func doChatToQQ(qq: String) {
-    UIApplication.chatToQQ(qq)
-}
-
-public func doSendAction(action: Selector, fromSender sender: AnyObject?, forEvent event: UIEvent? = nil) -> Bool {
-    return UIApplication.sendAction(action, fromSender: sender, forEvent: event)
-}
-
-// MARK: - Properties
-
-/// Setting the statusBarStyle does nothing if your application is using the default UIViewController-based status bar system.
-public func doMakeStatusBarDark() {
-    UIApplication.sharedApplication().statusBarStyle = .Default
-}
-
-/// Setting the statusBarStyle does nothing if your application is using the default UIViewController-based status bar system.
-public func doMakeStatusBarLight() {
-    UIApplication.sharedApplication().statusBarStyle = .LightContent
+    
+    /// Setting the statusBarStyle does nothing if your application is using the default UIViewController-based status bar system.
+    public class func makeStatusBarDark() {
+        UIApplication.shared.statusBarStyle = .default
+    }
+    
+    /// Setting the statusBarStyle does nothing if your application is using the default UIViewController-based status bar system.
+    public class func makeStatusBarLight() {
+        UIApplication.shared.statusBarStyle = .lightContent
+    }
 }

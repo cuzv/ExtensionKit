@@ -1,9 +1,6 @@
 //
-//  DefaultReflectable.swift
-//  ExtensionKit
-//
-//  Created by Moch Xiao on 4/24/16.
-//  Copyright © 2016 Moch Xiao (http://mochxiao.com).
+//  ExtensionProtocols.swift
+//  Copyright (c) 2015-2016 Moch Xiao (http://mochxiao.com).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +30,7 @@ public protocol DefaultReflectable: CustomStringConvertible {}
 /// A default implementation that enables class members to display their values.
 extension DefaultReflectable {
     /// Constructs a better representation using reflection.
-    internal func DefaultDescription<T>(instance: T) -> String {
+    internal func defaultDescription<T>(_ instance: T) -> String {
         let mirror = Mirror(reflecting: instance)
         let chunks = mirror.children.map { (label: String?, value: Any) -> String in
             if let label = label {
@@ -46,7 +43,7 @@ extension DefaultReflectable {
             }
         }
         if chunks.count > 0 {
-            let chunksString = chunks.joinWithSeparator(", ")
+            let chunksString = chunks.joined(separator: ", ")
             return "\(mirror.subjectType)(\(chunksString))"
         } else {
             return "\(instance)"
@@ -55,6 +52,57 @@ extension DefaultReflectable {
     
     /// Conforms to CustomStringConvertible.
     public var description: String {
-        return DefaultDescription(self)
+        return defaultDescription(self)
     }
+}
+
+extension NSObject: DefaultReflectable {
+}
+
+// MARK: -
+
+public protocol Identifiable {
+    var identifier: String { get }
+}
+
+extension Identifiable {
+    var identifier: String { return UUID().uuidString }
+}
+
+extension NSObject: Identifiable {
+    public var identifier: String { return "\(hash)" }
+}
+
+// MARK: -
+
+@objc public protocol SetupData {
+    func setupData(_ data: AnyObject!)
+}
+
+extension UITableViewCell: SetupData {
+    public func setupData(_ data: AnyObject!) {}
+}
+
+extension UITableViewHeaderFooterView: SetupData {
+    public func setupData(_ data: AnyObject!) {}
+}
+
+extension UICollectionReusableView: SetupData {
+    public func setupData(_ data: AnyObject!) {}
+}
+
+@objc public protocol LazyLoadImagesData {
+    func lazilySetupData(_ data: AnyObject!)
+}
+
+extension UITableViewCell: LazyLoadImagesData {
+    public func lazilySetupData(_ data: AnyObject!) {}
+}
+
+extension UITableViewHeaderFooterView: LazyLoadImagesData {
+    public func lazilySetupData(_ data: AnyObject!) {}
+}
+
+extension UICollectionReusableView: LazyLoadImagesData {
+    public func lazilySetupData(_ data: AnyObject!) {}
 }

@@ -1,9 +1,6 @@
 //
-//  NSData+Extension.swift
-//  ExtensionKit
-//
-//  Created by Moch Xiao on 1/3/16.
-//  Copyright © @2016 Moch Xiao (https://github.com/cuzv).
+//  Data+Extension.swift
+//  Copyright (c) 2015-2016 Moch Xiao (http://mochxiao.com).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -26,24 +23,30 @@
 
 import Foundation
 
-public extension NSData {
+public extension Data {
     /// Create a Foundation object from JSON data.
     public var JSONObject: AnyObject? {
         do {
-            return try NSJSONSerialization.JSONObjectWithData(self, options: NSJSONReadingOptions.MutableLeaves)
+            return try JSONSerialization.jsonObject(
+                with: self,
+                options: JSONSerialization.ReadingOptions.mutableLeaves
+            ) as AnyObject
         } catch let error as NSError {
-            debugPrint("Deserialized JSON string failed with error: \(error)")
+            logging("Deserialized JSON string failed with error: \(error)")
             return nil
         }
     }
-}
-
-/// Generate JSON data from a Foundation object
-public func NSDataFrom(JSONObject: AnyObject) -> NSData? {
-    do {
-        return try NSJSONSerialization.dataWithJSONObject(JSONObject, options: NSJSONWritingOptions.PrettyPrinted)
-    } catch let error as NSError {
-        debugPrint("Serialized JSON string failed with error: \(error)")
-        return nil
+    
+    /// Generate JSON data from a Foundation object
+    public static func make(fromJSONObject obj: AnyObject) -> Data? {
+        do {
+            return try JSONSerialization.data(
+                withJSONObject: obj,
+                options: JSONSerialization.WritingOptions.prettyPrinted
+            )
+        } catch let error as NSError {
+            logging("Serialized JSON string failed with error: \(error)")
+            return nil
+        }
     }
 }
