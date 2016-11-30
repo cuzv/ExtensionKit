@@ -40,6 +40,7 @@ public extension UIResponder {
         return UIApplication.sendAction(action, fromSender: self)
     }
 
+    @discardableResult
     public func performAction(
         _ action: Selector,
         _ firstArgument: AnyObject! = nil,
