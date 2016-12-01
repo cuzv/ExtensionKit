@@ -709,7 +709,7 @@ public extension UIView {
     }
 
     /// Add activity indicator animation.
-    public func satrtActivityIndicatorAnimation(indicatorColor color: UIColor = UIColor.lightGray, dy: CGFloat = 0) {
+    public func startActivityIndicatorAnimation(indicatorColor color: UIColor = UIColor.lightGray, dy: CGFloat = 0) {
         if isActivityIndicatorAnimating {
             return
         }

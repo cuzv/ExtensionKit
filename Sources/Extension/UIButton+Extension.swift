@@ -240,13 +240,13 @@ public extension UIButton {
         set { associate(assignObject: newValue, forKey: &AssociationKey.activityIndicatorContainerView) }
     }
     
-    public override func satrtActivityIndicatorAnimation(indicatorColor color: UIColor = UIColor.lightGray, dy: CGFloat = 0) {
+    public override func startActivityIndicatorAnimation(indicatorColor color: UIColor = UIColor.lightGray, dy: CGFloat = 0) {
         if let activityIndicatorContainerView = self.activityIndicatorContainerView {
             if activityIndicatorContainerView.isActivityIndicatorAnimating {
                 return
             }
             activityIndicatorContainerView.isHidden = false
-            activityIndicatorContainerView.satrtActivityIndicatorAnimation(indicatorColor: color, dy: dy)
+            activityIndicatorContainerView.startActivityIndicatorAnimation(indicatorColor: color, dy: dy)
             return
         }
         
@@ -259,7 +259,7 @@ public extension UIButton {
         activityIndicatorContainerView.isUserInteractionEnabled = false
         activityIndicatorContainerView.clipsToBounds = true
         activityIndicatorContainerView.cornerRadius = cornerRadius
-        activityIndicatorContainerView.satrtActivityIndicatorAnimation(indicatorColor: color, dy: dy)
+        activityIndicatorContainerView.startActivityIndicatorAnimation(indicatorColor: color, dy: dy)
         addSubview(activityIndicatorContainerView)
         self.activityIndicatorContainerView = activityIndicatorContainerView
     }
