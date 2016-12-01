@@ -51,7 +51,7 @@ public func objectIsType<T>(_ object: Any, _ someObjectOfType: T.Type) -> Bool {
  :param: function The name of the function, defaults to the function within which the call is made.
  :param: line     The line number, defaults to the line number within the file that the call is made.
  */
-func logging<T>(_ object: @autoclosure () -> T, _ file: String = #file, _ function: String = #function, _ line: Int = #line) {
+public func logging<T>(_ object: @autoclosure () -> T, _ file: String = #file, _ function: String = #function, _ line: Int = #line) {
     #if DEBUG
         let value = object()
         let stringRepresentation: String
