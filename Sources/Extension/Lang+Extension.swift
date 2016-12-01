@@ -63,7 +63,7 @@ public func logging<T>(_ object: @autoclosure () -> T, _ file: String = #file, _
         } else {
             stringRepresentation = "\(value)"
         }
-        let fileURL = NSURL(string: file)?.lastPathComponent ?? "Unknown file"
+        let fileURL = URL(string: file)?.lastPathComponent ?? "Unknown file"
         let queue = Thread.isMainThread ? "UI" : "BG"
         print("<\(queue)> \(fileURL) \(function)[\(line)]: " + stringRepresentation)
     #endif
