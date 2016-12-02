@@ -48,13 +48,10 @@ private struct AssociationKey {
 
 // MARK: - UIControl Action
 
-public protocol UIControlActionFunctionProtocol {}
-extension UIControl: UIControlActionFunctionProtocol {}
-
-public extension UIControlActionFunctionProtocol where Self: UIControl {
-    public func addControlEvents(_ events: UIControlEvents, handler: @escaping (Self) -> ()) {
+public extension Extension where Base: UIControl {
+    public func addControlEvents(_ events: UIControlEvents, handler: @escaping (Extension) -> ()) {
         let trampoline = ActionTrampoline(action: handler)
-        addTarget(trampoline, action: NSSelectorFromString("action:"), for: events)
+        base.addTarget(trampoline, action: NSSelectorFromString("action:"), for: events)
         associate(object: trampoline, forEvents: events)
     }
     

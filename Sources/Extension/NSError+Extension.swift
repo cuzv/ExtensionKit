@@ -23,7 +23,7 @@
 
 import Foundation
 
-public extension NSError {
+public extension Extension where Base: NSError {
     public class var emptyErrorDomain: String { return "com.mochxiao.error.default" }
     public class var emptyErrorCode: Int { return 1024 }
     public class var empty: NSError {
@@ -40,5 +40,5 @@ public extension NSError {
 }
 
 public func NSErrorFrom(message: String) -> NSError {
-    return NSError.make(message: message)
+    return NSError.ext.make(message: message)
 }

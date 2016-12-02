@@ -23,15 +23,15 @@
 
 import UIKit
 
-public extension UIDevice {
-    fileprivate static let _currentDevice = UIDevice.current
-    
+fileprivate let _currentDevice = UIDevice.current
+
+public extension Extension where Base: UIDevice {
     public class var sysVersion: String {
         return _currentDevice.systemVersion
     }
     
     public class var majorVersion: Int {
-        return Int(UIDevice.sysVersion.components(separatedBy: ".").first!)!
+        return Int(sysVersion.components(separatedBy: ".").first!)!
     }
     
     public class var iOS7x: Bool {

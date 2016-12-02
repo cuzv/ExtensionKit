@@ -23,17 +23,17 @@
 
 import UIKit
 
-public extension UITableView {
+public extension Extension where Base: UITableView {
     public func scrollToTop(animated: Bool = true) {
-        if let indexPath = indexPathForRow(at: CGPoint(x: bounds.midX, y: 2)) , !isEmpty {
-            scrollToRow(at: indexPath, at: .top, animated: animated)
+        if let indexPath = base.indexPathForRow(at: CGPoint(x: base.bounds.midX, y: 2)) , !isEmpty {
+            base.scrollToRow(at: indexPath, at: .top, animated: animated)
         }
     }
     
     public var isEmpty: Bool {
         var count = 0
-        for section in 0 ..< numberOfSections {
-            count += numberOfRows(inSection: section)
+        for section in 0 ..< base.numberOfSections {
+            count += base.numberOfRows(inSection: section)
         }
         return count == 0
     }

@@ -23,10 +23,10 @@
 
 import UIKit
 
-public extension UITabBar {
+public extension Extension where Base: UITabBar {
     /// Not tested
     public var hairline: UIView? {
-        for subview in subviews {
+        for subview in base.subviews {
             if subview is UIImageView && subview.frame.size.height == 1.0 / UIScreen.main.scale {
                 return subview
             }
@@ -36,7 +36,7 @@ public extension UITabBar {
     
     /// Hide the hairline view or not. default is false
     public var hairlineHidden: Bool {
-        get { return clipsToBounds }
-        set { clipsToBounds = newValue }
+        get { return base.clipsToBounds }
+        set { base.clipsToBounds = newValue }
     }
 }

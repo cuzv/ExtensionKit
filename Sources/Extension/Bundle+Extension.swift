@@ -23,9 +23,8 @@
 
 import Foundation
 
-public extension Bundle {
-    fileprivate static let _mainBundle = Bundle.main
-    
+fileprivate let _mainBundle = Bundle.main
+public extension Extension where Base: Bundle {
     public class var build: String {
         return _mainBundle.infoDictionary?["CFBundleVersion"] as? String ?? ""
     }

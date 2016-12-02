@@ -31,7 +31,7 @@ private struct AssociationKey {
 
 // MARK: - 
 
-public extension UIBarButtonItem {
+public extension Extension where Base: UIBarButtonItem {
     public class func make(fixedSpace width: CGFloat) -> UIBarButtonItem {
         let spacing = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
         spacing.width = width
@@ -41,14 +41,20 @@ public extension UIBarButtonItem {
 
 // MARK: - 
 
-public extension UIBarButtonItem {
-    fileprivate var barButtonItemActionHandlerWrapper: ClosureDecorator<UIBarButtonItem>? {
-        get { return associatedObject(forKey: &AssociationKey.barButtonItemActionHandlerWrapper) as? ClosureDecorator<UIBarButtonItem> }
-        set { associate(retainObject: newValue, forKey: &AssociationKey.barButtonItemActionHandlerWrapper) }
+extension UIBarButtonItem {
+    internal class func performActionHandler(sender: UIBarButtonItem) {
+        sender.barButtonItemActionHandlerWrapper?.invoke(sender)
     }
-    
+
+    fileprivate var barButtonItemActionHandlerWrapper: ClosureDecorator<UIBarButtonItem>? {
+        get { return ext.associatedObject(forKey: &AssociationKey.barButtonItemActionHandlerWrapper) as? ClosureDecorator<UIBarButtonItem> }
+        set { ext.associate(retainObject: newValue, forKey: &AssociationKey.barButtonItemActionHandlerWrapper) }
+    }
+}
+
+public extension Extension where Base: UIBarButtonItem {
     public class func make(title: String, actionHandler: ((UIBarButtonItem) -> ())?) -> UIBarButtonItem {
-        let barButtonItem = UIBarButtonItem(title: title, style: .plain, target: self, action: #selector(UIBarButtonItem.performActionHandler(sender:)))
+        let barButtonItem = UIBarButtonItem(title: title, style: .plain, target: UIBarButtonItem.self, action: #selector(UIBarButtonItem.performActionHandler(sender:)))
         if let actionHandler = actionHandler {
             barButtonItem.barButtonItemActionHandlerWrapper = ClosureDecorator(actionHandler)
         }
@@ -56,7 +62,7 @@ public extension UIBarButtonItem {
     }
     
     public class func make(image: UIImage?, actionHandler: ((UIBarButtonItem) -> ())?) -> UIBarButtonItem {
-        let barButtonItem = UIBarButtonItem(image: image?.original, style: .plain, target: self, action: #selector(UIBarButtonItem.performActionHandler(sender:)))
+        let barButtonItem = UIBarButtonItem(image: image?.ext.original, style: .plain, target: UIBarButtonItem.self, action: #selector(UIBarButtonItem.performActionHandler(sender:)))
         if let actionHandler = actionHandler {
             barButtonItem.barButtonItemActionHandlerWrapper = ClosureDecorator(actionHandler)
         }
@@ -64,15 +70,11 @@ public extension UIBarButtonItem {
     }
     
     public class func make(systemItem item: UIBarButtonSystemItem, actionHandler: ((UIBarButtonItem) -> ())?) -> UIBarButtonItem {
-        let barButtonItem = UIBarButtonItem(barButtonSystemItem: item, target: self, action: #selector(UIBarButtonItem.performActionHandler(sender:)))
+        let barButtonItem = UIBarButtonItem(barButtonSystemItem: item, target: UIBarButtonItem.self, action: #selector(UIBarButtonItem.performActionHandler(sender:)))
         if let actionHandler = actionHandler {
             barButtonItem.barButtonItemActionHandlerWrapper = ClosureDecorator(actionHandler)
         }
         return barButtonItem
     }
-    
-    /// Helper func
-    internal class func performActionHandler(sender: UIBarButtonItem) {
-        sender.barButtonItemActionHandlerWrapper?.invoke(sender)
-    }
+
 }

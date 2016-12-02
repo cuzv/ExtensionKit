@@ -25,9 +25,9 @@ import UIKit
 
 // MARK: - Actions
 
-public extension UIApplication {
-    fileprivate static let _sharedApplication = UIApplication.shared
-    
+fileprivate let _sharedApplication = UIApplication.shared
+
+public extension Extension where Base: UIApplication {
     public class func open(URL: Foundation.URL) {
         if _sharedApplication.canOpenURL(URL) {
            _sharedApplication.openURL(URL)
@@ -38,7 +38,7 @@ public extension UIApplication {
     
     public class func open(urlPath: String) {
         if let URL = URL(string: urlPath) {
-            UIApplication.open(URL: URL)
+            UIApplication.ext.open(URL: URL)
         }
     }
     

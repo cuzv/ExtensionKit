@@ -25,18 +25,20 @@
 
 import Foundation
 
-public extension DispatchQueue {
-    private static var _onceTracker = [String]()
-    
+extension DispatchQueue {
+    fileprivate static var _onceTracker = [String]()
+}
+
+public extension Extension where Base: DispatchQueue {
     public class func once(token: String, block: ()-> ()) {
-        objc_sync_enter(self)
-        defer { objc_sync_exit(self) }
+        objc_sync_enter(Base.self)
+        defer { objc_sync_exit(Base.self) }
         
-        if _onceTracker.contains(token) {
+        if DispatchQueue._onceTracker.contains(token) {
             return
         }
         
-        _onceTracker.append(token)
+        DispatchQueue._onceTracker.append(token)
         
         block()
     }

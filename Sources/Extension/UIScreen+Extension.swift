@@ -23,7 +23,7 @@
 
 import UIKit
 
-public extension UIScreen {
+public extension Extension where Base: UIScreen {
     public class var width: CGFloat {
         return UIScreen.main.bounds.size.width
     }

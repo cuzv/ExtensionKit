@@ -23,43 +23,43 @@
 
 import UIKit
 
-public extension UIImageView {
+public extension Extension where Base: UIImageView {
     /// Setup rounding corners radius, fillColor will not be used.
     /// **Note**: Before you invoke this method, ensure `self` already have correct frame and image.
-    public override func addRoundingCorners(
+    public func addRoundingCorners(
         for corners: UIRectCorner = .allCorners,
         radius: CGFloat = 3,
         fillColor: UIColor? = nil,
         strokeColor: UIColor? = nil,
         strokeLineWidth: CGFloat = 0)
     {
-        if frame.size.equalTo(CGSize.zero) {
+        if base.frame.size.equalTo(CGSize.zero) {
             logging("Could not set rounding corners on zero size view.")
             return
         }
-        if nil != layer.contents {
+        if nil != base.layer.contents {
             return
         }
-        guard let image = image else {
+        guard let image = base.image else {
             return
         }
         
         DispatchQueue.global().async {
             let scale = max(
-                image.size.width / self.frame.size.width,
-                image.size.height / self.frame.size.height
+                image.size.width / self.base.frame.size.width,
+                image.size.height / self.base.frame.size.height
             )
             let relatedRadius = scale * radius
             let relatedStockLineWidth = scale * strokeLineWidth
-            let newImage = image.remake(
+            let newImage = image.ext.remake(
                 roundingCorners: corners,
                 radius: relatedRadius,
                 strokeColor: strokeColor ?? UIColor.clear,
                 strokeLineWidth: relatedStockLineWidth
             )
             DispatchQueue.main.async {
-                self.backgroundColor = UIColor.clear
-                self.image = newImage
+                self.base.backgroundColor = UIColor.clear
+                self.base.image = newImage
                 self.isRoundingCornersExists = true
             }
         }

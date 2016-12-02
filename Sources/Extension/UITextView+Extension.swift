@@ -33,28 +33,28 @@ private struct AssociationKey {
 
 private extension UITextView {
     var textViewTextObserver: TextObserver {
-        get { return associatedObject(forKey: &AssociationKey.textViewTextObserver) as! TextObserver }
-        set { associate(retainObject: newValue, forKey: &AssociationKey.textViewTextObserver) }
+        get { return ext.associatedObject(forKey: &AssociationKey.textViewTextObserver) as! TextObserver }
+        set { ext.associate(retainObject: newValue, forKey: &AssociationKey.textViewTextObserver) }
     }
 }
 
-public extension UITextView {
+public extension Extension where Base: UITextView {
     public func setupTextObserver(maxLength: Int = 100, actionHandler: ((Int) -> ())? = nil) {
         let textObserver = TextObserver(maxLength: maxLength) { (remainCount) -> () in
             actionHandler?(remainCount)
         }
-        textObserver.observe(textView: self)
-        textViewTextObserver = textObserver
+        textObserver.observe(textView: base)
+        base.textViewTextObserver = textObserver
     }
 }
 
 // MARK: -
 
-public extension UITextView {
+public extension Extension where Base: UITextView {
     public func scrollCursorToVisible() {
-        let cursorLocation = selectedRange.location
+        let cursorLocation = base.selectedRange.location
         let range = NSMakeRange(0, cursorLocation)
-        scrollRangeToVisible(range)
+        base.scrollRangeToVisible(range)
     }
 }
 

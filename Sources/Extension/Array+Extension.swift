@@ -25,35 +25,35 @@ import Foundation
 
 // MARK: - Array
 
-public extension Array {
+public extension ArrayExtension {
     public mutating func exchange(lhs index: Int, rhs otherIndex: Int) {
-        if count <= index || count <= otherIndex  {
+        if base.count <= index || base.count <= otherIndex  {
             fatalError("Index beyond boundary.")
         }
         if index >= otherIndex {
             fatalError("lhs must less than rhs.")
         }
 
-        let firstItemData = self[index]
+        let firstItemData = base[index]
         let firstRange = Range(index ..< index + 1)
         
-        let secondaryItemData = self[otherIndex]
+        let secondaryItemData = base[otherIndex]
         let secondaryRange = Range(otherIndex ..< otherIndex + 1)
         
-        replaceSubrange(firstRange, with: [secondaryItemData])
-        replaceSubrange(secondaryRange, with: [firstItemData])
+        base.replaceSubrange(firstRange, with: [secondaryItemData])
+        base.replaceSubrange(secondaryRange, with: [firstItemData])
     }
     
     public mutating func replace(at index: Int, with element: Element) {
-        if count <= index {
+        if base.count <= index {
             fatalError("Index beyond boundary.")
         }
         let range = Range(index ..< index + 1)
-        replaceSubrange(range, with: [element])
+        base.replaceSubrange(range, with: [element])
     }
     
     public mutating func replaceLast(_ element: Element) {
-        replace(at: count - 1, with: element)
+        replace(at: base.count - 1, with: element)
     }
     
     public mutating func replaceFirst(_ element: Element) {
@@ -63,7 +63,7 @@ public extension Array {
     public var prettyDebugDescription: String {
         var output: [String] = []
         var index = 0
-        for item in self {
+        for item in base {
             output.append("\(index): \(item)")
             index += 1
         }
@@ -71,47 +71,47 @@ public extension Array {
     }
     
     public var second: Element? {
-        if count > 1 { return self[1] }
+        if base.count > 1 { return base[1] }
         return nil
     }
     
     public var third: Element? {
-        if count > 2 { return self[2] }
+        if base.count > 2 { return base[2] }
         return nil
     }
     
     public var fourth: Element? {
-        if count > 3 { return self[3] }
+        if base.count > 3 { return base[3] }
         return nil
     }
     
     public var fifthly: Element? {
-        if count > 4 { return self[4] }
+        if base.count > 4 { return base[4] }
         return nil
     }
     
     public var sixth: Element? {
-        if count > 5 { return self[5] }
+        if base.count > 5 { return base[5] }
         return nil
     }
     
     public var seventh: Element? {
-        if count > 6 { return self[6] }
+        if base.count > 6 { return base[6] }
         return nil
     }
     
     public var eighth: Element? {
-        if count > 7 { return self[7] }
+        if base.count > 7 { return base[7] }
         return nil
     }
     
     public var ninth: Element? {
-        if count > 8 { return self[8] }
+        if base.count > 8 { return base[8] }
         return nil
     }
     
     public var tenth: Element? {
-        if count > 9 { return self[9] }
+        if base.count > 9 { return base[9] }
         return nil
     }
 }

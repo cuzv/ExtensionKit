@@ -25,30 +25,30 @@ import UIKit
 
 public let UserDefaults = Foundation.UserDefaults.standard
 
-public extension Foundation.UserDefaults {
+public extension Extension where Base: Foundation.UserDefaults {
     public subscript(key: String) -> Any? {
-        get { return value(forKey: key) as Any }
+        get { return base.value(forKey: key) as Any }
         set {
             switch newValue {
-            case let value as Int: set(value, forKey: key)
-            case let value as Double: set(value, forKey: key)
-            case let value as Bool: set(value, forKey: key)
-            case let value as URL: set(value, forKey: key)
-            case let value as NSObject: set(value, forKey: key)
-            case nil: removeObject(forKey: key)
+            case let value as Int: base.set(value, forKey: key)
+            case let value as Double: base.set(value, forKey: key)
+            case let value as Bool: base.set(value, forKey: key)
+            case let value as URL: base.set(value, forKey: key)
+            case let value as NSObject: base.set(value, forKey: key)
+            case nil: base.removeObject(forKey: key)
             default: assertionFailure("Invalid value type.")
             }
         }
     }
     
     fileprivate func setter(key: String, value: AnyObject?) {
-        self[key] = value
-        synchronize()
+        base.set(value, forKey: key)
+        base.synchronize()
     }
 
     /// Is there a object for specific key exist.
     public func hasKey(_ key: String) -> Bool {
-        return nil != object(forKey: key)
+        return nil != base.object(forKey: key)
     }
     
     /// Archive object to NSData to save.
@@ -56,12 +56,12 @@ public extension Foundation.UserDefaults {
         if let value = object {
             setter(key: key, value: NSKeyedArchiver.archivedData(withRootObject: value) as AnyObject?)
         } else {
-            removeObject(forKey: key)
+            base.removeObject(forKey: key)
         }
     }
     
     /// Unarchive object for specific key.
     public func unarchivedObject(forKey key: String) -> AnyObject? {
-        return data(forKey: key).flatMap { NSKeyedUnarchiver.unarchiveObject(with: $0) as AnyObject }
+        return base.data(forKey: key).flatMap { NSKeyedUnarchiver.unarchiveObject(with: $0) as AnyObject }
     }
 }

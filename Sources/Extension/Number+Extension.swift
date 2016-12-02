@@ -25,14 +25,14 @@ import Foundation
 
 // MARK: - Double -> String
 
-public extension Double {
+public extension DoubleExtension {
     public var price: String {
-        let str = String(format: "%.2f", self)
+        let str = String(format: "%.2f", base)
         if str.hasSuffix("00") {
-            return String(format: "%.0f", self)
+            return String(format: "%.0f", base)
         }
         if str.hasSuffix("0") {
-            return String(format: "%.1f", self)
+            return String(format: "%.1f", base)
         }
         return str
     }
@@ -45,45 +45,45 @@ public extension Double {
     }
     
     public var string: String {
-        return String(self)
+        return String(base)
     }
 }
 
 // MARK: - Time & Date
 
-public extension Double {
+public extension DoubleExtension {
     var formattedDate: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
-        let date = Date(timeIntervalSince1970: self)
+        let date = Date(timeIntervalSince1970: base)
         return formatter.string(from: date)
     }
     
     var formattedTime: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm"
-        let date = Date(timeIntervalSince1970: self)
+        let date = Date(timeIntervalSince1970: base)
         return formatter.string(from: date)
     }
 
     var formattedDateTime: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm"
-        let date = Date(timeIntervalSince1970: self)
+        let date = Date(timeIntervalSince1970: base)
         return formatter.string(from: date)
     }
 }
 
-public extension Int {
+public extension IntExtension {
     var formattedDate: String {
-        return Double(self).formattedDate
+        return Double(base).ext.formattedDate
     }
 
     var formattedTime: String {
-        return Double(self).formattedTime
+        return Double(base).ext.formattedTime
     }
     
     var formattedDateTime: String {
-        return Double(self).formattedDateTime
+        return Double(base).ext.formattedDateTime
     }
 }

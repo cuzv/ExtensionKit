@@ -39,19 +39,19 @@ final public class BadgeView: UIView {
     public var badgeValue: String = "" {
         didSet {
             badgeLabel.text = badgeValue
-            var width: CGFloat = badgeValue.layoutSize(font: badgeLabel.font).width + fixedHeight / 2
+            var width: CGFloat = badgeValue.ext.layoutSize(font: badgeLabel.font).width + fixedHeight / 2
             if width < fixedHeight {
                 width = fixedHeight
             }
             
-            self.width = ceil(width)
-            self.height = fixedHeight
+            ext.width = ceil(width)
+            ext.height = fixedHeight
             displayIfNeeded()
         }
     }
     
     fileprivate func displayIfNeeded() {
-        isHidden = badgeValue.length == 0 || badgeValue == "0"
+        isHidden = badgeValue.ext.length == 0 || badgeValue == "0"
         if !isHidden {
             setNeedsDisplay()
             invalidateIntrinsicContentSize()
@@ -76,11 +76,11 @@ final public class BadgeView: UIView {
 
 // MARK:
 
-public extension UIView {
-    fileprivate struct AssociatedKey {
-        static var badgeView: String = "badgeView"
-    }
-    
+fileprivate struct AssociatedKey {
+    static var badgeView: String = "badgeView"
+}
+
+public extension Extension where Base: UIView {
     fileprivate var badgeView: BadgeView? {
         get { return associatedObject(forKey: &AssociatedKey.badgeView) as? BadgeView }
         set { associate(assignObject: newValue, forKey: &AssociatedKey.badgeView) }
@@ -124,27 +124,27 @@ public extension UIView {
         guard let badgeView = badgeView else { return }
 
         var needsRemove = [NSLayoutConstraint]()
-        for cons in constraints {
+        for cons in base.constraints {
             if cons.firstItem as? NSObject == badgeView {
                 needsRemove.append(cons)
             }
         }
-        removeConstraints(needsRemove)
+        base.removeConstraints(needsRemove)
         
-        addConstraint(NSLayoutConstraint(
+        base.addConstraint(NSLayoutConstraint(
             item: badgeView,
             attribute: .centerX,
             relatedBy: .equal,
-            toItem: self,
+            toItem: base,
             attribute: .right,
             multiplier: 1,
             constant: offset.horizontal
         ))
-        addConstraint(NSLayoutConstraint(
+        base.addConstraint(NSLayoutConstraint(
             item: badgeView,
             attribute: .centerY,
             relatedBy: .equal,
-            toItem: self,
+            toItem: base,
             attribute: .top,
             multiplier: 1,
             constant: offset.vertical
@@ -156,21 +156,21 @@ public extension UIView {
         badgeView.translatesAutoresizingMaskIntoConstraints = false
         badgeView.backgroundColor = UIColor.red
         
-        addSubview(badgeView)
-        addConstraint(NSLayoutConstraint(
+        base.addSubview(badgeView)
+        base.addConstraint(NSLayoutConstraint(
             item: badgeView,
             attribute: .centerX,
             relatedBy: .equal,
-            toItem: self,
+            toItem: base,
             attribute: .right,
             multiplier: 1,
             constant: 0
         ))
-        addConstraint(NSLayoutConstraint(
+        base.addConstraint(NSLayoutConstraint(
             item: badgeView,
             attribute: .centerY,
             relatedBy: .equal,
-            toItem: self,
+            toItem: base,
             attribute: .top,
             multiplier: 1,
             constant: 0

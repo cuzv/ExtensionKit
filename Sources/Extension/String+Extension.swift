@@ -25,9 +25,9 @@ import UIKit
 
 // MARK: - RegEx
 
-public extension String {
+public extension StringExtension {
     public func isMatch(regEx: String) -> Bool {
-        return NSPredicate(format: "SELF MATCHES %@", regEx).evaluate(with: self)
+        return NSPredicate(format: "SELF MATCHES %@", regEx).evaluate(with: base)
     }
     
     public var isPhoneNumber: Bool {
@@ -41,21 +41,21 @@ public extension String {
 
 // MARK: - 
 
-public extension String {
+public extension StringExtension {
     public var length: Int {
-        return characters.count
+        return base.characters.count
     }
     
     public var isEmpty: Bool {
-        return 0 == trimed.length
+        return 0 == trimed.ext.length
     }
     
     public var trimed: String {
-        return trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+        return base.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
     }
     
-    public func layoutSize(font: UIFont, preferredMaxLayoutWidth: CGFloat = UIScreen.width) -> CGSize {
-        let str = self as NSString
+    public func layoutSize(font: UIFont, preferredMaxLayoutWidth: CGFloat = UIScreen.ext.width) -> CGSize {
+        let str = base as NSString
         return str.boundingRect(
             with: CGSize(width: preferredMaxLayoutWidth, height: CGFloat.greatestFiniteMagnitude),
             options: [.usesLineFragmentOrigin, .usesFontLeading, .truncatesLastVisibleLine],
@@ -64,25 +64,25 @@ public extension String {
         ).size
     }
     
-    public subscript(range: Range<Index>) -> String {
-        return substring(with: range)
+    public subscript(range: Range<String.Index>) -> String {
+        return base.substring(with: range)
     }
     
     public func substring(fromIndex minIndex: Int, toIndex maxIndex: Int) -> String {
-        let start = characters.index(startIndex, offsetBy: minIndex)
-        let end = characters.index(startIndex, offsetBy: maxIndex, limitedBy: endIndex)
+        let start = base.characters.index(base.startIndex, offsetBy: minIndex)
+        let end = base.characters.index(base.startIndex, offsetBy: maxIndex, limitedBy: base.endIndex)
         let range = Range<String.Index>(start ..< end!)
-        return substring(with: range)
+        return base.substring(with: range)
     }
     
     public func substring(fromIndex minIndex: Int) -> String {
-        let start = characters.index(startIndex, offsetBy: minIndex)
-        return substring(from: start)
+        let start = base.characters.index(base.startIndex, offsetBy: minIndex)
+        return base.substring(from: start)
     }
     
     public func substring(toIndex index: Int) -> String {
-        let end = characters.index(startIndex, offsetBy: index, limitedBy: endIndex)
-        return self.substring(to: end!)
+        let end = base.characters.index(base.startIndex, offsetBy: index, limitedBy: base.endIndex)
+        return base.substring(to: end!)
     }
     
     public static var uniqueIdentifier: String {
@@ -91,7 +91,7 @@ public extension String {
 }
 
 public extension NSAttributedString {
-    public func layoutSize(preferredMaxLayoutWidth: CGFloat = UIScreen.width) -> CGSize {
+    public func layoutSize(preferredMaxLayoutWidth: CGFloat = UIScreen.ext.width) -> CGSize {
         return boundingRect(
             with: CGSize(width: preferredMaxLayoutWidth, height: CGFloat.greatestFiniteMagnitude),
             options: [.usesLineFragmentOrigin, .usesFontLeading, .truncatesLastVisibleLine],
@@ -102,20 +102,20 @@ public extension NSAttributedString {
 
 // MARK: - String -> Numbers
 
-public extension String {
+public extension StringExtension {
     /// Convert string to double, shall not input cannot converted string.
     public var double: Double {
-        return Double(self)!
+        return Double(base)!
     }
     
     /// Convert string to Float, shall not input cannot converted string.
     public var float: Float {
-        return Float(self)!
+        return Float(base)!
     }
     
     /// Convert string to Int, shall not input cannot converted string.
     public var int: Int {
-        return Int(self)!
+        return Int(base)!
     }
 }
 

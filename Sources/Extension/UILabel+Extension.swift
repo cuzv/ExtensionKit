@@ -45,9 +45,20 @@ extension UILabel {
             override: #selector(_ek_drawText(in:))
         )
     }
+    
+    var _ek_intrinsicContentSize: CGSize {
+        let size = sizeThatFits(CGSize(width: bounds.size.width, height: bounds.size.height))
+        let width = size.width + ext.contentInsets.left + ext.contentInsets.right
+        let height = size.height + ext.contentInsets.top + ext.contentInsets.bottom
+        return CGSize(width: width, height: height)
+    }
+    
+    func _ek_drawText(in rect: CGRect) {
+        _ek_drawText(in: UIEdgeInsetsInsetRect(rect, ext.contentInsets))
+    }
 }
 
-public extension UILabel {
+public extension Extension where Base: UILabel {
     public var contentInsets: UIEdgeInsets {
         get {
             if let value = associatedObject(forKey: &AssociationKey.contentInsets) as? NSValue {
@@ -57,62 +68,51 @@ public extension UILabel {
         }
         set { associate(retainObject: NSValue(uiEdgeInsets: newValue), forKey: &AssociationKey.contentInsets) }
     }
-    
-    var _ek_intrinsicContentSize: CGSize {
-        let size = sizeThatFits(CGSize(width: bounds.size.width, height: bounds.size.height))
-        let width = size.width + contentInsets.left + contentInsets.right
-        let height = size.height + contentInsets.top + contentInsets.bottom
-        return CGSize(width: width, height: height)
-    }
-    
-    func _ek_drawText(in rect: CGRect) {
-        _ek_drawText(in: UIEdgeInsetsInsetRect(rect, contentInsets))
-    }
 }
 
 // MARK: - 
 
-public extension UILabel {
+public extension Extension where Base: UILabel {
     /// Setup rounding corners radius.
     /// **Note**: Before you invoke this method, ensure `self` already have correct frame and image.
-    public override func addRoundingCorners(
+    public func addRoundingCorners(
         for corners: UIRectCorner = .allCorners,
         radius: CGFloat = 3,
         fillColor: UIColor? = nil,
         strokeColor: UIColor? = nil,
         strokeLineWidth: CGFloat = 0)
     {
-        if frame.size.equalTo(CGSize.zero) {
+        if base.frame.size.equalTo(CGSize.zero) {
             logging("Could not set rounding corners on zero size view.")
             return
         }
-        if nil == superview {
+        if nil == base.superview {
             return
         }
 
         DispatchQueue.global().async {
-            let backImage = UIImage.make(
-                color: fillColor ?? self.backgroundColor ?? UIColor.white,
-                size: self.frame.size,
+            let backImage = UIImage.ext.make(
+                color: fillColor ?? self.base.backgroundColor ?? UIColor.white,
+                size: self.base.frame.size,
                 roundingCorners: corners,
                 radius: radius,
-                strokeColor: strokeColor ?? self.backgroundColor ?? UIColor.clear,
+                strokeColor: strokeColor ?? self.base.backgroundColor ?? UIColor.clear,
                 strokeLineWidth: strokeLineWidth
             )
             DispatchQueue.main.async {
                 let backImageView = UIImageView(image: backImage)
-                backImageView.frame = self.frame
-                self.superview?.addSubview(backImageView)
-                self.superview?.sendSubview(toBack: backImageView)
-                self.backgroundColor = UIColor.clear
+                backImageView.frame = self.base.frame
+                self.base.superview?.addSubview(backImageView)
+                self.base.superview?.sendSubview(toBack: backImageView)
+                self.base.backgroundColor = UIColor.clear
                 self.isRoundingCornersExists = true
             }
         }
     }
     
     /// This will remove all added rounding corners on label's superview
-    public override func removeRoundingCorners() {
-        superview?.removeRoundingCorners()
+    public func removeRoundingCorners() {
+        base.superview?.ext.removeRoundingCorners()
         isRoundingCornersExists = false
     }
 }

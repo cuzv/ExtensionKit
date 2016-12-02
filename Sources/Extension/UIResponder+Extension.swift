@@ -23,9 +23,9 @@
 
 import UIKit
 
-public extension UIResponder {
+public extension Extension where Base: UIResponder {
     public func responder(ofClass cls: AnyClass) -> UIResponder? {
-        var responder = self
+        var responder: UIResponder = base
         while let _responder = responder.next {
             if _responder.isKind(of: cls) {
                 return _responder
@@ -37,7 +37,7 @@ public extension UIResponder {
     }
     
     public func sendAction(_ action: Selector) -> Bool {
-        return UIApplication.sendAction(action, fromSender: self)
+        return UIApplication.ext.sendAction(action, fromSender: self)
     }
 
     @discardableResult
@@ -46,7 +46,7 @@ public extension UIResponder {
         _ firstArgument: AnyObject! = nil,
         _ secondArgument: AnyObject! = nil) -> Unmanaged<AnyObject>!
     {
-        var responder: UIResponder? = self
+        var responder: UIResponder? = base
         while let _responder = responder , !_responder.responds(to: action) {
             responder = _responder.next
         }

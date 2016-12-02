@@ -23,12 +23,12 @@
 
 import UIKit
 
-public extension UIColor {
+public extension Extension where Base: UIColor {
     public class var random: UIColor {
         let red   = CGFloat(ExtensionKit.random(in: 0 ..< 255))
         let green = CGFloat(ExtensionKit.random(in: 0 ..< 255))
         let blue  = CGFloat(ExtensionKit.random(in: 0 ..< 255))
-        return UIColor.make(red: red, green: green, blue: blue)
+        return UIColor.ext.make(red: red, green: green, blue: blue)
     }
     
     public class func make(red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat = 100) -> UIColor {
@@ -47,7 +47,7 @@ public extension UIColor {
         scanner.scanHexInt32(&hexint)
         
         // Create color object, specifying alpha
-        if hex.length <= 4 {
+        if hex.ext.length <= 4 {
             let divisor = CGFloat(15)
             let red     = CGFloat((hexint & 0xF00) >> 8) / divisor
             let green   = CGFloat((hexint & 0x0F0) >> 4) / divisor
@@ -64,11 +64,11 @@ public extension UIColor {
 }
 
 public func UIColorFrom(red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat = 100) -> UIColor {
-    return UIColor.make(red: red, green: green, blue: blue, alpha: alpha)
+    return UIColor.ext.make(red: red, green: green, blue: blue, alpha: alpha)
 }
 
 public func UIColorFrom(hex: String, alpha: CGFloat = 100) -> UIColor {
-    return UIColor.make(hex: hex, alpha: alpha)
+    return UIColor.ext.make(hex: hex, alpha: alpha)
 }
 
 // MARK: - iOS default color
@@ -76,48 +76,48 @@ public func UIColorFrom(hex: String, alpha: CGFloat = 100) -> UIColor {
 public extension UIColor {
     public class var tint: UIColor {
         // 3, 122, 255, 100
-        return UIColor.make(hex: "037AFF")
+        return UIColor.ext.make(hex: "037AFF")
     }
     
     public class var separator: UIColor {
         // 200, 199, 204, 100
-        return UIColor.make(hex: "C8C7CC")
+        return UIColor.ext.make(hex: "C8C7CC")
     }
     
     public class var separatorDark: UIColor {
         // 69, 75, 65, 100
-        return UIColor.make(hex: "454b41")
+        return UIColor.ext.make(hex: "454b41")
     }
     
     /// Grouped table view background.
     public class var groupedBackground: UIColor {
         // 239, 239, 244, 100
-        return UIColor.make(hex: "EFEFF4")
+        return UIColor.ext.make(hex: "EFEFF4")
     }
     
     /// Activity background
     public class var activityBackground: UIColor {
         // 248, 248, 248, 60
-        return UIColor.make(hex: "F8F8F8", alpha: 60)
+        return UIColor.ext.make(hex: "F8F8F8", alpha: 60)
     }
     
     public class var disclosureIndicator: UIColor {
-        return UIColor.make(hex: "C7C7CC")
+        return UIColor.ext.make(hex: "C7C7CC")
     }
 
     /// Navigation bar title.
     public class var naviTitle: UIColor {
         // 3, 3, 3, 100
-        return UIColor.make(hex: "030303")
+        return UIColor.ext.make(hex: "030303")
     }
     
     public class var subTitle: UIColor {
         // 144, 144, 148, 100
-        return UIColor.make(hex: "909094")
+        return UIColor.ext.make(hex: "909094")
     }
     
     public class var placeholder: UIColor {
         // 200, 200, 205, 100
-        return UIColor.make(hex: "C8C8CD")
+        return UIColor.ext.make(hex: "C8C8CD")
     }
 }

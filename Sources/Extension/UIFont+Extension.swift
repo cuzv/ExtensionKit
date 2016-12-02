@@ -25,7 +25,7 @@ import UIKit
 
 // MARK: - Fonts
 
-public extension UIFont {
+public extension Extension where Base: UIFont {
     public class var size8Fixed: UIFont {
         return UIFont.systemFont(ofSize: 8.0)
     }
@@ -43,7 +43,7 @@ public extension UIFont {
     }
     
     public class var size11: UIFont {
-        return UIFont.caption2
+        return UIFont.ext.caption2
     }
     
     public class var caption1: UIFont {
@@ -51,7 +51,7 @@ public extension UIFont {
     }
     
     public class var size12: UIFont {
-        return UIFont.caption1
+        return UIFont.ext.caption1
     }
     
     public class var footnote: UIFont {
@@ -59,7 +59,7 @@ public extension UIFont {
     }
     
     public class var size13: UIFont {
-        return UIFont.footnote
+        return UIFont.ext.footnote
     }
     
     public class var size14Fixed: UIFont {
@@ -71,7 +71,7 @@ public extension UIFont {
     }
     
     public class var size15: UIFont {
-        return UIFont.subheadline
+        return UIFont.ext.subheadline
     }
     
     public class var body: UIFont {
@@ -79,7 +79,7 @@ public extension UIFont {
     }
     
     public class var size17: UIFont {
-        return UIFont.body
+        return UIFont.ext.body
     }
     
     public class var headline: UIFont {
@@ -87,7 +87,7 @@ public extension UIFont {
     }
     
     public class var size17Blod: UIFont {
-        return UIFont.headline
+        return UIFont.ext.headline
     }
     
     public class var size18Fixed: UIFont {

@@ -23,12 +23,12 @@
 
 import Foundation
 
-public extension Data {
+public extension DataExtension {
     /// Create a Foundation object from JSON data.
     public var JSONObject: AnyObject? {
         do {
             return try JSONSerialization.jsonObject(
-                with: self,
+                with: base,
                 options: JSONSerialization.ReadingOptions.mutableLeaves
             ) as AnyObject
         } catch let error as NSError {

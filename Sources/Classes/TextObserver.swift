@@ -57,12 +57,12 @@ final public class TextObserver {
                 guard let textField = notification.object as? UITextField else { return }
                 guard let text = textField.text else { return }
                 
-                let textLenght = text.length
+                let textLenght = text.ext.length
                 if textLenght > this.maxLength && nil == textField.markedTextRange {
-                    textField.text = text.substring(toIndex: this.maxLength)
+                    textField.text = text.ext.substring(toIndex: this.maxLength)
                 }
                 
-                this.actionHandler(this.maxLength - (textField.text ?? "").length)
+                this.actionHandler(this.maxLength - (textField.text ?? "").ext.length)
             }
     }
     
@@ -77,13 +77,13 @@ final public class TextObserver {
                 guard let textView = notification.object as? UITextView else { return }
                 guard let text = textView.text else { return }
                 
-                let textLenght = text.length
+                let textLenght = text.ext.length
                 if textLenght > this.maxLength && nil == textView.markedTextRange {
-                    textView.text = text.substring(toIndex: this.maxLength)
+                    textView.text = text.ext.substring(toIndex: this.maxLength)
                 }
                 
-                this.actionHandler(this.maxLength - (textView.text ?? "").length)
-                textView.scrollCursorToVisible()
+                this.actionHandler(this.maxLength - (textView.text ?? "").ext.length)
+                textView.ext.scrollCursorToVisible()
             }
     }
     

@@ -60,61 +60,62 @@ extension UIView {
 
 private extension UIGestureRecognizer {
     var gestureRecognizerWrapper: ClosureDecorator<(UIView, UIGestureRecognizer)> {
-        get { return associatedObject(forKey: &AssociationKey.gestureRecognizerWrapper) as! ClosureDecorator<(UIView, UIGestureRecognizer)> }
-        set { associate(retainObject: newValue, forKey: &AssociationKey.gestureRecognizerWrapper) }
+        get { return ext.associatedObject(forKey: &AssociationKey.gestureRecognizerWrapper) as! ClosureDecorator<(UIView, UIGestureRecognizer)> }
+        set { ext.associate(retainObject: newValue, forKey: &AssociationKey.gestureRecognizerWrapper) }
     }
 }
 
-public extension UIView {
+public extension Extension where Base: UIView {
     /// Single tap action closure func.
     /// **Note**: You should invoke `longPressAction:` or `doubleTapsAction` first if you need.
     public func tapAction(_ action: @escaping ((UIView, UIGestureRecognizer?) -> ())) {
-        isUserInteractionEnabled = true
+        base.isUserInteractionEnabled = true
         
         let tapGesureRecognizer = UITapGestureRecognizer(
-            target: self,
+            target: base,
             action: #selector(UIView.handleGestureRecognizerAction(_:))
         )
-        checkRequireGestureRecognizerToFailForSingleTapGesureRecognizer(tapGesureRecognizer)
-        addGestureRecognizer(tapGesureRecognizer)
+        base.checkRequireGestureRecognizerToFailForSingleTapGesureRecognizer(tapGesureRecognizer)
+        base.addGestureRecognizer(tapGesureRecognizer)
         tapGesureRecognizer.gestureRecognizerWrapper = ClosureDecorator(action)
     }
     
     /// Dobule tap action closure func.
     /// **Note**: You should invoke `longPressAction:` first if you need.
     public func doubleTapsAction(_ action: @escaping (UIView, UIGestureRecognizer?) -> ()) {
-        isUserInteractionEnabled = true
+        base.isUserInteractionEnabled = true
         
         let doubleTapGesureRecognizer = UITapGestureRecognizer(
-            target: self,
+            target: base,
             action: #selector(UIView.handleGestureRecognizerAction(_:))
         )
         doubleTapGesureRecognizer.numberOfTapsRequired = 2
-        checkRequireGestureRecognizerToFailForDoubleTapGesureRecognizer(doubleTapGesureRecognizer)
-        addGestureRecognizer(doubleTapGesureRecognizer)
+        base.checkRequireGestureRecognizerToFailForDoubleTapGesureRecognizer(doubleTapGesureRecognizer)
+        base.addGestureRecognizer(doubleTapGesureRecognizer)
         doubleTapGesureRecognizer.gestureRecognizerWrapper = ClosureDecorator(action)
     }
     
     /// Long press action closure func.
     public func longPressAction(_ action: @escaping (UIView, UIGestureRecognizer?) -> ()) {
-        isUserInteractionEnabled = true
+        base.isUserInteractionEnabled = true
         
         let longPressGesureRecognizer = UILongPressGestureRecognizer(
-            target: self,
+            target: base,
             action: #selector(UIView.handleGestureRecognizerAction(_:))
         )
-        addGestureRecognizer(longPressGesureRecognizer)
+        base.addGestureRecognizer(longPressGesureRecognizer)
         longPressGesureRecognizer.gestureRecognizerWrapper = ClosureDecorator(action)
     }
     
-    internal func handleGestureRecognizerAction(_ sender: UIGestureRecognizer) {
+}
+
+private extension UIView {
+    dynamic func handleGestureRecognizerAction(_ sender: UIGestureRecognizer) {
         if (sender.state == .ended) {
             sender.gestureRecognizerWrapper.invoke((self, sender))
         }
     }
-}
 
-private extension UIView {
     func checkRequireGestureRecognizerToFailForSingleTapGesureRecognizer(_ tapGesureRecognizer: UITapGestureRecognizer) {
         if let gestureRecognizers = gestureRecognizers {
             for gestureRecognizer in gestureRecognizers {
@@ -140,29 +141,26 @@ private extension UIView {
 
 // MARK: The `ActionTrampoline` implement
 
-@objc public protocol UIGestureRecognizerFunctionProtocol {}
-extension UIView: UIGestureRecognizerFunctionProtocol {}
-
-public extension UIGestureRecognizerFunctionProtocol where Self: UIView {
+public extension Extension where Base: UIView {
     /// Single tap action closure func.
     /// **Note**: You should invoke `longPressAction:` or `tripleTapsAction` first if you need.
-    public func tapAction(_ action: @escaping ((Self) -> ())) {
-        isUserInteractionEnabled = true
+    public func tapAction(_ action: @escaping ((UIView) -> ())) {
+        base.isUserInteractionEnabled = true
         
         let trampoline = ActionTrampoline(action: action)
         let tapGestureRecognizer = UITapGestureRecognizer(
             target: trampoline,
             action: trampoline.selector
         )
-        checkRequireGestureRecognizerToFailForSingleTapGesureRecognizer(tapGestureRecognizer)
-        addGestureRecognizer(tapGestureRecognizer)
+        base.checkRequireGestureRecognizerToFailForSingleTapGesureRecognizer(tapGestureRecognizer)
+        base.addGestureRecognizer(tapGestureRecognizer)
         associate(retainObject: trampoline, forKey: &AssociationKey.singleTapGestureRecognizer)
     }
 
     /// Dobule taps action closure func.
     /// **Note**: You should invoke `longPressAction:` or `tripleTapsAction` first if you need.
-    public func doubleTapsAction(_ action: @escaping (Self) -> ()) {
-        isUserInteractionEnabled = true
+    public func doubleTapsAction(_ action: @escaping (UIView) -> ()) {
+        base.isUserInteractionEnabled = true
 
         let trampoline = ActionTrampoline(action: action)
         let doubleTapGesureRecognizer = UITapGestureRecognizer(
@@ -170,15 +168,15 @@ public extension UIGestureRecognizerFunctionProtocol where Self: UIView {
             action: trampoline.selector
         )
         doubleTapGesureRecognizer.numberOfTapsRequired = 2
-        checkRequireGestureRecognizerToFailForDoubleTapGesureRecognizer(doubleTapGesureRecognizer)
-        addGestureRecognizer(doubleTapGesureRecognizer)
+        base.checkRequireGestureRecognizerToFailForDoubleTapGesureRecognizer(doubleTapGesureRecognizer)
+        base.addGestureRecognizer(doubleTapGesureRecognizer)
         associate(retainObject: trampoline, forKey: &AssociationKey.doubleTapGestureRecognizer)
     }
     
     /// Triple taps action closure func.
     /// **Note**: You should invoke `longPressAction:` or `tripleTapsAction` first if you need.
-    public func tripleTapsAction(_ action: @escaping (Self) -> ()) {
-        isUserInteractionEnabled = true
+    public func tripleTapsAction(_ action: @escaping (UIView) -> ()) {
+        base.isUserInteractionEnabled = true
         
         let trampoline = ActionTrampoline(action: action)
         let doubleTapGesureRecognizer = UITapGestureRecognizer(
@@ -186,15 +184,15 @@ public extension UIGestureRecognizerFunctionProtocol where Self: UIView {
             action: trampoline.selector
         )
         doubleTapGesureRecognizer.numberOfTapsRequired = 3
-        checkRequireGestureRecognizerToFailForDoubleTapGesureRecognizer(doubleTapGesureRecognizer)
-        addGestureRecognizer(doubleTapGesureRecognizer)
+        base.checkRequireGestureRecognizerToFailForDoubleTapGesureRecognizer(doubleTapGesureRecognizer)
+        base.addGestureRecognizer(doubleTapGesureRecognizer)
         associate(retainObject: trampoline, forKey: &AssociationKey.doubleTapGestureRecognizer)
     }
     
     /// Multiple tap action closure func.
     /// **Note**: You should invoke `longPressAction:` or `tripleTapsAction` first if you need.
-    public func multipleTaps(numberOfTapsRequired taps: Int, action: @escaping (Self) -> ()) {
-        isUserInteractionEnabled = true
+    public func multipleTaps(numberOfTapsRequired taps: Int, action: @escaping (UIView) -> ()) {
+        base.isUserInteractionEnabled = true
         
         let trampoline = ActionTrampoline(action: action)
         let doubleTapGesureRecognizer = UITapGestureRecognizer(
@@ -202,133 +200,145 @@ public extension UIGestureRecognizerFunctionProtocol where Self: UIView {
             action: trampoline.selector
         )
         doubleTapGesureRecognizer.numberOfTapsRequired = taps
-        checkRequireGestureRecognizerToFailForDoubleTapGesureRecognizer(doubleTapGesureRecognizer)
-        addGestureRecognizer(doubleTapGesureRecognizer)
+        base.checkRequireGestureRecognizerToFailForDoubleTapGesureRecognizer(doubleTapGesureRecognizer)
+        base.addGestureRecognizer(doubleTapGesureRecognizer)
         associate(retainObject: trampoline, forKey: &AssociationKey.doubleTapGestureRecognizer)
     }
 
     /// Long press action closure func.
-    public func longPressAction(_ action: @escaping (Self) -> ()) {
-        isUserInteractionEnabled = true
+    public func longPressAction(_ action: @escaping (UIView) -> ()) {
+        base.isUserInteractionEnabled = true
         
         let trampoline = ActionTrampoline(action: action)
         let longPressGesureRecognizer = UILongPressGestureRecognizer(
             target: trampoline,
             action: trampoline.selector
         )
-        addGestureRecognizer(longPressGesureRecognizer)
+        base.addGestureRecognizer(longPressGesureRecognizer)
         associate(retainObject: trampoline, forKey: &AssociationKey.longPressGestureRecognizer)
     }
 }
 
 // MARK: - Responder
 
-public extension UIView {
+public extension Extension where Base: UIView {
     public var responderViewController: UIViewController? {
         return responder(ofClass: UIViewController.self) as? UIViewController
     }
 }
 
 // MARK: - Frame & Struct
-public extension UIView {
+public extension Extension where Base: UIView {
     public var origin: CGPoint {
-        get { return frame.origin }
-        set { frame = CGRect(x: newValue.x, y: newValue.y, width: width, height: height) }
+        get { return base.frame.origin }
+        set { base.frame = CGRect(x: newValue.x, y: newValue.y, width: width, height: height) }
     }
     
     public var size: CGSize {
-        get { return frame.size }
-        set { frame = CGRect(x: minX, y: minY, width: newValue.width, height: newValue.height) }
+        get { return base.frame.size }
+        set { base.frame = CGRect(x: minX, y: minY, width: newValue.width, height: newValue.height) }
     }
     
     public var minX: CGFloat {
-        get { return frame.origin.x }
-        set { frame = CGRect(x: newValue, y: minY, width: width, height: height) }
+        get { return base.frame.origin.x }
+        set { base.frame = CGRect(x: newValue, y: minY, width: width, height: height) }
     }
     
     public var left: CGFloat {
-        get { return frame.origin.x }
-        set { frame = CGRect(x: newValue, y: minY, width: width, height: height) }
+        get { return base.frame.origin.x }
+        set { base.frame = CGRect(x: newValue, y: minY, width: width, height: height) }
     }
     
     public var midX: CGFloat {
-        get { return frame.midX }
-        set { frame = CGRect(x: newValue - width / 2.0, y: minY, width: width, height: height) }
+        get { return base.frame.midX }
+        set { base.frame = CGRect(x: newValue - width / 2.0, y: minY, width: width, height: height) }
     }
     
     public var centerX: CGFloat {
-        get { return frame.midX }
-        set { frame = CGRect(x: newValue - width / 2.0, y: minY, width: width, height: height) }
+        get { return base.frame.midX }
+        set { base.frame = CGRect(x: newValue - width / 2.0, y: minY, width: width, height: height) }
     }
     
     public var maxX: CGFloat {
         get { return minX + width }
-        set { frame = CGRect(x: newValue - width, y: minY, width: width, height: height) }
+        set { base.frame = CGRect(x: newValue - width, y: minY, width: width, height: height) }
     }
     
     public var right: CGFloat {
         get { return minX + width }
-        set { frame = CGRect(x: newValue - width, y: minY, width: width, height: height) }
+        set { base.frame = CGRect(x: newValue - width, y: minY, width: width, height: height) }
     }
     
     public var minY: CGFloat {
-        get { return frame.origin.y }
-        set { frame = CGRect(x: minX, y: newValue, width: width, height: height) }
+        get { return base.frame.origin.y }
+        set { base.frame = CGRect(x: minX, y: newValue, width: width, height: height) }
     }
     
     public var top: CGFloat {
-        get { return frame.origin.y }
-        set { frame = CGRect(x: minX, y: newValue, width: width, height: height) }
+        get { return base.frame.origin.y }
+        set { base.frame = CGRect(x: minX, y: newValue, width: width, height: height) }
     }
     
     public var midY: CGFloat {
-        get { return frame.midY }
-        set { frame = CGRect(x: minX, y: newValue - height / 2.0, width: width, height: height) }
+        get { return base.frame.midY }
+        set { base.frame = CGRect(x: minX, y: newValue - height / 2.0, width: width, height: height) }
     }
     
     public var centerY: CGFloat {
-        get { return frame.midY }
-        set { frame = CGRect(x: minX, y: newValue - height / 2.0, width: width, height: height) }
+        get { return base.frame.midY }
+        set { base.frame = CGRect(x: minX, y: newValue - height / 2.0, width: width, height: height) }
     }
     
     public var maxY: CGFloat {
         get { return minY + height }
-        set { frame = CGRect(x: minX, y: newValue - height, width: width, height: height) }
+        set { base.frame = CGRect(x: minX, y: newValue - height, width: width, height: height) }
     }
     
     public var bottom: CGFloat {
         get { return minY + height }
-        set { frame = CGRect(x: minX, y: newValue - height, width: width, height: height) }
+        set { base.frame = CGRect(x: minX, y: newValue - height, width: width, height: height) }
     }
     
     public var width: CGFloat {
-        get { return bounds.width }
-        set { frame = CGRect(x: minX, y: minY, width: newValue, height: height) }
+        get { return base.bounds.width }
+        set { base.frame = CGRect(x: minX, y: minY, width: newValue, height: height) }
     }
     
     public var height: CGFloat {
-        get { return bounds.height }
-        set { frame = CGRect(x: minX, y: minY, width: width, height: newValue) }
+        get { return base.bounds.height }
+        set { base.frame = CGRect(x: minX, y: minY, width: width, height: newValue) }
     }
 } 
 
 // MARK: - Border
 
-public extension UIView {
+fileprivate class _BorderLineView: UIView {
+    fileprivate var edge: UIRectEdge
+    fileprivate init(edge: UIRectEdge) {
+        self.edge = edge
+        super.init(frame: CGRect.zero)
+    }
+    
+    required fileprivate init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+public extension Extension where Base: UIView {
     public var borderWith: CGFloat {
-        get { return layer.borderWidth }
-        set { layer.borderWidth = newValue }
+        get { return base.layer.borderWidth }
+        set { base.layer.borderWidth = newValue }
     }
     
     public var borderColor: UIColor? {
         get {
-            if let CGColor = layer.borderColor {
+            if let CGColor = base.layer.borderColor {
                 return UIColor(cgColor: CGColor)
             } else {
                 return nil
             }
         }
-        set { layer.borderColor = newValue?.cgColor }
+        set { base.layer.borderColor = newValue?.cgColor }
     }
     
     /// Setup border width & color.
@@ -336,8 +346,8 @@ public extension UIView {
         width: CGFloat = 1.0 / UIScreen.main.scale,
         color: UIColor = UIColor.separator)
     {
-        layer.borderWidth = width
-        layer.borderColor = color.cgColor
+        base.layer.borderWidth = width
+        base.layer.borderColor = color.cgColor
     }
     
     /// Add dash border line view using CAShapeLayer.
@@ -373,8 +383,8 @@ public extension UIView {
             return lineLayer
         }
         
-        let w = bounds.size.width
-        let h = bounds.size.height
+        let w = base.bounds.size.width
+        let h = base.bounds.size.height
         let startX  = 0.5 * w * (1.0 - multiplier) + 0.5 * constant
         let endX    = 0.5 * w * (1.0 + multiplier) - 0.5 * constant
         let startY  = 0.5 * h * (1.0 - multiplier) + 0.5 * constant
@@ -388,7 +398,7 @@ public extension UIView {
                 startPoint: CGPoint(x: startX, y: 0),
                 endPoint: CGPoint(x: endX, y: 0)
             )
-            layer.addSublayer(lineLayer)
+            base.layer.addSublayer(lineLayer)
         }
         
         if rectEdge.contains(.left) {
@@ -399,7 +409,7 @@ public extension UIView {
                 startPoint: CGPoint(x: 0, y: startY),
                 endPoint: CGPoint(x: 0, y: endY)
             )
-            layer.addSublayer(lineLayer)
+            base.layer.addSublayer(lineLayer)
         }
         
         if rectEdge.contains(.bottom) {
@@ -410,7 +420,7 @@ public extension UIView {
                 startPoint: CGPoint(x: startX, y: h),
                 endPoint: CGPoint(x: endX, y: h)
             )
-            layer.addSublayer(lineLayer)
+            base.layer.addSublayer(lineLayer)
         }
         
         if rectEdge.contains(.right) {
@@ -421,19 +431,7 @@ public extension UIView {
                 startPoint: CGPoint(x: w, y: startY),
                 endPoint: CGPoint(x: w, y: endY)
             )
-            layer.addSublayer(lineLayer)
-        }
-    }
-
-    fileprivate class _BorderLineView: UIView {
-        fileprivate var edge: UIRectEdge
-        fileprivate init(edge: UIRectEdge) {
-            self.edge = edge
-            super.init(frame: CGRect.zero)
-        }
-        
-        required fileprivate init?(coder aDecoder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
+            base.layer.addSublayer(lineLayer)
         }
     }
     
@@ -457,13 +455,13 @@ public extension UIView {
             let lineView = _BorderLineView(edge: rectEdge)
             lineView.backgroundColor = color
             lineView.translatesAutoresizingMaskIntoConstraints = false
-            addSubview(lineView)
+            base.addSubview(lineView)
             
             let edgeConstraint = NSLayoutConstraint(
                 item: lineView,
                 attribute: edge,
                 relatedBy: .equal,
-                toItem: self,
+                toItem: base,
                 attribute: edge,
                 multiplier: 1,
                 constant: 0
@@ -472,7 +470,7 @@ public extension UIView {
                 item: lineView,
                 attribute: center,
                 relatedBy: .equal,
-                toItem: self,
+                toItem: base,
                 attribute: center,
                 multiplier: 1,
                 constant: 0
@@ -481,12 +479,12 @@ public extension UIView {
                 item: lineView,
                 attribute: size,
                 relatedBy: .equal,
-                toItem: self,
+                toItem: base,
                 attribute: size,
                 multiplier: multiplier,
                 constant: constant
             )
-            addConstraints([edgeConstraint, centerConstraint, sizeConstraint])
+            base.addConstraints([edgeConstraint, centerConstraint, sizeConstraint])
             
             let constraints = NSLayoutConstraint.constraints(
                 withVisualFormat: visualFormat,
@@ -494,14 +492,14 @@ public extension UIView {
                 metrics: nil,
                 views: ["lineView": lineView]
             )
-            addConstraints(constraints)
+            base.addConstraints(constraints)
         }
         
         if rectEdge == UIRectEdge() {
             return
         }
         
-        for view in subviews {
+        for view in base.subviews {
             if let view = view as? _BorderLineView , rectEdge.contains(view.edge) {
                 return
             }
@@ -562,7 +560,7 @@ public extension UIView {
             return
         }
         
-        for view in subviews {
+        for view in base.subviews {
             if let view = view as? _BorderLineView , rectEdge.contains(view.edge) {
                 view.removeFromSuperview()
             }
@@ -572,12 +570,12 @@ public extension UIView {
 
 // MARK: - Corner
 
-public extension UIView {
+public extension Extension where Base: UIView {
     public var cornerRadius: CGFloat {
-        get { return layer.cornerRadius }
+        get { return base.layer.cornerRadius }
         set {
-            layer.masksToBounds = newValue > 0
-            layer.cornerRadius = newValue
+            base.layer.masksToBounds = newValue > 0
+            base.layer.cornerRadius = newValue
         }
     }
     
@@ -600,23 +598,23 @@ public extension UIView {
         strokeColor: UIColor? = nil,
         strokeLineWidth: CGFloat = 0)
     {
-        if frame.size.equalTo(CGSize.zero) {
+        if base.frame.size.equalTo(CGSize.zero) {
             logging("Could not set rounding corners on zero size view.")
             return
         }
 
         DispatchQueue.global().async {
-            let backImage = UIImage.make(
-                color: fillColor ?? self.backgroundColor ?? UIColor.white,
-                size: self.frame.size,
+            let backImage = UIImage.ext.make(
+                color: fillColor ?? self.base.backgroundColor ?? UIColor.white,
+                size: self.base.frame.size,
                 roundingCorners: corners,
                 radius: radius,
-                strokeColor: strokeColor ?? self.backgroundColor ?? UIColor.clear,
+                strokeColor: strokeColor ?? self.base.backgroundColor ?? UIColor.clear,
                 strokeLineWidth: strokeLineWidth
             )
             DispatchQueue.main.async {
-                self.backgroundColor = UIColor.clear
-                self.layer.contents = backImage?.cgImage
+                self.base.backgroundColor = UIColor.clear
+                self.base.layer.contents = backImage?.cgImage
                 self.isRoundingCornersExists = true
             }
         }
@@ -624,14 +622,14 @@ public extension UIView {
     
     /// This will remove all added rounding corners on self
     public func removeRoundingCorners() {
-        layer.contents = nil
+        base.layer.contents = nil
         isRoundingCornersExists = false
     }
 }
 
 // MARK: - Blur
 
-public extension UIView {
+public extension Extension where Base: UIView {
     @available(iOS 8.0, *)
     public class func blurEffect(style: UIBlurEffectStyle = .extraLight) -> UIView {
         let blurView = UIVisualEffectView(frame: CGRect.zero)
@@ -641,18 +639,18 @@ public extension UIView {
     
     @available(iOS 8.0, *)
     public func addBlurEffectView(style: UIBlurEffectStyle = .extraLight, useAutolayout: Bool = true) -> UIView {
-        let blurView = UIView.blurEffect(style: style)
-        blurView.frame = bounds
-        addSubview(blurView)
+        let blurView = UIView.ext.blurEffect(style: style)
+        blurView.frame = base.bounds
+        base.addSubview(blurView)
         if useAutolayout {
             blurView.translatesAutoresizingMaskIntoConstraints = false
-            addConstraints(NSLayoutConstraint.constraints(
+            base.addConstraints(NSLayoutConstraint.constraints(
                 withVisualFormat: "|[blurView]|",
                 options: .directionLeadingToTrailing,
                 metrics: nil,
                 views: ["blurView": blurView]
             ))
-            addConstraints(NSLayoutConstraint.constraints(
+            base.addConstraints(NSLayoutConstraint.constraints(
                 withVisualFormat: "V:|[blurView]|",
                 options: .directionLeadingToTrailing,
                 metrics: nil,
@@ -673,17 +671,17 @@ public extension UIView {
     
     @available(iOS 6.0, *)
     public func addSpeclEffectView(style: UIBarStyle = .default, useAutolayout: Bool = true) -> UIView {
-        let speclEffectView = UIView.speclEffect(style: style)
-        speclEffectView.frame = bounds
+        let speclEffectView = UIView.ext.speclEffect(style: style)
+        speclEffectView.frame = base.bounds
         if useAutolayout {
             speclEffectView.translatesAutoresizingMaskIntoConstraints = false
-            addConstraints(NSLayoutConstraint.constraints(
+            base.addConstraints(NSLayoutConstraint.constraints(
                 withVisualFormat: "|[speclEffectView]|",
                 options: .directionLeadingToTrailing,
                 metrics: nil,
                 views: ["speclEffectView": speclEffectView]
             ))
-            addConstraints(NSLayoutConstraint.constraints(
+            base.addConstraints(NSLayoutConstraint.constraints(
                 withVisualFormat: "V:|[speclEffectView]|",
                 options: .directionLeadingToTrailing,
                 metrics: nil,
@@ -696,14 +694,14 @@ public extension UIView {
 
 // MARK: - UIActivityIndicatorView
 
-public extension UIView {
+public extension Extension where Base: UIView {
     fileprivate var activityIndicatorView: UIActivityIndicatorView? {
         get { return associatedObject(forKey: &AssociationKey.activityIndicatorView) as? UIActivityIndicatorView }
         set { associate(assignObject: newValue, forKey: &AssociationKey.activityIndicatorView) }
     }
     
     fileprivate func correspondCenter(dy: CGFloat) -> CGPoint {
-        var newCenter = center
+        var newCenter = base.center
         newCenter.y += dy
         return newCenter
     }
@@ -726,7 +724,7 @@ public extension UIView {
         activityIndicatorView.center = correspondCenter(dy: dy)
         activityIndicatorView.isUserInteractionEnabled = false
         activityIndicatorView.clipsToBounds = true
-        addSubview(activityIndicatorView)
+        base.addSubview(activityIndicatorView)
         activityIndicatorView.startAnimating()
         self.activityIndicatorView = activityIndicatorView
     }
@@ -747,7 +745,7 @@ public extension UIView {
 
 // MARK: - Arc Animation
 
-public extension UIView {
+public extension Extension where Base: UIView {
     fileprivate var arcIndicatorLayer: CAShapeLayer! {
         get { return associatedObject(forKey: &AssociationKey.arcIndicatorLayer) as? CAShapeLayer }
         set { associate(assignObject: newValue, forKey: &AssociationKey.arcIndicatorLayer) }
@@ -755,13 +753,13 @@ public extension UIView {
     fileprivate var stokeAnimationKey: String { return "stokeAnimation" }
     
     fileprivate func makeArcIndicatorLayer(lineWidth: CGFloat = 2, lineColor: UIColor = UIColor.lightGray) -> CAShapeLayer {
-        let half = min(bounds.midX, bounds.midY)
+        let half = min(base.bounds.midX, base.bounds.midY)
         let path = UIBezierPath()
         path.addArc(
-            withCenter: CGPoint(x: bounds.midX, y: bounds.midY),
+            withCenter: CGPoint(x: base.bounds.midX, y: base.bounds.midY),
             radius: half,
-            startAngle: CGFloat(-90).radian,
-            endAngle: CGFloat(270).radian,
+            startAngle: CGFloat(-90).ext.radian,
+            endAngle: CGFloat(270).ext.radian,
             clockwise: true
         )
 
@@ -770,7 +768,7 @@ public extension UIView {
         arcIndicatorLayer.fillColor = UIColor.clear.cgColor
         arcIndicatorLayer.strokeColor = UIColor.lightGray.cgColor
         arcIndicatorLayer.lineWidth = 2;
-        arcIndicatorLayer.frame = bounds
+        arcIndicatorLayer.frame = base.bounds
         return arcIndicatorLayer
     }
     
@@ -796,7 +794,7 @@ public extension UIView {
         let arcIndicatorLayer = makeArcIndicatorLayer(lineWidth: lineWidth, lineColor: lineColor)
         let stokeAnimation = makeStrokeAnimation(duration: duration)
         arcIndicatorLayer.add(stokeAnimation, forKey: stokeAnimationKey)
-        layer.addSublayer(arcIndicatorLayer)
+        base.layer.addSublayer(arcIndicatorLayer)
         self.arcIndicatorLayer = arcIndicatorLayer
     }
     
@@ -816,10 +814,10 @@ public extension UIView {
 
 // MARK: - Shake animation
 
-public extension UIView {
+public extension Extension where Base: UIView {
     fileprivate var shakeAnimationKey: String { return "shakeAnimation" }
     public func shake(horizontal: Bool = true) {
-        layer.removeAnimation(forKey: shakeAnimationKey)
+        base.layer.removeAnimation(forKey: shakeAnimationKey)
         
         let animation = CAKeyframeAnimation()
         animation.keyPath = horizontal ? "position.x" : "position.y"
@@ -832,17 +830,17 @@ public extension UIView {
             NSNumber(value: 1),
         ]
         animation.isAdditive = true
-        layer.add(animation, forKey: shakeAnimationKey)
+        base.layer.add(animation, forKey: shakeAnimationKey)
     }
 }
 
 // MARK: - Snapshot
 
-public extension UIView {
+public extension Extension where Base: UIView {
     public var snapshot: UIImage? {
-        UIGraphicsBeginImageContextWithOptions(bounds.size, isOpaque, 0)
+        UIGraphicsBeginImageContextWithOptions(base.bounds.size, base.isOpaque, 0)
         if let content = UIGraphicsGetCurrentContext() {
-            layer.render(in: content)
+            base.layer.render(in: content)
         } else {
             return nil
         }
@@ -854,7 +852,19 @@ public extension UIView {
 
 // MARK: - ExtendTouchRect
 
-public extension UIView {
+extension UIView {
+    func _ek_point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        if let control = self as? UIControl, !control.isEnabled || isHidden || ext.touchExtendInsets == UIEdgeInsets.zero {
+            return _ek_point(inside: point, with: event)
+        }
+        var hitFrame = UIEdgeInsetsInsetRect(bounds, ext.touchExtendInsets)
+        hitFrame.size.width = max(hitFrame.size.width, 0)
+        hitFrame.size.height = max(hitFrame.size.height, 0)
+        return hitFrame.contains(point)
+    }
+}
+
+public extension Extension where Base: UIView {
     public var touchExtendInsets: UIEdgeInsets {
         get {
             if let value = associatedObject(forKey: &AssociationKey.touchExtendInsets) as? NSValue {
@@ -863,15 +873,5 @@ public extension UIView {
             return UIEdgeInsets.zero
         }
         set { associate(retainObject: NSValue(uiEdgeInsets: newValue), forKey: &AssociationKey.touchExtendInsets) }
-    }
-    
-    func _ek_point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-        if let control = self as? UIControl, !control.isEnabled || isHidden || touchExtendInsets == UIEdgeInsets.zero {
-            return _ek_point(inside: point, with: event)
-        }
-        var hitFrame = UIEdgeInsetsInsetRect(bounds, touchExtendInsets)
-        hitFrame.size.width = max(hitFrame.size.width, 0)
-        hitFrame.size.height = max(hitFrame.size.height, 0)
-        return hitFrame.contains(point)
     }
 }

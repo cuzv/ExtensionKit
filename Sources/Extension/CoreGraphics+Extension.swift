@@ -27,37 +27,37 @@ import UIKit
 
 // MARK: -
 
-public extension Double {
+public extension DoubleExtension {
     public var radian: CGFloat {
-        return CGFloat(self / 180.0 * M_PI)
+        return CGFloat(base / 180.0 * M_PI)
     }
     
     public var angle: CGFloat {
-        return CGFloat(self / M_PI * 180.0)
+        return CGFloat(base / M_PI * 180.0)
     }
 }
 
-public extension CGFloat {
+public extension CGFloatExtension {
     public var radian: CGFloat {
-        return CGFloat(Double(native / 180.0) * M_PI)
+        return CGFloat(Double(base.native / 180.0) * M_PI)
     }
     
     public var angle: CGFloat {
-        return CGFloat(Double(native) / M_PI * 180.0)
+        return CGFloat(Double(base.native) / M_PI * 180.0)
     }
 }
 
-public extension CGFloat {
-    public var ceilling: CGFloat { return ceil(self) }
-    public var flooring: CGFloat { return floor(self) }
+public extension CGFloatExtension {
+    public var ceilling: CGFloat { return ceil(base) }
+    public var flooring: CGFloat { return floor(base) }
 }
 
-public extension CGPoint {
-    public var ceilling: CGPoint { return CGPoint(x: ceil(x), y: ceil(y)) }
-    public var flooring: CGPoint { return CGPoint(x: floor(x), y: floor(y)) }
+public extension CGPointExtension {
+    public var ceilling: CGPoint { return CGPoint(x: ceil(base.x), y: ceil(base.y)) }
+    public var flooring: CGPoint { return CGPoint(x: floor(base.x), y: floor(base.y)) }
     
     public func makeVector(to other: CGPoint) -> CGVector {
-        return CGVector(dx: other.x - x, dy: y - other.y)
+        return CGVector(dx: other.x - base.x, dy: base.y - other.y)
     }
 }
 
@@ -77,23 +77,23 @@ public func CGPointMake(_ x: Int, _ y: Int) -> CGPoint {
 
 // MARK: -
 
-public extension CGSize {
-    public var ceilling: CGSize { return CGSize(width: ceil(width), height: ceil(height)) }
-    public var flooring: CGSize { return CGSize(width: floor(width), height: floor(height)) }
+public extension CGSizeExtension {
+    public var ceilling: CGSize { return CGSize(width: ceil(base.width), height: ceil(base.height)) }
+    public var flooring: CGSize { return CGSize(width: floor(base.width), height: floor(base.height)) }
     
     /// Multiply the size components by the factor
     public func scale(factor: CGFloat) -> CGSize {
-        return CGSize(width: width * factor, height: height * factor)
+        return CGSize(width: base.width * factor, height: base.height * factor)
     }
     
     /// Calculate scale for fitting a size to a destination size
     public func scale(aspectToFit size: CGSize) -> CGSize {
-        return scale(factor: min(size.width / width, size.height / height))
+        return scale(factor: min(size.width / base.width, size.height / base.height))
     }
     
     // Calculate scale for filling a destination size
     public func scale(aspectToFill size: CGSize) -> CGSize {
-        return scale(factor: max(size.width / width, size.height / height))
+        return scale(factor: max(size.width / base.width, size.height / base.height))
     }
 }
 
@@ -117,9 +117,9 @@ public func CGSizeEqualToSize(_ lhs: CGSize, _ rhs: CGSize) -> Bool {
 
 // MARK: -
 
-public extension CGVector {
-    public var ceilling: CGVector { return CGVector(dx: ceil(dx), dy: ceil(dy)) }
-    public var flooring: CGVector { return CGVector(dx: floor(dx), dy: floor(dy)) }
+public extension CGVectorExtension {
+    public var ceilling: CGVector { return CGVector(dx: ceil(base.dx), dy: ceil(base.dy)) }
+    public var flooring: CGVector { return CGVector(dx: floor(base.dx), dy: floor(base.dy)) }
 }
 
 public func CGVectorMake(_ dx: CGFloat, dy: CGFloat) -> CGVector {
@@ -136,104 +136,104 @@ public func CGVectorMake(_ dx: Int, dy: Int) -> CGVector {
 
 // MARK: -
 
-public extension CGRect {
-    public var ceilling: CGRect { return CGRectMake(size: size.ceilling) }
-    public var flooring: CGRect { return CGRectMake(size: size.flooring) }
+public extension CGRectExtension {
+    public var ceilling: CGRect { return CGRectMake(size: base.size.ext.ceilling) }
+    public var flooring: CGRect { return CGRectMake(size: base.size.ext.flooring) }
     public var center: CGPoint { return CGPoint(x: midX, y: midY) }
     
     /// Return a rect centered a source to a destination
     public func centering(in destination: CGRect) -> CGRect {
         let dx: CGFloat = destination.midX - midX
         let dy: CGFloat = destination.midY - midY
-        return offsetBy(dx: dx, dy: dy)
+        return base.offsetBy(dx: dx, dy: dy)
     }
     
     /// Return a rect fitting a source to a destination
     public func fitting(in destination: CGRect) -> CGRect {
-        let targetSize = size.scale(aspectToFit: destination.size)
-        return CGRectMake(center: destination.center, size: targetSize)
+        let targetSize = base.size.ext.scale(aspectToFit: destination.size)
+        return CGRectMake(center: destination.ext.center, size: targetSize)
     }
     
     /// Return a rect that fills the destination
     public func filling(in destination: CGRect) -> CGRect {
-        let targetSize = size.scale(aspectToFill: destination.size)
-        return CGRectMake(center: destination.center, size: targetSize)
+        let targetSize = base.size.ext.scale(aspectToFill: destination.size)
+        return CGRectMake(center: destination.ext.center, size: targetSize)
     }
     
     public var minX: CGFloat {
         set {
-            var newOrigin = origin
+            var newOrigin = base.origin
             newOrigin.x = newValue
-            origin = newOrigin
+            base.origin = newOrigin
         }
-        get { return origin.x }
+        get { return base.origin.x }
     }
     
     public var midX: CGFloat {
         set {
             let diff = newValue - midX
-            var newOrigin = origin
+            var newOrigin = base.origin
             newOrigin.x += diff
-            origin = newOrigin
+            base.origin = newOrigin
         }
-        get { return origin.x + size.width / 2.0 }
+        get { return base.origin.x + base.size.width / 2.0 }
     }
     
     public var maxX: CGFloat {
         set {
             let diff = newValue - maxX
-            var newOrigin = origin
+            var newOrigin = base.origin
             newOrigin.x += diff
-            origin = newOrigin
+            base.origin = newOrigin
         }
-        get { return origin.x + size.width }
+        get { return base.origin.x + base.size.width }
     }
     
     public var minY: CGFloat {
         set {
-            var newOrigin = origin
+            var newOrigin = base.origin
             newOrigin.y = newValue
-            origin = newOrigin
+            base.origin = newOrigin
         }
-        get { return origin.y }
+        get { return base.origin.y }
     }
     
     public var midY: CGFloat {
         set {
             let diff = newValue - midY
-            var newOrigin = origin
+            var newOrigin = base.origin
             newOrigin.y += diff
-            origin = newOrigin
+            base.origin = newOrigin
         }
-        get { return origin.y + size.height / 2.0 }
+        get { return base.origin.y + base.size.height / 2.0 }
     }
     
     public var maxY: CGFloat {
         set {
             let diff = newValue - maxY
-            var newOrigin = origin
+            var newOrigin = base.origin
             newOrigin.y += diff
-            origin = newOrigin
+            base.origin = newOrigin
         }
-        get { return origin.y + size.height }
+        get { return base.origin.y + base.size.height }
     }
     
     public var width: CGFloat {
         set {
-            var newSize = size
+            var newSize = base.size
             newSize.width = newValue
-            size = newSize
+            base.size = newSize
         }
-        get { return size.width }
+        get { return base.size.width }
     }
     
     public var height: CGFloat {
         set {
-            var newSize = size
+            var newSize = base.size
             newSize.height = newValue
-            size = newSize
+            base.size = newSize
         }
-        get { return size.height }
+        get { return base.size.height }
     }
 }
 
@@ -243,7 +243,7 @@ public let CGRectInfinite = CGRect.infinite
 
 /// Return center for rect
 public func CGRectGetCenter(_ rect: CGRect) -> CGPoint {
-    return rect.center
+    return rect.ext.center
 }
 
 public func CGRectMake(origin: CGPoint = CGPoint.zero, size: CGSize) -> CGRect {
@@ -363,28 +363,28 @@ public func CGRectIntersectsRect(_ rect1: CGRect, _ rect2: CGRect) -> Bool {
 
 // MARK: -
 
-public extension CGAffineTransform {
+public extension CGAffineTransformExtension {
     /// X scale from transform
-    public var xScale: CGFloat { return sqrt(a * a + c * c) }
+    public var xScale: CGFloat { return sqrt(base.a * base.a + base.c * base.c) }
     
     /// Y scale from transform
-    public var yScale: CGFloat { return sqrt(b * b + d * d) }
+    public var yScale: CGFloat { return sqrt(base.b * base.b + base.d * base.d) }
     
     /// Rotation in radians
-    public var rotation: CGFloat { return CGFloat(atan2f(Float(b), Float(a))) }
+    public var rotation: CGFloat { return CGFloat(atan2f(Float(base.b), Float(base.a))) }
 }
 
 // MARK: -
 
-public extension UIBezierPath {
+public extension Extension where Base: UIBezierPath {
     /// The path bounding box of `path'.
     public var boundingBox: CGRect {
-        return cgPath.boundingBoxOfPath
+        return base.cgPath.boundingBoxOfPath
     }
     
     /// The calculated bounds taking line width into account
     public var boundingWithLineBox: CGRect {
-        return boundingBox.insetBy(dx: -lineWidth / 2.0, dy: -lineWidth / 2.0)
+        return boundingBox.insetBy(dx: -base.lineWidth / 2.0, dy: -base.lineWidth / 2.0)
     }
     
     /// The center point for the path bounding box of `path'.
@@ -399,7 +399,7 @@ public extension UIBezierPath {
         t = t.translatedBy(x: center.x, y: center.y)
         t = transform.concatenating(t)
         t = t.translatedBy(x: -center.x, y: -center.y)
-        apply(t)
+        base.apply(t)
     }
     
     public func offset(vector: CGVector) {
@@ -413,14 +413,14 @@ public extension UIBezierPath {
     /// Move to a new origin
     public func move(to positon: CGPoint) {
         let bounds = boundingBox
-        let vector = bounds.origin.makeVector(to: positon)
+        let vector = bounds.origin.ext.makeVector(to: positon)
         offset(vector: vector)
     }
     
     /// Move to a new center
     public func moveCenter(to position: CGPoint) {
         let bounds = boundingBox
-        var vector = bounds.origin.makeVector(to: position)
+        var vector = bounds.origin.ext.makeVector(to: position)
         vector.dx -= bounds.size.width / 2.0
         vector.dy -= bounds.size.height / 2.0
         offset(vector: vector)
@@ -432,9 +432,9 @@ public extension UIBezierPath {
     
     public func fit(to destRect: CGRect) {
         let bounds = boundingBox
-        let fitRect = bounds.filling(in: destRect)
+        let fitRect = bounds.ext.filling(in: destRect)
         let factor = min(destRect.size.width / bounds.size.width, destRect.size.height / bounds.size.height)
-        moveCenter(to: fitRect.center)
+        moveCenter(to: fitRect.ext.center)
         scale(xFactor: factor, yFactor: factor)
     }
     
@@ -486,7 +486,7 @@ public extension UIBezierPath {
             
             // Offset by size
             let size = (string.substring(with: NSRange( i ..< i + 1)) as NSString).size(attributes: [NSFontAttributeName: font])
-            path.offset(vector: CGVector(dx: -size.width, dy: 0))
+            path.ext.offset(vector: CGVector(dx: -size.width, dy: 0))
         }
         
         // Clean up
@@ -547,19 +547,19 @@ public func UIKitGetContextSize() -> CGSize {
     )
 }
 
-public extension CGContext {
+public extension Extension where Base: CGContext {
     /// Horizontal flip context by supplying the size
     public func horizontalInverst(size: CGSize) {
-        textMatrix = CGAffineTransform.identity
-        translateBy(x: size.width, y: 0)
-        scaleBy(x: -1.0, y: 1.0)
+        base.textMatrix = CGAffineTransform.identity
+        base.translateBy(x: size.width, y: 0)
+        base.scaleBy(x: -1.0, y: 1.0)
     }
     
     /// Vertical flip context by supplying the size
     public func verticalInverst(size: CGSize) {
-        textMatrix = CGAffineTransform.identity
-        translateBy(x: 0, y: size.height)
-        scaleBy(x: 1.0, y: -1.0)
+        base.textMatrix = CGAffineTransform.identity
+        base.translateBy(x: 0, y: size.height)
+        base.scaleBy(x: 1.0, y: -1.0)
     }
 
     /// Flip context by retrieving image

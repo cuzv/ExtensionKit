@@ -53,7 +53,7 @@ final public class PlaceholderTextView: UITextView {
     
     override public var text: String? {
         didSet {
-            if let text = text , text.length > 0 {
+            if let text = text, text.ext.length > 0 {
                 placeholderLabel.isHidden = true
             } else {
                 placeholderLabel.isHidden = false
@@ -83,7 +83,7 @@ public extension PlaceholderTextView {
     }
     
     fileprivate func updatePlaceholderLabelFrame() {
-        if let size = placeholderLabel.text?.layoutSize(
+        if let size = placeholderLabel.text?.ext.layoutSize(
             font: placeholderLabel.font,
             preferredMaxLayoutWidth: bounds.width - 10)
         {
@@ -95,11 +95,13 @@ public extension PlaceholderTextView {
             )
         }
     }
-    
+}
+
+public extension Extension where Base: PlaceholderTextView {
     /// **Note**: Do not invoke `setupTextObserver(maxLength:, actionHandler:)` the both.
     public func invokeTextObserver(maxLength: Int = 100, actionHandler: ((Int) -> ())? = nil) {
-        setupTextObserver(maxLength: maxLength) { [weak self] (remainCount) -> () in
-            self?.placeholderLabel.isHidden = remainCount != maxLength
+        setupTextObserver(maxLength: maxLength) { [weak base] (remainCount) -> () in
+            base?.placeholderLabel.isHidden = remainCount != maxLength
             actionHandler?(remainCount)
         }
     }

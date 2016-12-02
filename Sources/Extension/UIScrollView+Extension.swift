@@ -23,124 +23,124 @@
 
 import UIKit
 
-public extension UIScrollView {
+public extension Extension where Base: UIScrollView {
     public var insetTop: CGFloat {
-        get { return contentInset.top }
+        get { return base.contentInset.top }
         set {
-            var inset = contentInset
+            var inset = base.contentInset
             inset.top = newValue
-            contentInset = inset
+            base.contentInset = inset
         }
     }
     
     public var insetLeft: CGFloat {
-        get { return contentInset.left }
+        get { return base.contentInset.left }
         set {
-            var inset = contentInset
+            var inset = base.contentInset
             inset.left = newValue
-            contentInset = inset
+            base.contentInset = inset
         }
     }
     
     public var insetBottom: CGFloat {
-        get { return contentInset.bottom }
+        get { return base.contentInset.bottom }
         set {
-            var inset = contentInset
+            var inset = base.contentInset
             inset.bottom = newValue
-            contentInset = inset
+            base.contentInset = inset
         }
     }
     
     public var insetRight: CGFloat {
-        get { return contentInset.right }
+        get { return base.contentInset.right }
         set {
-            var inset = contentInset
+            var inset = base.contentInset
             inset.right = newValue
-            contentInset = inset
+            base.contentInset = inset
         }
     }
     
     public var scrollIndicatorInsetTop: CGFloat {
-        get { return  scrollIndicatorInsets.top }
+        get { return  base.scrollIndicatorInsets.top }
         set {
             
-            var inset = scrollIndicatorInsets
+            var inset = base.scrollIndicatorInsets
             inset.top = newValue
-            scrollIndicatorInsets = inset
+            base.scrollIndicatorInsets = inset
         }
     }
     
     public var scrollIndicatorInsetLeft: CGFloat {
-        get { return scrollIndicatorInsets.left }
+        get { return base.scrollIndicatorInsets.left }
         set {
-            var inset = scrollIndicatorInsets
+            var inset = base.scrollIndicatorInsets
             inset.left = newValue
-            scrollIndicatorInsets = inset
+            base.scrollIndicatorInsets = inset
         }
     }
     
     public var scrollIndicatorInsetBottom: CGFloat {
-        get { return scrollIndicatorInsets.bottom }
+        get { return base.scrollIndicatorInsets.bottom }
         set {
-            var inset = scrollIndicatorInsets
+            var inset = base.scrollIndicatorInsets
             inset.bottom = newValue
-            scrollIndicatorInsets = inset
+            base.scrollIndicatorInsets = inset
         }
     }
     
     public var scrollIndicatorInsetRight: CGFloat {
-        get { return scrollIndicatorInsets.right }
+        get { return base.scrollIndicatorInsets.right }
         set {
-            var inset = scrollIndicatorInsets
+            var inset = base.scrollIndicatorInsets
             inset.right = newValue
-            scrollIndicatorInsets = inset
+            base.scrollIndicatorInsets = inset
         }
     }
     
     public var contentOffsetX: CGFloat {
-        get { return contentOffset.x }
+        get { return base.contentOffset.x }
         set {
-            var offset = contentOffset
+            var offset = base.contentOffset
             offset.x = newValue
-            contentOffset = offset
+            base.contentOffset = offset
         }
     }
     
     public var contentOffsetY: CGFloat {
-        get { return contentOffset.y }
+        get { return base.contentOffset.y }
         set {
-            var offset = contentOffset
+            var offset = base.contentOffset
             offset.y = newValue
-            contentOffset = offset
+            base.contentOffset = offset
         }
     }
     
     public var contentSizeWidth: CGFloat {
-        get { return contentSize.width }
+        get { return base.contentSize.width }
         set {
-            var size = contentSize
+            var size = base.contentSize
             size.width = newValue
-            contentSize = size
+            base.contentSize = size
         }
     }
     
     public var contentSizeHeight: CGFloat {
-        get { return contentSize.height }
+        get { return base.contentSize.height }
         set {
-            var size = contentSize
+            var size = base.contentSize
             size.height = newValue
-            contentSize = size
+            base.contentSize = size
         }
     }
 }
 
 // MARK: - RefreshControl
 
-public extension UIScrollView {
-    fileprivate struct AssociationKey {
-        fileprivate static var refreshControl: String = "com.mochxiao.uiscrollview.RefreshControl"
-    }
-    
+fileprivate struct AssociationKey {
+    fileprivate static var refreshControl: String = "com.mochxiao.uiscrollview.RefreshControl"
+}
+
+public extension Extension where Base: UIScrollView {
     public private(set) var refreshContrl: UIRefreshControl? {
         get { return associatedObject(forKey: &AssociationKey.refreshControl) as? UIRefreshControl }
         set { associate(assignObject: newValue, forKey: &AssociationKey.refreshControl) }
@@ -157,12 +157,12 @@ public extension UIScrollView {
             width: UIScreen.main.bounds.width,
             height: 64
         ))
-        addSubview(_refreshContrl)
-        sendSubview(toBack: _refreshContrl)
-        _refreshContrl.addControlEvents(.valueChanged) { [weak self] (_) in
+        base.addSubview(_refreshContrl)
+        base.sendSubview(toBack: _refreshContrl)
+        _refreshContrl.ext.addControlEvents(.valueChanged) { [weak self] (_) in
             if let this = self {
                 if this.refreshControlEnabled {
-                    handler(this)
+                    handler(this.base)
                 } else {
                     this.endRefreshing()
                 }

@@ -25,7 +25,7 @@ import UIKit
 
 // MARK: - Load image
 
-public extension UIImage {
+public extension Extension where Base: UIImage {
     /// Load bundle image with file name
     public class func load(fileName: String, extensionType: String = "png") -> UIImage? {
         func pathForResource(_ fileName: String, ofType: String) -> String? {
@@ -52,16 +52,16 @@ public extension UIImage {
 
 // MARK: - Compress & Decompress
 
-public extension UIImage {
+public extension Extension where Base: UIImage {
     /// Represent current image to render mode original.
     public var original: UIImage {
-        return withRenderingMode(.alwaysOriginal)
+        return base.withRenderingMode(.alwaysOriginal)
     }
     
     /// Decompressed image.
     public var decompressed: UIImage? {
-        UIGraphicsBeginImageContextWithOptions(size, true, 0)
-        draw(at: CGPoint.zero)
+        UIGraphicsBeginImageContextWithOptions(base.size, true, 0)
+        base.draw(at: CGPoint.zero)
         guard let decompressedImage = UIGraphicsGetImageFromCurrentImageContext() else {
             return nil
         }
@@ -74,11 +74,11 @@ public extension UIImage {
         capacity: Int = 50,
         targetSize: CGSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)) -> Data?
     {
-        let currentRepresention = size.width * size.height
+        let currentRepresention = base.size.width * base.size.height
         let targetRepresention = targetSize.width * targetSize.height
-        var scaledImage = self
+        var scaledImage: UIImage = base
         if currentRepresention > targetRepresention {
-            scaledImage = builtThumbnail(targetSize: targetSize) ?? self
+            scaledImage = builtThumbnail(targetSize: targetSize) ?? base
         }
         
         var compressionQuality: CGFloat = 0.5
@@ -98,15 +98,15 @@ public extension UIImage {
     }
     
     public func orientation(to orientation: UIImageOrientation) -> UIImage {
-        if imageOrientation == orientation {
-            return self
+        if base.imageOrientation == orientation {
+            return base
         }
         
-        if let CGImage = cgImage {
+        if let CGImage = base.cgImage {
             return UIImage(cgImage: CGImage, scale: UIScreen.main.scale, orientation: orientation)
         }
         logging("Cannot complete action.")
-        return self
+        return base
     }
     
     public var bytes: Data? {
@@ -114,8 +114,8 @@ public extension UIImage {
         let colorSpace = CGColorSpaceCreateDeviceRGB()
         
         // Establish context
-        let width: Int = Int(size.width)
-        let height: Int = Int(size.height)
+        let width: Int = Int(base.size.width)
+        let height: Int = Int(base.size.height)
         guard let context = CGContext(
             data: nil,
             width: width,
@@ -127,8 +127,8 @@ public extension UIImage {
         ) else { return nil }
         
         // Draw source into context bytes
-        let rect = CGRectMake(size: size)
-        guard let CGImage = cgImage else {
+        let rect = CGRectMake(size: base.size)
+        guard let CGImage = base.cgImage else {
             return nil
         }
         context.draw(CGImage, in: rect)
@@ -142,8 +142,8 @@ public extension UIImage {
     }
     
     public func color(atPixel point: CGPoint) -> UIColor? {
-        let width = size.width
-        let height = size.height
+        let width = base.size.width
+        let height = base.size.height
         if !CGRect(x: 0, y: 0, width: width, height: height).contains(point) {
             return nil
         }
@@ -166,7 +166,7 @@ public extension UIImage {
         
         let pointX = trunc(point.x)
         let pointY = trunc(point.y)
-        guard let cgImage = cgImage else { return nil }
+        guard let cgImage = base.cgImage else { return nil }
         context.translateBy(x: -pointX, y: pointY - height)
         context.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
         return UIColor(red: pixelData[0] / 255.0, green: pixelData[1] / 255.0, blue: pixelData[2] / 255.0, alpha: pixelData[3] / 255.0)
@@ -175,7 +175,7 @@ public extension UIImage {
 
 // MARK: - Draw
 
-public extension UIImage {
+public extension Extension where Base: UIImage {
     public class func make(
         color: UIColor,
         size: CGSize = CGSize(width: 1, height: 1),
@@ -220,7 +220,7 @@ public extension UIImage {
         strokeColor: UIColor = UIColor.clear,
         strokeLineWidth: CGFloat = 1.0 / UIScreen.main.scale) -> UIImage?
     {
-        let rect = CGRect(origin: CGPoint(x: 0, y: 0), size: size)
+        let rect = CGRect(origin: CGPoint(x: 0, y: 0), size: base.size)
         
         UIGraphicsBeginImageContextWithOptions(rect.size, false, 0)
         guard let context = UIGraphicsGetCurrentContext() else { fatalError() }
@@ -233,7 +233,7 @@ public extension UIImage {
         context.addPath(path.cgPath)
         
         context.clip()
-        draw(in: rect)
+        base.draw(in: rect)
         
         context.setLineWidth(strokeLineWidth)
         context.setStrokeColor(strokeColor.cgColor)
@@ -257,10 +257,10 @@ public extension UIImage {
     }
     
     public func remake(alpha: CGFloat) -> UIImage {
-        UIGraphicsBeginImageContext(size)
+        UIGraphicsBeginImageContext(base.size)
         
-        let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
-        draw(in: rect, blendMode: .normal, alpha: alpha)
+        let rect = CGRect(x: 0, y: 0, width: base.size.width, height: base.size.height)
+        base.draw(in: rect, blendMode: .normal, alpha: alpha)
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
@@ -268,12 +268,12 @@ public extension UIImage {
     }
     
     public func rendering(color: UIColor, alpha: CGFloat = 1.0) -> UIImage? {
-        UIGraphicsBeginImageContext(size)
+        UIGraphicsBeginImageContext(base.size)
         
         color.setFill()
-        let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+        let rect = CGRect(x: 0, y: 0, width: base.size.width, height: base.size.height)
         UIRectFill(rect)
-        draw(in: rect, blendMode: .overlay, alpha: alpha)
+        base.draw(in: rect, blendMode: .overlay, alpha: alpha)
         guard let output = UIGraphicsGetImageFromCurrentImageContext() else {
             return nil
         }
@@ -286,12 +286,12 @@ public extension UIImage {
         // Establish the output thumbnail rectangle
         let targetRect = CGRectMake(origin: CGPoint.zero, size: targetSize)
         // Create the source image’s bounding rectangle
-        let naturalRect = CGRectMake(origin: CGPoint.zero, size: size)
+        let naturalRect = CGRectMake(origin: CGPoint.zero, size: base.size)
         // Calculate fitting or filling destination rectangle
         // See Chapter 2 for a discussion on these functions
-        let destinationRect = useFitting ? naturalRect.fitting(in: targetRect) : naturalRect.filling(in: targetRect)
+        let destinationRect = useFitting ? naturalRect.ext.fitting(in: targetRect) : naturalRect.ext.filling(in: targetRect)
         // Draw the new thumbnail
-        draw(in: destinationRect)
+        base.draw(in: destinationRect)
         // Retrieve and return the new image
         guard let output = UIGraphicsGetImageFromCurrentImageContext() else {
             return nil
@@ -302,7 +302,7 @@ public extension UIImage {
     
     /// Extract image
     public func extracting(in subRect: CGRect) -> UIImage? {
-        if let imageRef = cgImage!.cropping(to: subRect) {
+        if let imageRef = base.cgImage!.cropping(to: subRect) {
             return UIImage(cgImage: imageRef)
         }
         return nil
@@ -315,21 +315,21 @@ public extension UIImage {
         color: UIColor = UIColor.white,
         rotate: Double = M_PI_4 ) -> UIImage?
     {
-        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        UIGraphicsBeginImageContextWithOptions(base.size, false, 0)
         let context = UIGraphicsGetCurrentContext()
         
         // Draw the original image into the context
-        let targetRect = CGRectMake(size: size)
-        draw(in: targetRect)
+        let targetRect = CGRectMake(size: base.size)
+        base.draw(in: targetRect)
         
         // Rotate the context
-        let center = targetRect.center
+        let center = targetRect.ext.center
         context!.translateBy(x: center.x, y: center.y)
         context!.rotate(by: CGFloat(rotate))
         context!.translateBy(x: -center.x, y: -center.y)
         
-        let stringSize = text.layoutSize(font: font, preferredMaxLayoutWidth: size.width)
-        let stringRect = CGRectMake(size: stringSize).centering(in: CGRectMake(size: size))
+        let stringSize = text.ext.layoutSize(font: font, preferredMaxLayoutWidth: base.size.width)
+        let stringRect = CGRectMake(size: stringSize).ext.centering(in: CGRectMake(size: base.size))
         
         // Draw the string, using a blend mode
         context!.setBlendMode(.normal)
@@ -355,7 +355,7 @@ public func UIImageFrom(
     strokeColor: UIColor = UIColor.clear,
     strokeLineWidth: CGFloat = 0) -> UIImage?
 {
-    return UIImage.make(
+    return UIImage.ext.make(
         color: color,
         size: size,
         roundingCorners: roundingCorners,
@@ -365,17 +365,17 @@ public func UIImageFrom(
     )
 }
 
-public extension UIImage {
+public extension Extension where Base: UIImage {
     @available(iOS 8.0, *)
     public var isQRCode: Bool {
-        if let CIImage = CIImage(image: self) {
+        if let CIImage = CIImage(image: base) {
             let detector = CIDetector(
                 ofType: CIDetectorTypeQRCode, context: nil,
                 options: [CIDetectorAccuracy : CIDetectorAccuracyHigh]
             )
             let features = detector!.features(in: CIImage)
             if let first = features.first as? CIQRCodeFeature {
-                return first.messageString!.length > 0
+                return first.messageString!.ext.length > 0
             }
         }
         return false

@@ -25,17 +25,17 @@ import Foundation
 
 // MARK: - Dictionary
 
-public extension Dictionary {
+public extension DictionaryExtension {
     /// URL query string.
     public var queryString: String {
-        let mappedList = map {
+        let mappedList = base.map {
             return "\($0.0)=\($0.1)"
         }
         return mappedList.sorted().joined(separator: "&")
     }
     
     public var JSONString: String? {
-        if let data = Data.make(fromJSONObject: self as AnyObject) {
+        if let data = Data.ext.make(fromJSONObject: base as AnyObject) {
             return String(data: data, encoding: String.Encoding.utf8)
         }
         return nil

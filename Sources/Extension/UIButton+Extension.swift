@@ -31,81 +31,81 @@ private struct AssociationKey {
 
 // MARK: - Property for state
 
-public extension UIButton {
+public extension Extension where Base: UIButton {
     public var title: String? {
-        get { return self.title(for: .normal) }
-        set { setTitle(newValue, for: .normal) }
+        get { return base.title(for: .normal) }
+        set { base.setTitle(newValue, for: .normal) }
     }
     
     public var titleFont: UIFont? {
-        get { return titleLabel?.font }
-        set { titleLabel?.font = newValue }
+        get { return base.titleLabel?.font }
+        set { base.titleLabel?.font = newValue }
     }
     
     public var attributedTitle: NSAttributedString? {
-        get { return self.attributedTitle(for: .normal) }
-        set { setAttributedTitle(newValue, for: .normal) }
+        get { return base.attributedTitle(for: .normal) }
+        set { base.setAttributedTitle(newValue, for: .normal) }
     }
     
     public var titleColor: UIColor? {
-        get { return self.titleColor(for: .normal) }
+        get { return base.titleColor(for: .normal) }
         set {
-            setTitleColor(newValue, for: .normal)
-            setTitleColor(newValue?.withAlphaComponent(0.5), for: .disabled)
-            setTitleColor(newValue, for: .selected)
-            if buttonType == .custom {
-                setTitleColor(newValue?.withAlphaComponent(0.5), for: .highlighted)
+            base.setTitleColor(newValue, for: .normal)
+            base.setTitleColor(newValue?.withAlphaComponent(0.5), for: .disabled)
+            base.setTitleColor(newValue, for: .selected)
+            if base.buttonType == .custom {
+                base.setTitleColor(newValue?.withAlphaComponent(0.5), for: .highlighted)
             }
         }
     }
     
     public var titleShadowColor: UIColor? {
-        get { return self.titleShadowColor(for: .normal) }
+        get { return base.titleShadowColor(for: .normal) }
         set {
-            setTitleShadowColor(newValue, for: .normal)
-            setTitleShadowColor(newValue?.withAlphaComponent(0.5), for: .disabled)
-            setTitleShadowColor(newValue, for: .selected)
+            base.setTitleShadowColor(newValue, for: .normal)
+            base.setTitleShadowColor(newValue?.withAlphaComponent(0.5), for: .disabled)
+            base.setTitleShadowColor(newValue, for: .selected)
         }
     }
     
     public var image: UIImage? {
-        get { return self.image(for: .normal) }
+        get { return base.image(for: .normal) }
         set {
-            setImage(newValue?.withRenderingMode(.alwaysOriginal), for: .normal)
+            base.setImage(newValue?.withRenderingMode(.alwaysOriginal), for: .normal)
         }
     }
     
     public var selectedImage: UIImage? {
-        get { return self.image(for: .selected) }
-        set { setImage(newValue?.withRenderingMode(.alwaysOriginal), for: .selected) }
+        get { return base.image(for: .selected) }
+        set { base.setImage(newValue?.withRenderingMode(.alwaysOriginal), for: .selected) }
     }
     
     public var backgroundImage: UIImage? {
-        get { return self.backgroundImage(for: .normal) }
+        get { return base.backgroundImage(for: .normal) }
         set {
             let image = newValue?.withRenderingMode(.alwaysOriginal)
-            setBackgroundImage(image, for: .normal)
-            if buttonType == .custom {
-                setBackgroundImage(image?.remake(alpha: 0.5), for: .highlighted)
-                setBackgroundImage(image?.remake(alpha: 0.5), for: .disabled)
+            base.setBackgroundImage(image, for: .normal)
+            if base.buttonType == .custom {
+                base.setBackgroundImage(image?.ext.remake(alpha: 0.5), for: .highlighted)
+                base.setBackgroundImage(image?.ext.remake(alpha: 0.5), for: .disabled)
             }
         }
     }
     
     public var selectedBackgroundImage: UIImage? {
-        get { return self.backgroundImage(for: .selected) }
-        set { setBackgroundImage(newValue?.withRenderingMode(.alwaysOriginal), for: .selected) }
+        get { return base.backgroundImage(for: .selected) }
+        set { base.setBackgroundImage(newValue?.withRenderingMode(.alwaysOriginal), for: .selected) }
     }
     
     public var disabledBackgroundImage: UIImage? {
-        get { return self.backgroundImage(for: .disabled) }
-        set { setBackgroundImage(newValue?.withRenderingMode(.alwaysOriginal), for: .disabled) }
+        get { return base.backgroundImage(for: .disabled) }
+        set { base.setBackgroundImage(newValue?.withRenderingMode(.alwaysOriginal), for: .disabled) }
     }
 }
 
 // MARK: - Image position
 
-public extension UIButton {
+public extension Extension where Base: UIButton {
     /// Convenience `setImageAlignmentToTop:` setter.
     public var imageAlignmentTopSpace: CGFloat {
         get { fatalError("Unavailable.") }
@@ -133,24 +133,24 @@ public extension UIButton {
     /// Setup image position relate to title
     /// **NOTE**: Before invoke this methods you should setup title and image already
     public func setImageAlignmentToTop(titleSpace space: CGFloat = 4.0) {
-        guard let currentImage = currentImage else { return }
-        guard let currentTitle = currentTitle as NSString? else { return }
-        guard let titleLabel = titleLabel else { return }
+        guard let currentImage = base.currentImage else { return }
+        guard let currentTitle = base.currentTitle as NSString? else { return }
+        guard let titleLabel = base.titleLabel else { return }
         
-        let halfSpace = (space / 2.0).ceilling
-        let halfImageWidth = (currentImage.size.width / 2.0).ceilling
-        let halfImageHeight = (currentImage.size.height / 2.0).ceilling
-        titleEdgeInsets = UIEdgeInsetsMake(
+        let halfSpace = (space / 2.0).ext.ceilling
+        let halfImageWidth = (currentImage.size.width / 2.0).ext.ceilling
+        let halfImageHeight = (currentImage.size.height / 2.0).ext.ceilling
+        base.titleEdgeInsets = UIEdgeInsetsMake(
             halfImageHeight + halfSpace,
             -halfImageWidth,
             -halfImageHeight - halfSpace,
             halfImageWidth
         )
         
-        let titleBounds = currentTitle.size(attributes: [NSFontAttributeName: titleLabel.font]).ceilling
-        let halfEdgeWidth = (titleBounds.width / 2.0).ceilling
-        let halfEdgeHeight = (titleBounds.height / 2.0).ceilling
-        imageEdgeInsets = UIEdgeInsetsMake(
+        let titleBounds = currentTitle.size(attributes: [NSFontAttributeName: titleLabel.font]).ext.ceilling
+        let halfEdgeWidth = (titleBounds.width / 2.0).ext.ceilling
+        let halfEdgeHeight = (titleBounds.height / 2.0).ext.ceilling
+        base.imageEdgeInsets = UIEdgeInsetsMake(
             -halfEdgeHeight - halfSpace,
             halfEdgeWidth,
             halfEdgeHeight + halfSpace,
@@ -161,24 +161,24 @@ public extension UIButton {
     /// Setup image position relate to title
     /// **NOTE**: Before invoke this methods you should setup title and image already
     public func setImageAlignmentToBottom(titleSpace space: CGFloat = 4.0) {
-        guard let currentImage = currentImage else { return }
-        guard let currentTitle = currentTitle as NSString? else { return }
-        guard let titleLabel = titleLabel else { return }
+        guard let currentImage = base.currentImage else { return }
+        guard let currentTitle = base.currentTitle as NSString? else { return }
+        guard let titleLabel = base.titleLabel else { return }
         
-        let halfSpace = (space / 2.0).ceilling
-        let halfImageWidth = (currentImage.size.width / 2.0).ceilling
-        let halfImageHeight = (currentImage.size.height / 2.0).ceilling
-        titleEdgeInsets = UIEdgeInsetsMake(
+        let halfSpace = (space / 2.0).ext.ceilling
+        let halfImageWidth = (currentImage.size.width / 2.0).ext.ceilling
+        let halfImageHeight = (currentImage.size.height / 2.0).ext.ceilling
+        base.titleEdgeInsets = UIEdgeInsetsMake(
             -halfImageHeight - halfSpace,
             -halfImageWidth,
             halfImageHeight + halfSpace,
             halfImageWidth
         )
         
-        let titleBounds = currentTitle.size(attributes: [NSFontAttributeName: titleLabel.font]).ceilling
-        let halfEdgeWidth = (titleBounds.width / 2.0).ceilling
-        let halfEdgeHeight = (titleBounds.height / 2.0).ceilling
-        imageEdgeInsets = UIEdgeInsetsMake(
+        let titleBounds = currentTitle.size(attributes: [NSFontAttributeName: titleLabel.font]).ext.ceilling
+        let halfEdgeWidth = (titleBounds.width / 2.0).ext.ceilling
+        let halfEdgeHeight = (titleBounds.height / 2.0).ext.ceilling
+        base.imageEdgeInsets = UIEdgeInsetsMake(
             halfEdgeHeight + halfSpace,
             halfEdgeWidth,
             -halfEdgeHeight - halfSpace,
@@ -189,15 +189,15 @@ public extension UIButton {
     /// Setup image position relate to title
     /// **NOTE**: Before invoke this methods you should setup title and image already
     public func setImageAlignmentToLeft(titleSpace space: CGFloat = 4.0) {
-        let halfSpace = (space / 2.0).ceilling
+        let halfSpace = (space / 2.0).ext.ceilling
         
-        titleEdgeInsets = UIEdgeInsetsMake(
+        base.titleEdgeInsets = UIEdgeInsetsMake(
             0,
             halfSpace,
             0,
             -halfSpace
         )
-        imageEdgeInsets = UIEdgeInsetsMake(
+        base.imageEdgeInsets = UIEdgeInsetsMake(
             0,
             -halfSpace,
             0,
@@ -208,21 +208,21 @@ public extension UIButton {
     /// Setup image position relate to title
     /// **NOTE**: Before invoke this methods you should setup title and image already
     public func setImageAlignmentToRight(titleSpace space: CGFloat = 4.0) {
-        guard let currentImage = currentImage else { return }
-        guard let currentTitle = currentTitle as NSString? else { return }
-        guard let titleLabel = titleLabel else { return }
+        guard let currentImage = base.currentImage else { return }
+        guard let currentTitle = base.currentTitle as NSString? else { return }
+        guard let titleLabel = base.titleLabel else { return }
         
-        let halfSpace = (space / 2.0).ceilling
-        let imageWidth = currentImage.size.width.ceilling
-        let edgeWidth = currentTitle.size(attributes: [NSFontAttributeName: titleLabel.font]).width.ceilling
+        let halfSpace = (space / 2.0).ext.ceilling
+        let imageWidth = currentImage.size.width.ext.ceilling
+        let edgeWidth = currentTitle.size(attributes: [NSFontAttributeName: titleLabel.font]).width.ext.ceilling
         
-        titleEdgeInsets = UIEdgeInsetsMake(
+        base.titleEdgeInsets = UIEdgeInsetsMake(
             0,
             -imageWidth - halfSpace,
             0,
             imageWidth + halfSpace
         )
-        imageEdgeInsets = UIEdgeInsetsMake(
+        base.imageEdgeInsets = UIEdgeInsetsMake(
             0,
             edgeWidth + halfSpace,
             0,
@@ -234,44 +234,44 @@ public extension UIButton {
 // MARK: - Animation
 
 
-public extension UIButton {
+public extension Extension where Base: UIButton {
     public fileprivate(set) var activityIndicatorContainerView: UIView? {
         get { return associatedObject(forKey: &AssociationKey.activityIndicatorContainerView) as? UIView }
         set { associate(assignObject: newValue, forKey: &AssociationKey.activityIndicatorContainerView) }
     }
     
-    public override func startActivityIndicatorAnimation(indicatorColor color: UIColor = UIColor.lightGray, dy: CGFloat = 0) {
+    public func startActivityIndicatorAnimation(indicatorColor color: UIColor = UIColor.lightGray, dy: CGFloat = 0) {
         if let activityIndicatorContainerView = self.activityIndicatorContainerView {
-            if activityIndicatorContainerView.isActivityIndicatorAnimating {
+            if activityIndicatorContainerView.ext.isActivityIndicatorAnimating {
                 return
             }
             activityIndicatorContainerView.isHidden = false
-            activityIndicatorContainerView.startActivityIndicatorAnimation(indicatorColor: color, dy: dy)
+            activityIndicatorContainerView.ext.startActivityIndicatorAnimation(indicatorColor: color, dy: dy)
             return
         }
         
-        var bgColor = backgroundColor
+        var bgColor = base.backgroundColor
         if bgColor == nil, let backgroundImage = backgroundImage {
-            bgColor = backgroundImage.color(atPixel: CGPoint(x: backgroundImage.size.width / 2.0, y: backgroundImage.size.height / 2.0))
+            bgColor = backgroundImage.ext.color(atPixel: CGPoint(x: backgroundImage.size.width / 2.0, y: backgroundImage.size.height / 2.0))
         }
-        let activityIndicatorContainerView = UIView(frame: bounds)
+        let activityIndicatorContainerView = UIView(frame: base.bounds)
         activityIndicatorContainerView.backgroundColor = bgColor
         activityIndicatorContainerView.isUserInteractionEnabled = false
         activityIndicatorContainerView.clipsToBounds = true
-        activityIndicatorContainerView.cornerRadius = cornerRadius
-        activityIndicatorContainerView.startActivityIndicatorAnimation(indicatorColor: color, dy: dy)
-        addSubview(activityIndicatorContainerView)
+        activityIndicatorContainerView.ext.cornerRadius = cornerRadius
+        activityIndicatorContainerView.ext.startActivityIndicatorAnimation(indicatorColor: color, dy: dy)
+        base.addSubview(activityIndicatorContainerView)
         self.activityIndicatorContainerView = activityIndicatorContainerView
     }
 
-    public override func stopActivityIndicatorAnimation() {
-        activityIndicatorContainerView?.stopActivityIndicatorAnimation()
+    public func stopActivityIndicatorAnimation() {
+        activityIndicatorContainerView?.ext.stopActivityIndicatorAnimation()
         activityIndicatorContainerView?.isHidden = true
     }
     
-    public override var isActivityIndicatorAnimating: Bool {
+    public var isActivityIndicatorAnimating: Bool {
         if let activityIndicatorContainerView = activityIndicatorContainerView {
-            return activityIndicatorContainerView.isActivityIndicatorAnimating
+            return activityIndicatorContainerView.ext.isActivityIndicatorAnimating
         }
         return false
     }
@@ -279,35 +279,35 @@ public extension UIButton {
 
 // MARK: - 
 
-public extension UIButton {
+public extension Extension where Base: UIButton {
     public func performToggleSelectStateImageAnimation() {
-        guard let normalImage = self.image(for: .normal) else { return }
-        guard let selectedImage = self.image(for: .selected) else { return }
-        guard let _imageView = imageView else { return }
+        guard let normalImage = base.image(for: .normal) else { return }
+        guard let selectedImage = base.image(for: .selected) else { return }
+        guard let _imageView = base.imageView else { return }
         
         // Clear image
         {
-            setImage(nil, for: .normal)
-            setImage(nil, for: .selected)
+            base.setImage(nil, for: .normal)
+            base.setImage(nil, for: .selected)
         }()
         
-        let animatedImageView = UIImageView(image: isSelected ? selectedImage : normalImage)
+        let animatedImageView = UIImageView(image: base.isSelected ? selectedImage : normalImage)
         animatedImageView.frame = _imageView.frame
-        addSubview(animatedImageView)
+        base.addSubview(animatedImageView)
         
         let recover = {
             UIView.animate(withDuration: 0.2, delay: 0, options: .beginFromCurrentState, animations: {
                 animatedImageView.transform = CGAffineTransform.identity
             }, completion: { (finished: Bool) in
-                self.setImage(normalImage, for: .normal)
-                self.setImage(selectedImage, for: .selected)
-                self.isSelected = !self.isSelected
+                self.base.setImage(normalImage, for: .normal)
+                self.base.setImage(selectedImage, for: .selected)
+                self.base.isSelected = !self.base.isSelected
                 animatedImageView.removeFromSuperview()
             })
         }
         
         let zoomOut = {
-            animatedImageView.image = !self.isSelected ? selectedImage : normalImage
+            animatedImageView.image = !self.base.isSelected ? selectedImage : normalImage
             UIView.animate(withDuration: 0.2, delay: 0, options: .beginFromCurrentState, animations: {
                 animatedImageView.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
             }, completion: { (finished: Bool) in

@@ -34,11 +34,11 @@ final public class DashlineView: UIView {
         backgroundColor?.setFill()
         UIRectFill(rect)
         
-        let lineWidth = horizontal ? rect.height.ceilling : rect.width.ceilling
-        let startPoint = horizontal ? CGPoint(x: (lineWidth / 2).ceilling, y: (rect.height / 2).ceilling) :
-                                      CGPoint(x: (rect.width / 2).ceilling , y: (lineWidth / 2).ceilling)
-        let endPoint = horizontal ? CGPoint(x: rect.width - (lineWidth / 2).ceilling, y: (rect.height / 2).ceilling) :
-                                    CGPoint(x: (rect.width / 2).ceilling , y: rect.height - (lineWidth / 2).ceilling)
+        let lineWidth = horizontal ? rect.height.ext.ceilling : rect.width.ext.ceilling
+        let startPoint = horizontal ? CGPoint(x: (lineWidth / 2).ext.ceilling, y: (rect.height / 2).ext.ceilling) :
+                                      CGPoint(x: (rect.width / 2).ext.ceilling , y: (lineWidth / 2).ext.ceilling)
+        let endPoint = horizontal ? CGPoint(x: rect.width - (lineWidth / 2).ext.ceilling, y: (rect.height / 2).ext.ceilling) :
+                                    CGPoint(x: (rect.width / 2).ext.ceilling , y: rect.height - (lineWidth / 2).ext.ceilling)
         
         guard let context = UIGraphicsGetCurrentContext() else {
             return
