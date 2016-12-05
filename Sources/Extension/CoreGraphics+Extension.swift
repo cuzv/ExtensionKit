@@ -160,81 +160,81 @@ public extension CGRect {
         return CGRectMake(center: destination.center, size: targetSize)
     }
     
-    public var minX: CGFloat {
-        set {
-            var newOrigin = origin
-            newOrigin.x = newValue
-            origin = newOrigin
-        }
-        get { return origin.x }
-    }
-    
-    public var midX: CGFloat {
-        set {
-            let diff = newValue - midX
-            var newOrigin = origin
-            newOrigin.x += diff
-            origin = newOrigin
-        }
-        get { return origin.x + size.width / 2.0 }
-    }
-    
-    public var maxX: CGFloat {
-        set {
-            let diff = newValue - maxX
-            var newOrigin = origin
-            newOrigin.x += diff
-            origin = newOrigin
-        }
-        get { return origin.x + size.width }
-    }
-    
-    public var minY: CGFloat {
-        set {
-            var newOrigin = origin
-            newOrigin.y = newValue
-            origin = newOrigin
-        }
-        get { return origin.y }
-    }
-    
-    public var midY: CGFloat {
-        set {
-            let diff = newValue - midY
-            var newOrigin = origin
-            newOrigin.y += diff
-            origin = newOrigin
-        }
-        get { return origin.y + size.height / 2.0 }
-    }
-    
-    public var maxY: CGFloat {
-        set {
-            let diff = newValue - maxY
-            var newOrigin = origin
-            newOrigin.y += diff
-            origin = newOrigin
-        }
-        get { return origin.y + size.height }
-    }
-    
-    public var width: CGFloat {
-        set {
-            var newSize = size
-            newSize.width = newValue
-            size = newSize
-        }
-        get { return size.width }
-    }
-    
-    public var height: CGFloat {
-        set {
-            var newSize = size
-            newSize.height = newValue
-            size = newSize
-        }
-        get { return size.height }
-    }
+//    public var minX: CGFloat {
+//        set {
+//            var newOrigin = origin
+//            newOrigin.x = newValue
+//            origin = newOrigin
+//        }
+//        get { return origin.x }
+//    }
+//    
+//    public var midX: CGFloat {
+//        set {
+//            let diff = newValue - midX
+//            var newOrigin = origin
+//            newOrigin.x += diff
+//            origin = newOrigin
+//        }
+//        get { return origin.x + size.width / 2.0 }
+//    }
+//    
+//    public var maxX: CGFloat {
+//        set {
+//            let diff = newValue - maxX
+//            var newOrigin = origin
+//            newOrigin.x += diff
+//            origin = newOrigin
+//        }
+//        get { return origin.x + size.width }
+//    }
+//    
+//    public var minY: CGFloat {
+//        set {
+//            var newOrigin = origin
+//            newOrigin.y = newValue
+//            origin = newOrigin
+//        }
+//        get { return origin.y }
+//    }
+//    
+//    public var midY: CGFloat {
+//        set {
+//            let diff = newValue - midY
+//            var newOrigin = origin
+//            newOrigin.y += diff
+//            origin = newOrigin
+//        }
+//        get { return origin.y + size.height / 2.0 }
+//    }
+//    
+//    public var maxY: CGFloat {
+//        set {
+//            let diff = newValue - maxY
+//            var newOrigin = origin
+//            newOrigin.y += diff
+//            origin = newOrigin
+//        }
+//        get { return origin.y + size.height }
+//    }
+//    
+//    public var width: CGFloat {
+//        set {
+//            var newSize = size
+//            newSize.width = newValue
+//            size = newSize
+//        }
+//        get { return size.width }
+//    }
+//    
+//    public var height: CGFloat {
+//        set {
+//            var newSize = size
+//            newSize.height = newValue
+//            size = newSize
+//        }
+//        get { return size.height }
+//    }
 }
 
 public let CGRectZero = CGRect.zero

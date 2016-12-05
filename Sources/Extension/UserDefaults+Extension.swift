@@ -23,8 +23,6 @@
 
 import UIKit
 
-public let UserDefaults = Foundation.UserDefaults.standard
-
 public extension Foundation.UserDefaults {
     public subscript(key: String) -> Any? {
         get { return value(forKey: key) as Any }
@@ -41,7 +39,7 @@ public extension Foundation.UserDefaults {
         }
     }
     
-    fileprivate func setter(key: String, value: AnyObject?) {
+    fileprivate func setter(key: String, value: Any?) {
         self[key] = value
         synchronize()
     }
@@ -52,16 +50,16 @@ public extension Foundation.UserDefaults {
     }
     
     /// Archive object to NSData to save.
-    public func archive(object: AnyObject?, forKey key: String) {
+    public func archive(object: Any?, forKey key: String) {
         if let value = object {
-            setter(key: key, value: NSKeyedArchiver.archivedData(withRootObject: value) as AnyObject?)
+            setter(key: key, value: NSKeyedArchiver.archivedData(withRootObject: value) as Any?)
         } else {
             removeObject(forKey: key)
         }
     }
     
     /// Unarchive object for specific key.
-    public func unarchivedObject(forKey key: String) -> AnyObject? {
-        return data(forKey: key).flatMap { NSKeyedUnarchiver.unarchiveObject(with: $0) as AnyObject }
+    public func unarchivedObject(forKey key: String) -> Any? {
+        return data(forKey: key).flatMap { NSKeyedUnarchiver.unarchiveObject(with: $0) as Any }
     }
 }
