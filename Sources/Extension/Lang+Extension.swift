@@ -70,7 +70,7 @@ public func logging<T>(_ object: @autoclosure () -> T, _ file: String = #file, _
 }
 
 /// Get value from `any` instance like KVC
-public func value(from object: Any, forKey key: String) -> Any? {
+public func takeValue(from object: Any, forKey key: String) -> Any? {
     let mirror = Mirror(reflecting: object)
     for (targetKey, targetMirror) in mirror.children {
         if key == targetKey {
