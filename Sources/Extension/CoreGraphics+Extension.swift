@@ -410,13 +410,6 @@ public extension UIBezierPath {
         centering(transform: CGAffineTransform(rotationAngle: theta))
     }
     
-    /// Move to a new origin
-    public func move(to positon: CGPoint) {
-        let bounds = boundingBox
-        let vector = bounds.origin.makeVector(to: positon)
-        offset(vector: vector)
-    }
-    
     /// Move to a new center
     public func moveCenter(to position: CGPoint) {
         let bounds = boundingBox

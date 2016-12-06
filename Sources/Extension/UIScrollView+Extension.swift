@@ -171,7 +171,7 @@ public extension UIScrollView {
         refreshContrl = _refreshContrl
     }
     
-    public private(set) var refreshControlEnabled: Bool {
+    public var refreshControlEnabled: Bool {
         get {
             if let refreshContrl = refreshContrl {
                 return refreshContrl.isEnabled

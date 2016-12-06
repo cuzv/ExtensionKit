@@ -269,8 +269,12 @@ public extension UIViewController {
         }
     }
     
-    public func present(_ viewControllerToPresent: UIViewController, completion: (() -> ())? = nil) {
+    public func present(_ viewControllerToPresent: UIViewController, completion: @escaping (() -> ())) {
         present(viewControllerToPresent, animated: true, completion: completion)
+    }
+
+    public func present(_ viewControllerToPresent: UIViewController) {
+        present(viewControllerToPresent, animated: true, completion: nil)
     }
     
     public func presentTranslucent(_ viewController: UIViewController, modalTransitionStyle: UIModalTransitionStyle = .coverVertical, animated flag: Bool = true, completion: (() -> ())? = nil) {

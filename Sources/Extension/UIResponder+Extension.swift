@@ -36,6 +36,7 @@ public extension UIResponder {
         return nil
     }
     
+    @discardableResult
     public func sendAction(_ action: Selector) -> Bool {
         return UIApplication.sendAction(action, fromSender: self)
     }

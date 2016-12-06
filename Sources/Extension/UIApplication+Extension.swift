@@ -28,17 +28,17 @@ import UIKit
 public extension UIApplication {
     fileprivate static let _sharedApplication = UIApplication.shared
     
-    public class func open(URL: Foundation.URL) {
-        if _sharedApplication.canOpenURL(URL) {
-           _sharedApplication.openURL(URL)
+    public class func open(url: Foundation.URL) {
+        if _sharedApplication.canOpenURL(url) {
+           _sharedApplication.openURL(url)
         } else {
             logging("Can not execute the given action.")
         }
     }
     
     public class func open(urlPath: String) {
-        if let URL = URL(string: urlPath) {
-            UIApplication.open(URL: URL)
+        if let url = URL(string: urlPath) {
+            UIApplication.open(url: url)
         }
     }
     

@@ -34,7 +34,7 @@ open class AsyncSerialWorker {
         attributes: []
     )
     
-    open func enqueue(work: @escaping (() -> ()) -> ()) {
+    open func enqueue(work: @escaping (@escaping () -> ()) -> ()) {
         serialQueue.async {
             let semaphore = DispatchSemaphore(value: 0)
             work {
