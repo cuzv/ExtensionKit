@@ -28,9 +28,15 @@ import Foundation
 public extension Dictionary {
     /// URL query string.
     public var queryString: String {
-        let mappedList = map {
-            return "\($0.0)=\($0.1)"
+        
+        let mappedList = map { (element: Element) -> String in
+            var value = "\(element.value)"
+            if let flag = element.value as? Bool {
+                value = flag ? "1" : "0"
+            }
+            return "\(element.key)=\(value)"
         }
+
         return mappedList.sorted().joined(separator: "&")
     }
     
