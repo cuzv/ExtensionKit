@@ -869,7 +869,13 @@ public extension UIView {
         if let control = self as? UIControl, !control.isEnabled || isHidden || touchExtendInsets == UIEdgeInsets.zero {
             return _ek_point(inside: point, with: event)
         }
-        var hitFrame = UIEdgeInsetsInsetRect(bounds, touchExtendInsets)
+        let extendInsets = UIEdgeInsetsMake(
+            -touchExtendInsets.top,
+            -touchExtendInsets.left,
+            -touchExtendInsets.bottom,
+            -touchExtendInsets.right
+        )
+        var hitFrame = UIEdgeInsetsInsetRect(bounds, extendInsets)
         hitFrame.size.width = max(hitFrame.size.width, 0)
         hitFrame.size.height = max(hitFrame.size.height, 0)
         return hitFrame.contains(point)
