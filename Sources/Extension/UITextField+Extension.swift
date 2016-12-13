@@ -69,6 +69,10 @@ public extension UITextField {
     }
     
     var _ek_intrinsicContentSize: CGSize {
+        // MARK: 4 fucking Xcode8/iOS10 SDKs
+        setNeedsLayout()
+        layoutIfNeeded()
+        
         let size = sizeThatFits(CGSize(width: bounds.size.width, height: bounds.size.height))
         let width = size.width + contentInsets.left + contentInsets.right
         let height = size.height + contentInsets.top + contentInsets.bottom
