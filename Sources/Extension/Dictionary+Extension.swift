@@ -34,6 +34,9 @@ public extension Dictionary {
             if let flag = element.value as? Bool {
                 value = flag ? "1" : "0"
             }
+            if let dvalue = element.value as? Double {
+                value = dvalue.price
+            }
             return "\(element.key)=\(value)"
         }
 
