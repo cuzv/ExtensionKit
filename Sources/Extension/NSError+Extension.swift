@@ -30,15 +30,15 @@ public extension NSError {
         return NSError(domain: emptyErrorDomain, code: emptyErrorCode, userInfo: nil)
     }
     
-    public class func make(message: String) -> NSError {
+    public class func make(message: String, code: Int = 9999) -> NSError {
         return NSError(
             domain: "com.mochxiao.error.maker",
-            code: 999,
+            code: code,
             userInfo: [NSLocalizedDescriptionKey: message, NSLocalizedFailureReasonErrorKey: message]
         )
     }
 }
 
-public func NSErrorFrom(message: String) -> NSError {
-    return NSError.make(message: message)
+public func NSErrorFrom(message: String, code: Int = 9999) -> NSError {
+    return NSError.make(message: message, code: code)
 }
