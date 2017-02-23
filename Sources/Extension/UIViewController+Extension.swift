@@ -41,7 +41,7 @@ public extension UIAlertAction {
             }
             return -1
         }
-        set { associate(assignObject: newValue, forKey: &AssociationKey.tag) }
+        set { associate(retainObject: newValue, forKey: &AssociationKey.tag) }
     }
 }
 
