@@ -24,15 +24,23 @@
 import UIKit
 
 public extension UIScreen {
+    static let _width = UIScreen.main.bounds.size.width
     public class var width: CGFloat {
-        return UIScreen.main.bounds.size.width
+        return _width
     }
     
+    static let _height = UIScreen.main.bounds.size.height
     public class var height: CGFloat {
-        return UIScreen.main.bounds.size.height
+        return _height
     }
     
+    static let _scale = UIScreen.main.scale
     public class var scaleValue: CGFloat {
-        return UIKit.UIScreen.main.scale
+        return _scale
+    }
+    
+    static let _size = UIScreen.main.bounds.size
+    public class var size: CGSize {
+        return _size
     }
 }

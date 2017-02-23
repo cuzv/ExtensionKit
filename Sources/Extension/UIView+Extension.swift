@@ -253,12 +253,12 @@ public extension UIView {
     
     public var midX: CGFloat {
         get { return frame.midX }
-        set { frame = CGRect(x: newValue - width / 2.0, y: minY, width: width, height: height) }
+        set { frame = CGRect(x: newValue - width * 0.5, y: minY, width: width, height: height) }
     }
     
     public var centerX: CGFloat {
         get { return frame.midX }
-        set { frame = CGRect(x: newValue - width / 2.0, y: minY, width: width, height: height) }
+        set { frame = CGRect(x: newValue - width * 0.5, y: minY, width: width, height: height) }
     }
     
     public var maxX: CGFloat {
@@ -283,12 +283,12 @@ public extension UIView {
     
     public var midY: CGFloat {
         get { return frame.midY }
-        set { frame = CGRect(x: minX, y: newValue - height / 2.0, width: width, height: height) }
+        set { frame = CGRect(x: minX, y: newValue - height * 0.5, width: width, height: height) }
     }
     
     public var centerY: CGFloat {
         get { return frame.midY }
-        set { frame = CGRect(x: minX, y: newValue - height / 2.0, width: width, height: height) }
+        set { frame = CGRect(x: minX, y: newValue - height * 0.5, width: width, height: height) }
     }
     
     public var maxY: CGFloat {
@@ -879,5 +879,41 @@ public extension UIView {
         hitFrame.size.width = max(hitFrame.size.width, 0)
         hitFrame.size.height = max(hitFrame.size.height, 0)
         return hitFrame.contains(point)
+    }
+}
+
+// MARK: - Layer Image
+
+public extension UIView {
+    public var layerImage: UIImage? {
+        get {
+            if let cg = layer.contents {
+                return UIImage(cgImage: cg as! CGImage)
+            } else {
+                return nil
+            }
+        }
+        set {
+            if let image = newValue {
+                let imageView = self
+                let width = image.size.width
+                let height = image.size.height
+                let scale = (height / width) / (imageView.height / imageView.width)
+                if (scale < 0.99 || scale.isNaN) {
+                    // 宽图把左右两边裁掉
+                    imageView.clipsToBounds = true
+                    imageView.contentMode = .scaleAspectFill
+                    imageView.layer.contentsRect = CGRectMake(0, 0, 1, 1)
+                } else {
+                    // 高图只保留顶部
+                    imageView.clipsToBounds = true
+                    imageView.contentMode = .scaleToFill;
+                    imageView.layer.contentsRect = CGRectMake(0, 0, 1, width / height)
+                }
+                imageView.layer.contents = image.cgImage
+            } else {
+                layer.contents = nil
+            }
+        }
     }
 }

@@ -48,6 +48,7 @@
 		468E95B01CD37606007D39AA /* UITableView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468E95AF1CD37606007D39AA /* UITableView+Extension.swift */; };
 		468F230A1CCC6DF100C0D1FD /* ExtensionProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468F23091CCC6DF100C0D1FD /* ExtensionProtocols.swift */; };
 		468F230C1CCC775C00C0D1FD /* Nostalgia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468F230B1CCC775C00C0D1FD /* Nostalgia.swift */; };
+		469445141E5DB82300F4F926 /* CALayer+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469445131E5DB82300F4F926 /* CALayer+Extension.swift */; };
 		46CFE5711CD5BAC40098C995 /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CFE5701CD5BAC40098C995 /* Observable.swift */; };
 		46FCD8BF1D5DC94200E72ACD /* UIBarButtonItem+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46FCD8BE1D5DC94200E72ACD /* UIBarButtonItem+Extension.swift */; };
 /* End PBXBuildFile section */
@@ -96,6 +97,7 @@
 		468E95AF1CD37606007D39AA /* UITableView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableView+Extension.swift"; sourceTree = "<group>"; };
 		468F23091CCC6DF100C0D1FD /* ExtensionProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtensionProtocols.swift; sourceTree = "<group>"; };
 		468F230B1CCC775C00C0D1FD /* Nostalgia.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Nostalgia.swift; sourceTree = "<group>"; };
+		469445131E5DB82300F4F926 /* CALayer+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CALayer+Extension.swift"; sourceTree = "<group>"; };
 		46CFE5701CD5BAC40098C995 /* Observable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
 		46FCD8BE1D5DC94200E72ACD /* UIBarButtonItem+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -160,6 +162,7 @@
 			children = (
 				4603E27C1CC07EE40030EDA0 /* Array+Extension.swift */,
 				4603E27F1CC07EE40030EDA0 /* CoreGraphics+Extension.swift */,
+				469445131E5DB82300F4F926 /* CALayer+Extension.swift */,
 				4603E2801CC07EE40030EDA0 /* Dictionary+Extension.swift */,
 				4603E2811CC07EE40030EDA0 /* Lang+Extension.swift */,
 				4603E2821CC07EE40030EDA0 /* Bundle+Extension.swift */,
@@ -322,6 +325,7 @@
 				4603E2B21CC07EE40030EDA0 /* UIButton+Extension.swift in Sources */,
 				4603E2AC1CC07EE40030EDA0 /* NSError+Extension.swift in Sources */,
 				4603E2C01CC07EE40030EDA0 /* UITextField+Extension.swift in Sources */,
+				469445141E5DB82300F4F926 /* CALayer+Extension.swift in Sources */,
 				4603E2BC1CC07EE40030EDA0 /* UIResponder+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
