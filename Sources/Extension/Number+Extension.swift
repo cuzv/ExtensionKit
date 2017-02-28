@@ -23,6 +23,10 @@
 
 import Foundation
 
+public extension NSNumber {
+    public var isBool: Bool { return CFBooleanGetTypeID() == CFGetTypeID(self) }
+}
+
 // MARK: - Double -> String
 
 public extension Double {

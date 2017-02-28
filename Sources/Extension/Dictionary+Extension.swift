@@ -26,21 +26,50 @@ import Foundation
 // MARK: - Dictionary
 
 public extension Dictionary {
-    /// URL query string.
-    public var queryString: String {
+    private func queryComponents(fromKey key: String, value: Any) -> [(String, String)] {
+        var components: [(String, String)] = []
         
-        let mappedList = map { (element: Element) -> String in
-            var value = "\(element.value)"
-            if let flag = element.value as? Bool {
-                value = flag ? "1" : "0"
+        if let dictionary = value as? [String: Any] {
+            for (nestedKey, value) in dictionary {
+                components += queryComponents(fromKey: "\(key)[\(nestedKey)]", value: value)
             }
-            if let dvalue = element.value as? Double {
-                value = dvalue.price
+        } else if let array = value as? [Any] {
+            for value in array {
+                components += queryComponents(fromKey: "\(key)[]", value: value)
             }
-            return "\(element.key)=\(value)"
+        } else if let value = value as? NSNumber {
+            if value.isBool {
+                components.append((key.escaped, (value.boolValue ? "1" : "0").escaped))
+            } else {
+                components.append((key.escaped, "\(value)".escaped))
+            }
+        } else if let bool = value as? Bool {
+            components.append((key.escaped, (bool ? "1" : "0").escaped))
+        } else {
+            components.append((key.escaped, "\(value)".escaped))
         }
-
-        return mappedList.sorted().joined(separator: "&")
+        
+        return components
+    }
+    
+    /// Stolen from Alamofire
+    private func query(_ parameters: [String: Any]) -> String {
+        var components: [(String, String)] = []
+        
+        for key in parameters.keys.sorted(by: <) {
+            let value = parameters[key]!
+            components += queryComponents(fromKey: key, value: value)
+        }
+        
+        return components.map { "\($0)=\($1)" }.joined(separator: "&")
+    }
+    
+    public var queryString: String {
+        var newDic: [String: Any] = [:]
+        for element in self {
+            newDic["\(element.key)"] = element.value
+        }
+        return query(newDic)
     }
     
     public var JSONString: String? {

@@ -23,6 +23,42 @@
 
 import UIKit
 
+// MARK: - URL
+/// Stolen from Alamofire
+public extension String {
+    public var escaped: String {
+        let string: String = self
+        let generalDelimitersToEncode = ":#[]@" // does not include "?" or "/" due to RFC 3986 - Section 3.4
+        let subDelimitersToEncode = "!$&'()*+,;="
+        
+        var allowedCharacterSet = CharacterSet.urlQueryAllowed
+        allowedCharacterSet.remove(charactersIn: "\(generalDelimitersToEncode)\(subDelimitersToEncode)")
+        
+        var escaped = ""
+        
+        if #available(iOS 8.3, *) {
+            escaped = string.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet) ?? string
+        } else {
+            let batchSize = 50
+            var index = string.startIndex
+            
+            while index != string.endIndex {
+                let startIndex = index
+                let endIndex = string.index(index, offsetBy: batchSize, limitedBy: string.endIndex) ?? string.endIndex
+                let range = startIndex..<endIndex
+                
+                let substring = string.substring(with: range)
+                
+                escaped += substring.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet) ?? substring
+                
+                index = endIndex
+            }
+        }
+        
+        return escaped
+    }
+}
+
 // MARK: - RegEx
 
 public extension String {
