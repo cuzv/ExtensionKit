@@ -51,6 +51,10 @@ public extension Double {
     public var string: String {
         return String(self)
     }
+    
+    public var cgfloat: CGFloat {
+        return CGFloat(self)
+    }
 }
 
 // MARK: - Time & Date
@@ -89,5 +93,39 @@ public extension Int {
     
     var formattedDateTime: String {
         return Double(self).formattedDateTime
+    }
+    
+    public var cgfloat: CGFloat {
+        return CGFloat(self)
+    }
+}
+
+public extension UInt {
+    public var cgfloat: CGFloat {
+        return CGFloat(self)
+    }
+}
+
+public extension UInt8 {
+    public var cgfloat: CGFloat {
+        return CGFloat(self)
+    }
+}
+
+public extension UInt16 {
+    public var cgfloat: CGFloat {
+        return CGFloat(self)
+    }
+}
+
+public extension UInt32 {
+    public var cgfloat: CGFloat {
+        return CGFloat(self)
+    }
+}
+
+public extension UInt64 {
+    public var cgfloat: CGFloat {
+        return CGFloat(self)
     }
 }
