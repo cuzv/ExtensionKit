@@ -896,19 +896,20 @@ public extension UIView {
         set {
             if let image = newValue {
                 let imageView = self
-                let width = image.size.width
-                let height = image.size.height
-                let scale = (height / width) / (imageView.height / imageView.width)
-                if (scale < 0.99 || scale.isNaN) {
-                    // 宽图把左右两边裁掉
-                    imageView.clipsToBounds = true
-                    imageView.contentMode = .scaleAspectFill
-                    imageView.layer.contentsRect = CGRectMake(0, 0, 1, 1)
-                } else {
+                let pw = image.size.width
+                let ph = image.size.height
+                let scale = ph / pw
+                if !scale.isNaN && scale > 1 {
                     // 高图只保留顶部
-                    imageView.clipsToBounds = true
                     imageView.contentMode = .scaleToFill;
-                    imageView.layer.contentsRect = CGRectMake(0, 0, 1, width / height)
+                    let vw = bounds.width
+                    let vh = bounds.height
+                    let scaleh = vh != vw ? (vh / vw) * (pw / ph) : pw / ph
+                    imageView.layer.contentsRect = CGRect(x: 0, y: 0, width: 1, height: scaleh)
+                } else {
+                    // 宽图把左右两边裁掉
+                    imageView.contentMode = .scaleAspectFill
+                    imageView.layer.contentsRect = CGRect(x: 0, y: 0, width: 1, height: 1)
                 }
                 imageView.layer.contents = image.cgImage
             } else {
