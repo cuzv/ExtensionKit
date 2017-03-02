@@ -69,32 +69,50 @@ public extension UIImage {
         return decompressedImage
     }
     
-    /// Compress image as possible to target size kb.
-    public func compressingAsPossible(
-        capacity: Int = 50,
-        targetSize: CGSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)) -> Data?
-    {
-        let currentRepresention = size.width * size.height
-        let targetRepresention = targetSize.width * targetSize.height
-        var scaledImage = self
-        if currentRepresention > targetRepresention {
-            scaledImage = builtThumbnail(targetSize: targetSize) ?? self
+    /// Compress image as possible to target size.
+    func compress(toByte maxLength: Int) -> Data? {
+        let image: UIImage = self
+        var compression: CGFloat = 1
+        if let data = UIImageJPEGRepresentation(image, compression), data.count < maxLength {
+            return data
         }
         
-        var compressionQuality: CGFloat = 0.5
-        let minBytes = capacity * 1024
-        guard var compressedImageData = UIImageJPEGRepresentation(scaledImage, compressionQuality) else {
-            return nil
-        }
-        while compressedImageData.count > minBytes && compressionQuality >= 0.1 {
-            guard let newCompressedImageData = UIImageJPEGRepresentation(scaledImage, compressionQuality) else {
-                return compressedImageData
+        // Compress by size
+        var max: CGFloat = 1
+        var min: CGFloat = 0
+        var data: Data!
+        for _ in 0 ..< 6 {
+            compression = (max + min) / 2
+            data = UIImageJPEGRepresentation(image, compression)
+            if nil != data {
+                if CGFloat(data.count) < CGFloat(maxLength) * 0.9 {
+                    min = compression
+                } else if data.count > maxLength {
+                    max = compression
+                } else {
+                    break
+                }
             }
-            compressedImageData = newCompressedImageData
-            compressionQuality -= 0.1
         }
-        
-        return compressedImageData
+        if data != nil && data.count < maxLength {
+            return data
+        }
+        var resultImage: UIImage! = UIImage(data: data)
+
+        // Compress by size
+        var lastDataLength: Int = 0
+        while resultImage != nil && data.count > maxLength, data.count != lastDataLength {
+            lastDataLength = data.count
+            let ratio: CGFloat = CGFloat(maxLength) / CGFloat(data.count)
+            let size: CGSize = CGSize(width: Int(resultImage.size.width * sqrt(ratio)),
+                                      height: Int(resultImage.size.height * sqrt(ratio)))
+            UIGraphicsBeginImageContext(size)
+            resultImage.draw(in: CGRect(x: 0, y: 0, width: size.width, height: size.height))
+            resultImage = UIGraphicsGetImageFromCurrentImageContext()!
+            UIGraphicsEndImageContext()
+            data = UIImageJPEGRepresentation(resultImage, compression)!
+        }
+        return data
     }
     
     public func orientation(to orientation: UIImageOrientation) -> UIImage {
