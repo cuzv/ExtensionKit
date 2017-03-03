@@ -228,7 +228,7 @@ extension UIViewController: UINavigationControllerDelegate, UIImagePickerControl
         backgroundThreadAsync { () -> Void in
             if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
                 let newImage = image.orientation(to: .up)
-                if let imageData = newImage.compress(toByte: 50 * 1024) {
+                if let imageData = newImage.compress(toByte: 100 * 1024) {
                     let resultImage = UIImage(data: imageData, scale: UIScreen.main.scale)
                     mainThreadAsync {
                         picker.presentingViewController?.dismiss(animated: true, completion: nil)
