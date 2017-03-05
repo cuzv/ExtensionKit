@@ -896,16 +896,15 @@ public extension UIView {
         set {
             if let image = newValue {
                 let imageView = self
-                let pw = image.size.width
-                let ph = image.size.height
-                let scale = ph / pw
+                let iw = image.size.width
+                let ih = image.size.height
+                let vw = bounds.width
+                let vh = bounds.height
+                let scale = (ih / iw) / (vh / vw)
                 if !scale.isNaN && scale > 1 {
                     // 高图只保留顶部
                     imageView.contentMode = .scaleToFill;
-                    let vw = bounds.width
-                    let vh = bounds.height
-                    let scaleh = vh != vw ? (vh / vw) * (pw / ph) : pw / ph
-                    imageView.layer.contentsRect = CGRect(x: 0, y: 0, width: 1, height: scaleh)
+                    imageView.layer.contentsRect = CGRect(x: 0, y: 0, width: 1, height: (iw / ih) * (vh / vw))
                 } else {
                     // 宽图把左右两边裁掉
                     imageView.contentMode = .scaleAspectFill
