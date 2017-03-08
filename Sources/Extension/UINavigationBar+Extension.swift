@@ -42,9 +42,21 @@ public extension UINavigationBar {
 public extension UINavigationBar {
     /// The hairline view.
     public var hairline: UIView? {
-        guard let cls = NSClassFromString("_UINavigationBarBackground") else { return nil }
+        let clazz1: AnyClass? = NSClassFromString("_UINavigationBarBackground")
+        let clazz2: AnyClass? = NSClassFromString("_UIBarBackground")
+        if nil == clazz1 && nil == clazz2 {
+            return nil
+        }
+        
         for subview in subviews {
-            if subview.isKind(of: cls) {
+            if let clazz1 = clazz1, subview.isKind(of: clazz1) {
+                for view in subview.subviews {
+                    if view is UIImageView && view.frame.size.height == 1.0 / UIScreen.main.scale {
+                        return view
+                    }
+                }
+            }
+            if let clazz2 = clazz2, subview.isKind(of: clazz2) {
                 for view in subview.subviews {
                     if view is UIImageView && view.frame.size.height == 1.0 / UIScreen.main.scale {
                         return view
