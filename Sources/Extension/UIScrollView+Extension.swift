@@ -201,3 +201,25 @@ public extension UIScrollView {
         return false
     }
 }
+
+// MARK: - For YYLabel touch hightlight
+
+public extension UIScrollView {
+    public func commitTouchesImmediately() {
+        delaysContentTouches = false
+        canCancelContentTouches = true
+        
+        if let wrapView = subviews.first {
+            if NSStringFromClass(type(of: wrapView)).hasSuffix("WrapperView") {
+                if let gestureRecognizers = wrapView.gestureRecognizers {
+                    for gesture in gestureRecognizers {
+                        if NSStringFromClass(type(of: gesture)).contains("DelayedTouchesBegan") {
+                            gesture.isEnabled = false
+                            break
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
