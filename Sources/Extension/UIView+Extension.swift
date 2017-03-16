@@ -745,6 +745,20 @@ public extension UIView {
     }
 }
 
+// MARK: - bgColor
+
+public extension UIView {
+    public var bgColor: UIColor? {
+        if let bgColor = backgroundColor {
+            return bgColor
+        }
+        if let superview = superview {
+            return superview.bgColor
+        }
+        return nil
+    }
+}
+
 // MARK: - Arc Animation
 
 public extension UIView {

@@ -250,20 +250,16 @@ public extension UIButton {
             return
         }
         
-        var bgColor = backgroundColor
-        if bgColor == nil, let backgroundImage = backgroundImage {
-            bgColor = backgroundImage.color(atPixel: CGPoint(x: backgroundImage.size.width / 2.0, y: backgroundImage.size.height / 2.0))
-        }
         let activityIndicatorContainerView = UIView(frame: bounds)
-        activityIndicatorContainerView.backgroundColor = bgColor
         activityIndicatorContainerView.isUserInteractionEnabled = false
         activityIndicatorContainerView.clipsToBounds = true
         activityIndicatorContainerView.cornerRadius = cornerRadius
         activityIndicatorContainerView.startActivityIndicatorAnimation(indicatorColor: color, dy: dy)
         addSubview(activityIndicatorContainerView)
+        activityIndicatorContainerView.backgroundColor = bgColor
         self.activityIndicatorContainerView = activityIndicatorContainerView
     }
-
+    
     public override func stopActivityIndicatorAnimation() {
         activityIndicatorContainerView?.stopActivityIndicatorAnimation()
         activityIndicatorContainerView?.isHidden = true
