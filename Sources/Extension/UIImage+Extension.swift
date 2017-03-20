@@ -77,7 +77,7 @@ public extension UIImage {
             return data
         }
         
-        // Compress by size
+        // Compress by quality
         var max: CGFloat = 1
         var min: CGFloat = 0
         var data: Data!
