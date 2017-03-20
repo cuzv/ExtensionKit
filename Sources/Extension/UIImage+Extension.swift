@@ -235,72 +235,104 @@ public extension UIImage {
     public func remake(
         roundingCorners corners: UIRectCorner = .allCorners,
         radius: CGFloat = 0,
-        strokeColor: UIColor = UIColor.clear,
-        strokeLineWidth: CGFloat = 1.0 / UIScreen.main.scale) -> UIImage?
+        strokeColor: UIColor? = nil,
+        strokeLineWidth: CGFloat = 0,
+        stockLineJoin: CGLineJoin = .miter) -> UIImage
     {
-        let rect = CGRect(origin: CGPoint(x: 0, y: 0), size: size)
-        
-        UIGraphicsBeginImageContextWithOptions(rect.size, false, 0)
-        guard let context = UIGraphicsGetCurrentContext() else { fatalError() }
-        
-        let path = UIBezierPath(
-            roundedRect: rect,
-            byRoundingCorners: corners,
-            cornerRadii: CGSize(width: radius, height: radius)
-        )
-        context.addPath(path.cgPath)
-        
-        context.clip()
-        draw(in: rect)
-        
-        context.setLineWidth(strokeLineWidth)
-        context.setStrokeColor(strokeColor.cgColor)
-        let roundedRect = CGRect(
-            x: strokeLineWidth,
-            y: strokeLineWidth,
-            width: rect.width - strokeLineWidth * 2,
-            height: rect.height - strokeLineWidth * 2)
-        let roundedPath = UIBezierPath(
-            roundedRect: roundedRect,
-            byRoundingCorners: corners,
-            cornerRadii: CGSize(width: radius, height: radius)
-        )
-        roundedPath.stroke()
-        
-        guard let output = UIGraphicsGetImageFromCurrentImageContext() else {
-            return nil
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        defer { UIGraphicsEndImageContext() }
+        guard let context = UIGraphicsGetCurrentContext() else {
+            return self
         }
-        UIGraphicsEndImageContext()
-        return output
+        context.scaleBy(x: 1, y: -1)
+        context.translateBy(x: 0, y: -size.height)
+        
+        let roundedRect = CGRect(origin: CGPoint(x: 0, y: 0), size: size)
+        let sideLength = min(roundedRect.size.width, roundedRect.size.height)
+        if strokeLineWidth < sideLength * 0.5 {
+            let roundedpath = UIBezierPath(
+                roundedRect: roundedRect.insetBy(dx: strokeLineWidth, dy: strokeLineWidth),
+                byRoundingCorners: corners,
+                cornerRadii: CGSize(width: radius, height: strokeLineWidth)
+            )
+            roundedpath.close()
+            
+            context.saveGState()
+            context.addPath(roundedpath.cgPath)
+            context.clip()
+            context.draw(cgImage!, in: roundedRect)
+            context.restoreGState()
+        }
+
+        if nil != strokeColor && strokeLineWidth > 0 {
+            let strokeInset = (floor(strokeLineWidth * scale) + 0.5) / scale
+            let strokeRect = roundedRect.insetBy(dx: strokeInset, dy: strokeInset)
+            let strokeRadius = radius > scale / 2.0 ? radius - scale / 2.0 : 0.0
+            let strokePath = UIBezierPath(
+                roundedRect: strokeRect,
+                byRoundingCorners: corners,
+                cornerRadii: CGSize(width: strokeRadius, height: strokeLineWidth)
+            )
+            strokePath.close()
+
+            context.saveGState()
+            context.setStrokeColor(strokeColor!.cgColor)
+            context.setLineWidth(strokeLineWidth)
+            context.setLineJoin(stockLineJoin)
+            context.addPath(strokePath.cgPath)
+            context.strokePath()
+            context.restoreGState()
+        }
+        
+        if let output = UIGraphicsGetImageFromCurrentImageContext() {
+            return output
+        }
+        return self
     }
     
+    public var circle: UIImage {
+        var newImage: UIImage = self
+        let sideLength = min(size.width, size.height)
+        if size.width != size.height {
+            let center = CGPoint(x: size.width * 0.5, y: size.height * 0.5)
+            let newRect = CGRect(x: center.x - sideLength * 0.5, y: center.y - sideLength * 0.5, width: sideLength, height: sideLength)
+            if let image = extracting(in: newRect) {
+                newImage = image
+            }
+        }
+        return newImage.remake(radius: sideLength * 0.5)
+    }
+        
     public func remake(alpha: CGFloat) -> UIImage {
         UIGraphicsBeginImageContext(size)
+        defer { UIGraphicsEndImageContext() }
         
-        let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+        let rect = CGRect(origin: CGPoint(x: 0, y: 0), size: size)
         draw(in: rect, blendMode: .normal, alpha: alpha)
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        
-        return image!
+        if let output = UIGraphicsGetImageFromCurrentImageContext() {
+            return output
+        }
+        return self
     }
     
-    public func rendering(color: UIColor, alpha: CGFloat = 1.0) -> UIImage? {
+    public func rendering(color: UIColor, alpha: CGFloat = 1.0) -> UIImage {
         UIGraphicsBeginImageContext(size)
+        defer { UIGraphicsEndImageContext() }
         
         color.setFill()
         let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
         UIRectFill(rect)
         draw(in: rect, blendMode: .overlay, alpha: alpha)
-        guard let output = UIGraphicsGetImageFromCurrentImageContext() else {
-            return nil
+        if let output = UIGraphicsGetImageFromCurrentImageContext() {
+            return output
         }
-        UIGraphicsEndImageContext()
-        return output
+        return self
     }
     
-    public func builtThumbnail(targetSize: CGSize, useFitting: Bool = true) -> UIImage? {
+    public func builtThumbnail(targetSize: CGSize, useFitting: Bool = true) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(targetSize, false, 0.0)
+        defer { UIGraphicsEndImageContext() }
+
         // Establish the output thumbnail rectangle
         let targetRect = CGRectMake(origin: CGPoint.zero, size: targetSize)
         // Create the source image’s bounding rectangle
@@ -311,11 +343,10 @@ public extension UIImage {
         // Draw the new thumbnail
         draw(in: destinationRect)
         // Retrieve and return the new image
-        guard let output = UIGraphicsGetImageFromCurrentImageContext() else {
-            return nil
+        if let output = UIGraphicsGetImageFromCurrentImageContext() {
+            return output
         }
-        UIGraphicsEndImageContext()
-        return output
+        return self
     }
     
     /// Extract image
@@ -331,9 +362,11 @@ public extension UIImage {
         text: String,
         font: UIFont,
         color: UIColor = UIColor.white,
-        rotate: Double = M_PI_4 ) -> UIImage?
+        rotate: Double = M_PI_4 ) -> UIImage
     {
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        defer { UIGraphicsEndImageContext() }
+
         let context = UIGraphicsGetCurrentContext()
         
         // Draw the original image into the context
@@ -357,11 +390,10 @@ public extension UIImage {
         )
         
         // Retrieve the new image
-        guard let output = UIGraphicsGetImageFromCurrentImageContext() else {
-            return nil
+        if let output = UIGraphicsGetImageFromCurrentImageContext() {
+            return output
         }
-        UIGraphicsEndImageContext()
-        return output
+        return self
     }
 }
 
