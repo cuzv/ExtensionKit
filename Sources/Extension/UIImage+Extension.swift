@@ -69,7 +69,36 @@ public extension UIImage {
         return decompressedImage
     }
     
-    /// Compress image as possible to target size.
+    /// Compress image quality as possible to fit target size.
+    public func compressQuality(toByte maxLength: Int) -> Data? {
+        let image: UIImage = self
+        var compression: CGFloat = 1
+        if let data = UIImageJPEGRepresentation(image, compression), data.count < maxLength {
+            return data
+        }
+        
+        // Compress by quality
+        var max: CGFloat = 1
+        var min: CGFloat = 0
+        var data: Data!
+        for _ in 0 ..< 6 {
+            compression = (max + min) / 2
+            data = UIImageJPEGRepresentation(image, compression)
+            if nil != data {
+                if CGFloat(data.count) < CGFloat(maxLength) * 0.9 {
+                    min = compression
+                } else if data.count > maxLength {
+                    max = compression
+                } else {
+                    break
+                }
+            }
+        }
+
+        return data
+    }
+    
+    /// Compress image quality & size as possible to fit target size.
     func compress(toByte maxLength: Int) -> Data? {
         let image: UIImage = self
         var compression: CGFloat = 1
