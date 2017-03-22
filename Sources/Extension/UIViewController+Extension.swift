@@ -52,6 +52,8 @@ public extension UIViewController {
             presentAlert(message: message)
         } else if let message = error.userInfo[NSLocalizedFailureReasonErrorKey] as? String {
             presentAlert(message: message)
+        } else {
+            presentAlert(message: error.localizedDescription)
         }
     }
     
