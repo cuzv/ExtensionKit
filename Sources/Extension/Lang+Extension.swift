@@ -71,13 +71,27 @@ public func logging<T>(_ object: @autoclosure () -> T, _ file: String = #file, _
 
 /// Get value from `any` instance like KVC
 public func takeValue(from object: Any, forKey key: String) -> Any? {
-    let mirror = Mirror(reflecting: object)
-    for (targetKey, targetMirror) in mirror.children {
-        if key == targetKey {
-            return targetMirror
+    func takeValue(_ mirror: Mirror, _ key: String) -> Any? {
+        for (targetKey, targetMirror) in mirror.children {
+            if key == targetKey {
+                return targetMirror
+            }
         }
+        return nil
     }
-    return nil
+    
+    func take(_ mirror: Mirror, _ key: String) -> Any? {
+        if let value = takeValue(mirror, key) {
+            return value
+        }
+        if let superMirror = mirror.superclassMirror {
+            return take(superMirror, key)
+        }
+        return nil
+    }
+    
+    let mirror = Mirror(reflecting: object)
+    return take(mirror, key)
 }
 
 /// Generate random number in range
