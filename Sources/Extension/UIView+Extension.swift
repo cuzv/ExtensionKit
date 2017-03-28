@@ -703,7 +703,7 @@ public extension UIView {
     }
     
     fileprivate func correspondCenter(dy: CGFloat) -> CGPoint {
-        var newCenter = center
+        var newCenter = CGPoint(x: bounds.size.width * 0.5, y: bounds.size.height * 0.5)
         newCenter.y += dy
         return newCenter
     }
