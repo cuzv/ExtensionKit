@@ -40,35 +40,13 @@ public extension UINavigationBar {
 // MARK: - Hairline
 
 public extension UINavigationBar {
-    /// The hairline view.
-    public var hairline: UIView? {
-        let clazz1: AnyClass? = NSClassFromString("_UINavigationBarBackground")
-        let clazz2: AnyClass? = NSClassFromString("_UIBarBackground")
-        if nil == clazz1 && nil == clazz2 {
-            return nil
-        }
-        
-        for subview in subviews {
-            if let clazz1 = clazz1, subview.isKind(of: clazz1) {
-                for view in subview.subviews {
-                    if view is UIImageView && view.frame.size.height == 1.0 / UIScreen.main.scale {
-                        return view
-                    }
-                }
-            }
-            if let clazz2 = clazz2, subview.isKind(of: clazz2) {
-                for view in subview.subviews {
-                    if view is UIImageView && view.frame.size.height == 1.0 / UIScreen.main.scale {
-                        return view
-                    }
-                }
-            }
+    public var shimShadowView: UIView? {
+        if let
+            _backgroundView = value(forKey: "_backgroundView") as? NSObject,
+            let _shadowView = _backgroundView.value(forKey: "_shadowView") as? UIView
+        {
+            return _shadowView
         }
         return nil
-    }
-    
-    /// Remove the hairline view.
-    public func removeHairline() {
-        hairline?.removeFromSuperview()
     }
 }

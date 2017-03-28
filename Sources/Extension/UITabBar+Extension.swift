@@ -24,19 +24,13 @@
 import UIKit
 
 public extension UITabBar {
-    /// Not tested
-    public var hairline: UIView? {
-        for subview in subviews {
-            if subview is UIImageView && subview.frame.size.height == 1.0 / UIScreen.main.scale {
-                return subview
-            }
+    public var shimShadowView: UIView? {
+        if let
+            _backgroundView = value(forKey: "_backgroundView") as? NSObject,
+            let _shadowView = _backgroundView.value(forKey: "_shadowView") as? UIView
+        {
+            return _shadowView
         }
         return nil
-    }
-    
-    /// Hide the hairline view or not. default is false
-    public var hairlineHidden: Bool {
-        get { return clipsToBounds }
-        set { clipsToBounds = newValue }
     }
 }
