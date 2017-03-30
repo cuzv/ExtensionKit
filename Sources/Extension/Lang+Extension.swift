@@ -224,7 +224,7 @@ public func swizzleClassMethod(
 
 /// Convert a `void *` type to Swift type, use this function carefully
 public func convertUnsafePointerToSwiftType<T>(_ value: UnsafeRawPointer) -> T {
-    return unsafeBitCast(value, to: UnsafePointer<T>.self).pointee
+    return value.assumingMemoryBound(to: T.self).pointee
 }
 
 // MARK: - Sandbox

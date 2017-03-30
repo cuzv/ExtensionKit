@@ -391,7 +391,7 @@ public extension UIImage {
         text: String,
         font: UIFont,
         color: UIColor = UIColor.white,
-        rotate: Double = M_PI_4 ) -> UIImage
+        rotate: Double = Double.pi / 4.0 ) -> UIImage
     {
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
         defer { UIGraphicsEndImageContext() }

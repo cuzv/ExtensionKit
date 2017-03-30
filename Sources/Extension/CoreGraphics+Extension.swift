@@ -29,11 +29,11 @@ import UIKit
 
 public extension Double {
     public var radian: CGFloat {
-        return CGFloat(self / 180.0 * M_PI)
+        return CGFloat(self / 180.0 * Double.pi)
     }
     
     public var angle: CGFloat {
-        return CGFloat(self / M_PI * 180.0)
+        return CGFloat(self / Double.pi * 180.0)
     }
     
     public var pointToPixel: CGFloat {
@@ -47,11 +47,11 @@ public extension Double {
 
 public extension CGFloat {
     public var radian: CGFloat {
-        return CGFloat(Double(native / 180.0) * M_PI)
+        return CGFloat(Double(native / 180.0) * Double.pi)
     }
     
     public var angle: CGFloat {
-        return CGFloat(Double(native) / M_PI * 180.0)
+        return CGFloat(Double(native) / Double.pi * 180.0)
     }
     
     public var pointToPixel: CGFloat {
@@ -529,8 +529,8 @@ public extension UIBezierPath {
         
         var firstPoint = true
         for i in 0 ..< numberOfSides - 1 {
-            let theta: Double = M_PI + Double(i) * 2 * M_PI / Double(numberOfSides)
-            let dTheta: Double = 2 * M_PI / Double(numberOfSides)
+            let theta: Double = Double.pi + Double(i) * 2 * Double.pi / Double(numberOfSides)
+            let dTheta: Double = 2 * Double.pi / Double(numberOfSides)
             var point = CGPoint.zero
             if firstPoint {
                 point.x = center.x + radius * CGFloat(sin(theta))

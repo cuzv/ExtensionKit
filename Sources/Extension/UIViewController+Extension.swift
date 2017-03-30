@@ -206,6 +206,54 @@ private extension UIImagePickerController {
     }
 }
 
+//final class _EKImagePickerController: UIImagePickerController, UIImagePickerControllerDelegate {
+//    private let completionHandler: ((UIImagePickerController, UIImage?) -> ())
+//    init(sourceType: UIImagePickerControllerSourceType = .photoLibrary, completionHandler: @escaping ((UIImagePickerController, UIImage?) -> ())) {
+//        self.completionHandler = completionHandler
+//        super.init(nibName: nil, bundle: nil)
+//        self.sourceType = sourceType
+//        commitInit()
+//    }
+//    
+//    required init?(coder aDecoder: NSCoder) {
+//        fatalError("init(coder:) has not been implemented")
+//    }
+//    
+//    private func commitInit() {
+//        videoQuality = .typeLow
+//        delegate = self
+//        allowsEditing = true
+//        imagePickerCompletionHandlerWrapper = ClosureDecorator(completionHandler)
+//    }
+//    
+//    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+//        picker.presentingViewController?.dismiss(animated: true, completion: nil)
+//        picker.imagePickerCompletionHandlerWrapper.invoke((picker, nil))
+//    }
+//    
+//    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+//        backgroundThreadAsync { () -> Void in
+//            if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
+//                let newImage = image.orientation(to: .up)
+//                if let imageData = newImage.compress(toByte: 100 * 1024) {
+//                    let resultImage = UIImage(data: imageData, scale: UIScreen.main.scale)
+//                    mainThreadAsync {
+//                        picker.presentingViewController?.dismiss(animated: true, completion: nil)
+//                        picker.imagePickerCompletionHandlerWrapper.invoke((picker, resultImage))
+//                    }
+//                    return
+//                }
+//            }
+//        }
+//    }
+//    
+//    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
+//        picker.presentingViewController?.dismiss(animated: true, completion: nil)
+//        picker.imagePickerCompletionHandlerWrapper.invoke((picker, image))
+//    }
+//
+//}
+
 public extension UIViewController {
     /// Present UIImagePickerController.
     public func presentImagePicker(sourceType: UIImagePickerControllerSourceType = .photoLibrary, completionHandler: @escaping ((UIImagePickerController, UIImage?) -> ())) {
@@ -214,8 +262,10 @@ public extension UIViewController {
         imagePicker.videoQuality = .typeLow
         imagePicker.delegate = self
         imagePicker.allowsEditing = true
-        
+        imagePicker.view.tintColor = UIApplication.shared.keyWindow?.tintColor
+//
         imagePicker.imagePickerCompletionHandlerWrapper = ClosureDecorator(completionHandler)
+//        let imagePicker = _EKImagePickerController(sourceType: sourceType, completionHandler: completionHandler)
         present(imagePicker, animated: true, completion: nil)
     }
 }
