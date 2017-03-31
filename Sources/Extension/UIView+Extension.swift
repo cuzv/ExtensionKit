@@ -39,13 +39,10 @@ private struct AssociationKey {
     fileprivate static var touchExtendInsets: String = "touchExtendInsets"
 }
 
-// MARK: - Swizzle
+// Swizzled see in `ObjcBridge.swift`
 
-extension UIView {
-    override open class func initialize() {
-        if self != UIButton.self {
-            return
-        }
+internal extension UIView {
+    static func swizzleView() {
         swizzleInstanceMethod(
             for: UIView.self,
             original: #selector(UIView.point(inside:with:)),

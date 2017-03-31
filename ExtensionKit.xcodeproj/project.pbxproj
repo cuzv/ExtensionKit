@@ -49,6 +49,9 @@
 		468F230A1CCC6DF100C0D1FD /* ExtensionProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468F23091CCC6DF100C0D1FD /* ExtensionProtocols.swift */; };
 		468F230C1CCC775C00C0D1FD /* Nostalgia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468F230B1CCC775C00C0D1FD /* Nostalgia.swift */; };
 		469445141E5DB82300F4F926 /* CALayer+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469445131E5DB82300F4F926 /* CALayer+Extension.swift */; };
+		46B7248A1E8DEA4B00BEE657 /* ObjcBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B724891E8DEA4B00BEE657 /* ObjcBridge.swift */; };
+		46B7248D1E8DEAA800BEE657 /* UIApplication+ObjcBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = 46B7248B1E8DEAA800BEE657 /* UIApplication+ObjcBridge.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		46B7248E1E8DEAA800BEE657 /* UIApplication+ObjcBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 46B7248C1E8DEAA800BEE657 /* UIApplication+ObjcBridge.m */; };
 		46CFE5711CD5BAC40098C995 /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CFE5701CD5BAC40098C995 /* Observable.swift */; };
 		46FCD8BF1D5DC94200E72ACD /* UIBarButtonItem+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46FCD8BE1D5DC94200E72ACD /* UIBarButtonItem+Extension.swift */; };
 /* End PBXBuildFile section */
@@ -98,6 +101,9 @@
 		468F23091CCC6DF100C0D1FD /* ExtensionProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtensionProtocols.swift; sourceTree = "<group>"; };
 		468F230B1CCC775C00C0D1FD /* Nostalgia.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Nostalgia.swift; sourceTree = "<group>"; };
 		469445131E5DB82300F4F926 /* CALayer+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CALayer+Extension.swift"; sourceTree = "<group>"; };
+		46B724891E8DEA4B00BEE657 /* ObjcBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjcBridge.swift; sourceTree = "<group>"; };
+		46B7248B1E8DEAA800BEE657 /* UIApplication+ObjcBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+ObjcBridge.h"; sourceTree = "<group>"; };
+		46B7248C1E8DEAA800BEE657 /* UIApplication+ObjcBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+ObjcBridge.m"; sourceTree = "<group>"; };
 		46CFE5701CD5BAC40098C995 /* Observable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
 		46FCD8BE1D5DC94200E72ACD /* UIBarButtonItem+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -132,6 +138,7 @@
 		4603E2691CC07E990030EDA0 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				46B724851E8DE85400BEE657 /* Objc */,
 				468F23081CCC6DE600C0D1FD /* Protocols */,
 				4603E2721CC07EE40030EDA0 /* Classes */,
 				4603E27B1CC07EE40030EDA0 /* Extension */,
@@ -205,6 +212,16 @@
 			path = Protocols;
 			sourceTree = "<group>";
 		};
+		46B724851E8DE85400BEE657 /* Objc */ = {
+			isa = PBXGroup;
+			children = (
+				46B724891E8DEA4B00BEE657 /* ObjcBridge.swift */,
+				46B7248B1E8DEAA800BEE657 /* UIApplication+ObjcBridge.h */,
+				46B7248C1E8DEAA800BEE657 /* UIApplication+ObjcBridge.m */,
+			);
+			path = Objc;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -212,6 +229,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				46B7248D1E8DEAA800BEE657 /* UIApplication+ObjcBridge.h in Headers */,
 				4603E26B1CC07E990030EDA0 /* ExtensionKit.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -248,7 +266,7 @@
 				TargetAttributes = {
 					4603E2661CC07E990030EDA0 = {
 						CreatedOnToolsVersion = 7.3;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0830;
 					};
 				};
 			};
@@ -288,6 +306,7 @@
 				464B0DA31DF004A500C5CF70 /* DispatchQueue+Extension.swift in Sources */,
 				4603E2B01CC07EE40030EDA0 /* String+Extension.swift in Sources */,
 				4603E29D1CC07EE40030EDA0 /* DashlineView.swift in Sources */,
+				46B7248E1E8DEAA800BEE657 /* UIApplication+ObjcBridge.m in Sources */,
 				4631CE291CCB9F6700CFCBCD /* CustomHeightNavigationBar.swift in Sources */,
 				4603E2BB1CC07EE40030EDA0 /* UINavigationBar+Extension.swift in Sources */,
 				4603E2A41CC07EE40030EDA0 /* Array+Extension.swift in Sources */,
@@ -318,6 +337,7 @@
 				4603E2C21CC07EE40030EDA0 /* UIView+Extension.swift in Sources */,
 				4603E29E1CC07EE40030EDA0 /* NoPasteTextField.swift in Sources */,
 				4603E2A71CC07EE40030EDA0 /* CoreGraphics+Extension.swift in Sources */,
+				46B7248A1E8DEA4B00BEE657 /* ObjcBridge.swift in Sources */,
 				468578361CDA410000906ABA /* CGD.swift in Sources */,
 				4603E2AE1CC07EE40030EDA0 /* UserDefaults+Extension.swift in Sources */,
 				46FCD8BF1D5DC94200E72ACD /* UIBarButtonItem+Extension.swift in Sources */,
@@ -434,6 +454,7 @@
 		4603E2701CC07E990030EDA0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -447,6 +468,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mochxiao.ExtensionKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -454,6 +476,7 @@
 		4603E2711CC07E990030EDA0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;

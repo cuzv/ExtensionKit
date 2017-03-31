@@ -30,13 +30,10 @@ private struct AssociationKey {
     fileprivate static var contentInsets: String = "com.mochxiao.uitextfield.contentInsets"
 }
 
-// MARK: - Swizzle
+// Swizzled see in `ObjcBridge.swift`
 
-extension UITextField {
-    override open class func initialize() {
-        if self != UITextField.self {
-            return
-        }
+internal extension UITextField {
+    static func swizzleTextField() {
         swizzleInstanceMethod(
             for: UITextField.self,
             original: #selector(getter: intrinsicContentSize),
@@ -55,7 +52,7 @@ extension UITextField {
     }
 }
 
-// MARK: - 
+// MARK: -
 
 public extension UITextField {
     public var contentInsets: UIEdgeInsets {
