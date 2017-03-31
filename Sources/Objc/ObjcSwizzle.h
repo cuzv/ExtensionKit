@@ -1,5 +1,5 @@
 //
-//  UIApplication+ObjcBridge.h
+//  ObjcSwizzle.h
 //  ExtensionKit
 //
 //  Created by Moch Xiao on 3/31/17.
@@ -8,6 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UIApplication (ObjcBridge)
+@interface UIView (ObjcSwizzle)
+@end
 
+@interface UILabel (ObjcSwizzle)
+@end
+
+@interface UITextField (ObjcSwizzle)
 @end

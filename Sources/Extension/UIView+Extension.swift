@@ -39,18 +39,6 @@ private struct AssociationKey {
     fileprivate static var touchExtendInsets: String = "touchExtendInsets"
 }
 
-// Swizzled see in `ObjcBridge.swift`
-
-internal extension UIView {
-    static func swizzleView() {
-        swizzleInstanceMethod(
-            for: UIView.self,
-            original: #selector(UIView.point(inside:with:)),
-            override: #selector(UIView._ek_point(inside:with:))
-        )
-    }
-}
-
 // MARK: - UIGestureRecognizer
 
 // MARK: The `ClosureDecorator` implement

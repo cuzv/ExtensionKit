@@ -27,22 +27,6 @@ private struct AssociationKey {
     fileprivate static var contentInsets: String = "com.mochxiao.uilabel.contentInsets"
 }
 
-// Swizzled see in `ObjcBridge.swift`
-extension UILabel {
-    static func swizzleLabel() {
-        swizzleInstanceMethod(
-            for: UILabel.self,
-            original: #selector(getter: intrinsicContentSize),
-            override: #selector(getter: _ek_intrinsicContentSize)
-        )
-        swizzleInstanceMethod(
-            for: UILabel.self,
-            original: #selector(drawText(in:)),
-            override: #selector(_ek_drawText(in:))
-        )
-    }
-}
-
 public extension UILabel {
     public var contentInsets: UIEdgeInsets {
         get {
