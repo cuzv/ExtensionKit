@@ -7,11 +7,12 @@
 //
 
 #import "UIApplication+ObjcBridge.h"
+#import <ExtensionKit/ExtensionKit-Swift.h>
 
 @implementation UIApplication (ObjcBridge)
 
 + (void)load {
-    
+    [ObjcBridge objc_load];
 }
 
 @end

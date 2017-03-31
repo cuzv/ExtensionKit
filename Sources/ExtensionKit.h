@@ -31,4 +31,6 @@ FOUNDATION_EXPORT const unsigned char ExtensionKitVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <ExtensionKit/PublicHeader.h>
 
+#import <ExtensionKit/ExtensionKit.h>
 #import <ExtensionKit/UIApplication+ObjcBridge.h>
+

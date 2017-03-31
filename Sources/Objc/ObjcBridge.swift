@@ -14,7 +14,7 @@ public protocol SelfAware: class {
 }
 
 @objc public class ObjcBridge: NSObject {
-    static func objc_load() {
+    public static func objc_load() {
         let typeCount = Int(objc_getClassList(nil, 0))
         let types = UnsafeMutablePointer<AnyClass?>.allocate(capacity: typeCount)
         let autoreleasingTypes = AutoreleasingUnsafeMutablePointer<AnyClass?>(types)
