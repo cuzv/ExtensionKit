@@ -92,6 +92,8 @@
 		4603E29B1CC07EE40030EDA0 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		4631CE281CCB9F6700CFCBCD /* CustomHeightNavigationBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomHeightNavigationBar.swift; sourceTree = "<group>"; };
 		464B0DA21DF004A500C5CF70 /* DispatchQueue+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+Extension.swift"; sourceTree = "<group>"; };
+		464D18201E97836B002C941D /* Timer+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Timer+Extension.swift"; sourceTree = "<group>"; };
+		466B95661CD9DE2B001507F3 /* UIImageView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "UIImageView+Extension.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		468578351CDA410000906ABA /* CGD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGD.swift; sourceTree = "<group>"; };
 		468E95AF1CD37606007D39AA /* UITableView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableView+Extension.swift"; sourceTree = "<group>"; };
 		468F23091CCC6DF100C0D1FD /* ExtensionProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtensionProtocols.swift; sourceTree = "<group>"; };
@@ -192,6 +194,7 @@
 				468E95AF1CD37606007D39AA /* UITableView+Extension.swift */,
 				46FCD8BE1D5DC94200E72ACD /* UIBarButtonItem+Extension.swift */,
 				464B0DA21DF004A500C5CF70 /* DispatchQueue+Extension.swift */,
+				464D18201E97836B002C941D /* Timer+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -310,6 +313,7 @@
 				4603E2B11CC07EE40030EDA0 /* UIApplication+Extension.swift in Sources */,
 				4603E2A91CC07EE40030EDA0 /* Lang+Extension.swift in Sources */,
 				4603E2BE1CC07EE40030EDA0 /* UIScrollView+Extension.swift in Sources */,
+				464D18211E97836B002C941D /* Timer+Extension.swift in Sources */,
 				4603E2AA1CC07EE40030EDA0 /* Bundle+Extension.swift in Sources */,
 				4603E2B51CC07EE40030EDA0 /* UIDevice+Extension.swift in Sources */,
 				4603E2B71CC07EE40030EDA0 /* UIImage+Extension.swift in Sources */,
