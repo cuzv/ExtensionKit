@@ -43,11 +43,9 @@
 		4603E2C31CC07EE40030EDA0 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4603E29B1CC07EE40030EDA0 /* UIViewController+Extension.swift */; };
 		4631CE291CCB9F6700CFCBCD /* CustomHeightNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4631CE281CCB9F6700CFCBCD /* CustomHeightNavigationBar.swift */; };
 		464B0DA31DF004A500C5CF70 /* DispatchQueue+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464B0DA21DF004A500C5CF70 /* DispatchQueue+Extension.swift */; };
-		466B95671CD9DE2B001507F3 /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 466B95661CD9DE2B001507F3 /* UIImageView+Extension.swift */; };
 		468578361CDA410000906ABA /* CGD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468578351CDA410000906ABA /* CGD.swift */; };
 		468E95B01CD37606007D39AA /* UITableView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468E95AF1CD37606007D39AA /* UITableView+Extension.swift */; };
 		468F230A1CCC6DF100C0D1FD /* ExtensionProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468F23091CCC6DF100C0D1FD /* ExtensionProtocols.swift */; };
-		468F230C1CCC775C00C0D1FD /* Nostalgia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468F230B1CCC775C00C0D1FD /* Nostalgia.swift */; };
 		469445141E5DB82300F4F926 /* CALayer+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469445131E5DB82300F4F926 /* CALayer+Extension.swift */; };
 		46A63F021E8DFE42005B06DF /* ObjcSwizzle.h in Headers */ = {isa = PBXBuildFile; fileRef = 46A63F001E8DFE42005B06DF /* ObjcSwizzle.h */; };
 		46A63F031E8DFE42005B06DF /* ObjcSwizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 46A63F011E8DFE42005B06DF /* ObjcSwizzle.m */; };
@@ -94,11 +92,9 @@
 		4603E29B1CC07EE40030EDA0 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		4631CE281CCB9F6700CFCBCD /* CustomHeightNavigationBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomHeightNavigationBar.swift; sourceTree = "<group>"; };
 		464B0DA21DF004A500C5CF70 /* DispatchQueue+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+Extension.swift"; sourceTree = "<group>"; };
-		466B95661CD9DE2B001507F3 /* UIImageView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "UIImageView+Extension.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		468578351CDA410000906ABA /* CGD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGD.swift; sourceTree = "<group>"; };
 		468E95AF1CD37606007D39AA /* UITableView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableView+Extension.swift"; sourceTree = "<group>"; };
 		468F23091CCC6DF100C0D1FD /* ExtensionProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtensionProtocols.swift; sourceTree = "<group>"; };
-		468F230B1CCC775C00C0D1FD /* Nostalgia.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Nostalgia.swift; sourceTree = "<group>"; };
 		469445131E5DB82300F4F926 /* CALayer+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CALayer+Extension.swift"; sourceTree = "<group>"; };
 		46A63F001E8DFE42005B06DF /* ObjcSwizzle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjcSwizzle.h; sourceTree = "<group>"; };
 		46A63F011E8DFE42005B06DF /* ObjcSwizzle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjcSwizzle.m; sourceTree = "<group>"; };
@@ -155,7 +151,6 @@
 				4603E2781CC07EE40030EDA0 /* PlaceholderTextView.swift */,
 				4603E2791CC07EE40030EDA0 /* TextObserver.swift */,
 				4631CE281CCB9F6700CFCBCD /* CustomHeightNavigationBar.swift */,
-				468F230B1CCC775C00C0D1FD /* Nostalgia.swift */,
 				46CFE5701CD5BAC40098C995 /* Observable.swift */,
 				468578351CDA410000906ABA /* CGD.swift */,
 			);
@@ -184,7 +179,6 @@
 				4603E28D1CC07EE40030EDA0 /* UIDevice+Extension.swift */,
 				4603E28E1CC07EE40030EDA0 /* UIFont+Extension.swift */,
 				4603E28F1CC07EE40030EDA0 /* UIImage+Extension.swift */,
-				466B95661CD9DE2B001507F3 /* UIImageView+Extension.swift */,
 				4603E2921CC07EE40030EDA0 /* UILabel+Extension.swift */,
 				4603E2931CC07EE40030EDA0 /* UINavigationBar+Extension.swift */,
 				4603E2941CC07EE40030EDA0 /* UIResponder+Extension.swift */,
@@ -258,7 +252,7 @@
 		4603E25E1CC07E990030EDA0 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0910;
 				ORGANIZATIONNAME = Moch;
 				TargetAttributes = {
 					4603E2661CC07E990030EDA0 = {
@@ -325,10 +319,8 @@
 				4603E2AD1CC07EE40030EDA0 /* NSObject+Extension.swift in Sources */,
 				4603E2B31CC07EE40030EDA0 /* UIColor+Extension.swift in Sources */,
 				4603E2BD1CC07EE40030EDA0 /* UIScreen+Extension.swift in Sources */,
-				468F230C1CCC775C00C0D1FD /* Nostalgia.swift in Sources */,
 				46A63F031E8DFE42005B06DF /* ObjcSwizzle.m in Sources */,
 				4603E2C11CC07EE40030EDA0 /* UITextView+Extension.swift in Sources */,
-				466B95671CD9DE2B001507F3 /* UIImageView+Extension.swift in Sources */,
 				46CFE5711CD5BAC40098C995 /* Observable.swift in Sources */,
 				4603E2BF1CC07EE40030EDA0 /* UITabBar+Extension.swift in Sources */,
 				4603E2C21CC07EE40030EDA0 /* UIView+Extension.swift in Sources */,
@@ -358,14 +350,20 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -410,14 +408,20 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -465,7 +469,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -485,7 +489,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mochxiao.ExtensionKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};

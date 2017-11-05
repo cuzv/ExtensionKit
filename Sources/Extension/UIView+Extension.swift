@@ -1,6 +1,6 @@
 //
 //  UIView+Extension.swift
-//  Copyright (c) 2015-2016 Moch Xiao (http://mochxiao.com).
+//  Copyright (c) 2015-2016 Red Rain (http://mochxiao.com).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -92,7 +92,7 @@ public extension UIView {
         longPressGesureRecognizer.gestureRecognizerWrapper = ClosureDecorator(action)
     }
     
-    internal func handleGestureRecognizerAction(_ sender: UIGestureRecognizer) {
+    @objc internal func handleGestureRecognizerAction(_ sender: UIGestureRecognizer) {
         if (sender.state == .ended) {
             sender.gestureRecognizerWrapper.invoke((self, sender))
         }
@@ -864,7 +864,7 @@ public extension UIView {
         set { associate(retainObject: NSValue(uiEdgeInsets: newValue), forKey: &AssociationKey.touchExtendInsets) }
     }
     
-    func _ek_point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+    @objc dynamic func _ek_point(inside point: CGPoint, with event: UIEvent?) -> Bool {
         if let control = self as? UIControl, !control.isEnabled || isHidden || touchExtendInsets == UIEdgeInsets.zero {
             return _ek_point(inside: point, with: event)
         }

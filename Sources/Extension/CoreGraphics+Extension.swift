@@ -1,6 +1,6 @@
 //
 //  CoreGraphics+Extension.swift
-//  Copyright (c) 2015-2016 Moch Xiao (http://mochxiao.com).
+//  Copyright (c) 2015-2016 Red Rain (http://mochxiao.com).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -471,7 +471,7 @@ public extension UIBezierPath {
             return path
         }
         // Create font ref
-        let fontRef = CTFontCreateWithName(font.fontName as CFString?, font.pointSize, nil)
+        let fontRef = CTFontCreateWithName((font.fontName as CFString?)!, font.pointSize, nil)
         // Create glyphs (that is, individual letter shapes)
         
         
@@ -503,7 +503,7 @@ public extension UIBezierPath {
             path.append(UIBezierPath(cgPath: pathRef))
             
             // Offset by size
-            let size = (string.substring(with: NSRange( i ..< i + 1)) as NSString).size(attributes: [NSFontAttributeName: font])
+            let size = (string.substring(with: NSRange( i ..< i + 1)) as NSString).size(withAttributes: [NSAttributedStringKey.font: font])
             path.offset(vector: CGVector(dx: -size.width, dy: 0))
         }
         

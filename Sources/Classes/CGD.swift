@@ -1,6 +1,6 @@
 //
 //  CGD.swift
-//  Copyright (c) 2015-2016 Moch Xiao (http://mochxiao.com).
+//  Copyright (c) 2015-2016 Red Rain (http://mochxiao.com).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -23,33 +23,82 @@
 
 import Foundation
 
-private let serial_queue_label = "com.mochxiao.queue.serial"
-private let concurrent_queue_label = "com.mochxiao.queue.concurrent"
-private let isolation_queue_label = "com.mochxiao.isolation.queue"
+// MARK: - Delay Task & Cancel
+
+public typealias Task = ((_ cancel: Bool) -> ())
+
+@discardableResult
+public func delay(interval time: TimeInterval, task: @escaping (() -> ())) -> Task? {
+    func dispatch_later(_ block: @escaping () -> ()) {
+        DispatchQueue.main.asyncAfter(
+            deadline: .now() + time,
+            execute: block
+        )
+    }
+    
+    var closure: (() -> ())? = task
+    var result: Task?
+    
+    let delayedClosure: Task = {
+        if let internalClosure = closure, !$0 {
+            DispatchQueue.main.async(execute: internalClosure)
+        }
+        
+        closure = nil
+        result = nil
+    }
+    
+    result = delayedClosure
+    
+    dispatch_later {
+        if let delayedClosure = result {
+            delayedClosure(false)
+        }
+    }
+    
+    return result
+}
+
+public func cancel(_ task: Task?) {
+    task?(true)
+}
+
+// MARK: - Async Task
+
+public func mainThreadAsync(execute work: @escaping () -> ()) {
+    if Thread.isMainThread {
+        work()
+    } else {
+        DispatchQueue.main.async(execute: work)
+    }
+}
+
+public func globalThreadAsync(execute work: @escaping () -> ()) {
+    if !Thread.isMainThread {
+        work()
+    } else {
+        DispatchQueue.global().async(execute: work)
+    }
+}
+
+// MARK: - AsyncSerialWorker
 
 open class AsyncSerialWorker {
-    public init() {}
-    fileprivate let serialQueue = DispatchQueue(
-        label: serial_queue_label,
-        attributes: []
-    )
+    private let serialQueue = DispatchQueue(label: "com.mochxiao.queue.serial")
     
     open func enqueue(work: @escaping (@escaping () -> ()) -> ()) {
         serialQueue.async {
             let semaphore = DispatchSemaphore(value: 0)
-            work {
-                semaphore.signal()
-            }
-            _ = semaphore.wait(timeout: DispatchTime.distantFuture)
+            work { semaphore.signal() }
+            semaphore.wait()
         }
     }
 }
 
+// MARK: - LimitedWorker
+
 open class LimitedWorker {
-    fileprivate let concurrentQueue = DispatchQueue(
-        label: concurrent_queue_label,
-        attributes: DispatchQueue.Attributes.concurrent
-    )
+    fileprivate let concurrentQueue = DispatchQueue(label: "com.mochxiao.queue.concurrent", attributes: .concurrent)
     fileprivate let semaphore: DispatchSemaphore
     
     public init(limit: Int) {
@@ -58,25 +107,34 @@ open class LimitedWorker {
     
     open func enqueue(work: @escaping () -> ()) {
         concurrentQueue.async {
-            _ = self.semaphore.wait(timeout: DispatchTime.distantFuture)
+            self.semaphore.wait()
             work()
             self.semaphore.signal()
         }
     }
 }
 
+// MARK: - IdentityMap
+
+public protocol Identifiable {
+    var identifier: String { get }
+}
+
+extension Identifiable {
+    var identifier: String { return UUID().uuidString }
+}
+
+extension NSObject: Identifiable {
+    public var identifier: String { return String(hash) }
+}
+
 open class IdentityMap<T: Identifiable> {
     var dictionary = [String: T]()
-    let accessQueue = DispatchQueue(
-        label: isolation_queue_label,
-        attributes: DispatchQueue.Attributes.concurrent
-    )
+    let accessQueue = DispatchQueue(label: "com.mochxiao.isolation.queue", attributes: .concurrent)
     
-    func object(withIdentifier identifier: String) -> T? {
+    open subscript(identifier: String) -> T? {
         var result: T? = nil
-        accessQueue.sync {
-            result = self.dictionary[identifier] as T?
-        }
+        accessQueue.sync { result = self.dictionary[identifier] as T? }
         return result
     }
     
@@ -86,3 +144,4 @@ open class IdentityMap<T: Identifiable> {
         }
     }
 }
+

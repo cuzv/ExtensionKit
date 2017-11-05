@@ -1,6 +1,6 @@
 //
 //  String+Extension.swift
-//  Copyright (c) 2015-2016 Moch Xiao (http://mochxiao.com).
+//  Copyright (c) 2015-2016 Red Rain (http://mochxiao.com).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -46,8 +46,8 @@ public extension String {
                 let startIndex = index
                 let endIndex = string.index(index, offsetBy: batchSize, limitedBy: string.endIndex) ?? string.endIndex
                 let range = startIndex..<endIndex
-                
-                let substring = string.substring(with: range)
+
+                let substring = String(string[range])
                 
                 escaped += substring.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet) ?? substring
                 
@@ -78,12 +78,8 @@ public extension String {
 // MARK: - 
 
 public extension String {
-    public var length: Int {
-        return characters.count
-    }
-    
     public var isEmpty: Bool {
-        return 0 == trimed.length
+        return 0 == trimed.count
     }
     
     public var trimed: String {
@@ -95,30 +91,29 @@ public extension String {
         return str.boundingRect(
             with: CGSize(width: preferredMaxLayoutWidth, height: CGFloat.greatestFiniteMagnitude),
             options: [.usesLineFragmentOrigin, .usesFontLeading, .truncatesLastVisibleLine],
-            attributes: [NSFontAttributeName: font],
+            attributes: [.font: font],
             context: nil
         ).size
     }
     
     public subscript(range: Range<Index>) -> String {
-        return substring(with: range)
+        return String(self[range])
     }
     
     public func substring(fromIndex minIndex: Int, toIndex maxIndex: Int) -> String {
-        let start = characters.index(startIndex, offsetBy: minIndex)
-        let end = characters.index(startIndex, offsetBy: maxIndex, limitedBy: endIndex)
+        let start = index(startIndex, offsetBy: minIndex)
+        let end = index(startIndex, offsetBy: maxIndex, limitedBy: endIndex)
         let range = Range<String.Index>(start ..< end!)
-        return substring(with: range)
+        return String(self[range])
     }
     
     public func substring(fromIndex minIndex: Int) -> String {
-        let start = characters.index(startIndex, offsetBy: minIndex)
-        return substring(from: start)
+        let start = index(startIndex, offsetBy: minIndex)
+        return String(self[start...])
     }
     
-    public func substring(toIndex index: Int) -> String {
-        let end = characters.index(startIndex, offsetBy: index, limitedBy: endIndex)
-        return self.substring(to: end!)
+    public func substring(toIndex maxIndex: Int) -> String {
+        return substring(fromIndex: 0, toIndex: maxIndex)
     }
     
     public static var uniqueIdentifier: String {

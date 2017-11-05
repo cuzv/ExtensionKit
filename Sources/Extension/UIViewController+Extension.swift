@@ -1,6 +1,6 @@
 //
 //  UIViewController+Extension.swift
-//  Copyright (c) 2015-2016 Moch Xiao (http://mochxiao.com).
+//  Copyright (c) 2015-2016 Red Rain (http://mochxiao.com).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -227,7 +227,7 @@ extension UIViewController: UINavigationControllerDelegate, UIImagePickerControl
     }
 
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        backgroundThreadAsync { () -> Void in
+        globalThreadAsync { () -> Void in
             if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
                 let newImage = image.orientation(to: .up)
                 if let imageData = newImage.compress(toByte: 100 * 1024) {

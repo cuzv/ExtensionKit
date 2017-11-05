@@ -1,6 +1,6 @@
 //
 //  Lang+Extension.swift
-//  Copyright (c) 2015-2016 Moch Xiao (http://mochxiao.com).
+//  Copyright (c) 2015-2016 Red Rain (http://mochxiao.com).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -100,64 +100,6 @@ public func random(in range: Range<Int>) -> Int {
     return  Int(arc4random_uniform(count)) + range.lowerBound
 }
 
-// MARK: - GCD
-
-public typealias Task = ((_ cancel: Bool) -> ())
-
-@discardableResult
-public func delay(interval time: TimeInterval, task: @escaping (() -> ())) -> Task? {
-    func dispatch_later(_ block: @escaping () -> ()) {
-        DispatchQueue.main.asyncAfter(
-            deadline: DispatchTime.now() + Double(Int64(time * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC),
-            execute: block
-        )
-    }
-    
-    var closure: (() -> ())? = task
-    var result: Task?
-    
-    let delayedClosure: Task = {
-        if let internalClosure = closure {
-            if $0 == false {
-                DispatchQueue.main.async(execute: internalClosure)
-            }
-        }
-        
-        closure = nil
-        result = nil
-    }
-    
-    result = delayedClosure
-    
-    dispatch_later {
-        if let delayedClosure = result {
-            delayedClosure(false)
-        }
-    }
-    
-    return result
-}
-
-public func cancel(_ task: Task?) {
-    task?(true)
-}
-
-public func mainThreadAsync(execute work: @escaping () -> ()) {
-    if Thread.isMainThread {
-        work()
-        return
-    }
-    DispatchQueue.main.async(execute: work)
-}
-
-public func backgroundThreadAsync(execute work: @escaping () -> ()) {
-    if !Thread.isMainThread {
-        work()
-        return
-    }
-    DispatchQueue.global().async(execute: work)
-}
-
 // MARK: - synchronized
 
 public func synchronized(lock: AnyObject, work: () -> ()) {
@@ -174,8 +116,8 @@ public func swizzleInstanceMethod(
     original: Selector,
     override: Selector)
 {
-    let originalMethod = class_getInstanceMethod(cls, original)
-    let overrideMethod = class_getInstanceMethod(cls, override)
+    guard let originalMethod = class_getInstanceMethod(cls, original) else { return }
+    guard let overrideMethod = class_getInstanceMethod(cls, override) else { return }
     
     if class_addMethod(
         cls,
@@ -200,8 +142,8 @@ public func swizzleClassMethod(
     original: Selector,
     override: Selector)
 {
-    let originalMethod = class_getClassMethod(cls, original)
-    let overrideMethod = class_getClassMethod(cls, override)
+    guard let originalMethod = class_getClassMethod(cls, original) else { return }
+    guard let overrideMethod = class_getClassMethod(cls, override) else { return }
     
     if class_addMethod(
         cls,

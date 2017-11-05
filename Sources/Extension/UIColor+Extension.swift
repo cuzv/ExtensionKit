@@ -1,6 +1,6 @@
 //
 //  UIColor+Extension.swift
-//  Copyright (c) 2015-2016 Moch Xiao (http://mochxiao.com).
+//  Copyright (c) 2015-2016 Red Rain (http://mochxiao.com).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -47,7 +47,7 @@ public extension UIColor {
         scanner.scanHexInt32(&hexint)
         
         // Create color object, specifying alpha
-        if hex.length <= 4 {
+        if hex.count <= 4 {
             let divisor = CGFloat(15)
             let red     = CGFloat((hexint & 0xF00) >> 8) / divisor
             let green   = CGFloat((hexint & 0x0F0) >> 4) / divisor

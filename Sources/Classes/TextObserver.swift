@@ -1,6 +1,6 @@
 //
 //  TextObserver.swift
-//  Copyright (c) 2015-2016 Moch Xiao (http://mochxiao.com).
+//  Copyright (c) 2015-2016 Red Rain (http://mochxiao.com).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -57,12 +57,12 @@ final public class TextObserver {
                 guard let textField = notification.object as? UITextField else { return }
                 guard let text = textField.text else { return }
                 
-                let textLenght = text.length
+                let textLenght = text.count
                 if textLenght > this.maxLength && nil == textField.markedTextRange {
                     textField.text = text.substring(toIndex: this.maxLength)
                 }
                 
-                this.actionHandler(this.maxLength - (textField.text ?? "").length)
+                this.actionHandler(this.maxLength - (textField.text ?? "").count)
             }
     }
     
@@ -77,12 +77,12 @@ final public class TextObserver {
                 guard let textView = notification.object as? UITextView else { return }
                 guard let text = textView.text else { return }
                 
-                let textLenght = text.length
+                let textLenght = text.count
                 if textLenght > this.maxLength && nil == textView.markedTextRange {
                     textView.text = text.substring(toIndex: this.maxLength)
                 }
                 
-                this.actionHandler(this.maxLength - (textView.text ?? "").length)
+                this.actionHandler(this.maxLength - (textView.text ?? "").count)
                 textView.scrollCursorToVisible()
             }
     }

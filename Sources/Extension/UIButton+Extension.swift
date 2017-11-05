@@ -1,6 +1,6 @@
 //
 //  UIButton+Extension.swift
-//  Copyright (c) 2015-2016 Moch Xiao (http://mochxiao.com).
+//  Copyright (c) 2015-2016 Red Rain (http://mochxiao.com).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -147,7 +147,7 @@ public extension UIButton {
             halfImageWidth
         )
         
-        let titleBounds = currentTitle.size(attributes: [NSFontAttributeName: titleLabel.font]).ceilling
+        let titleBounds = currentTitle.size(withAttributes: [.font: titleLabel.font]).ceilling
         let halfEdgeWidth = (titleBounds.width / 2.0).ceilling
         let halfEdgeHeight = (titleBounds.height / 2.0).ceilling
         imageEdgeInsets = UIEdgeInsetsMake(
@@ -175,7 +175,7 @@ public extension UIButton {
             halfImageWidth
         )
         
-        let titleBounds = currentTitle.size(attributes: [NSFontAttributeName: titleLabel.font]).ceilling
+        let titleBounds = currentTitle.size(withAttributes: [.font: titleLabel.font]).ceilling
         let halfEdgeWidth = (titleBounds.width / 2.0).ceilling
         let halfEdgeHeight = (titleBounds.height / 2.0).ceilling
         imageEdgeInsets = UIEdgeInsetsMake(
@@ -214,7 +214,7 @@ public extension UIButton {
         
         let halfSpace = (space / 2.0).ceilling
         let imageWidth = currentImage.size.width.ceilling
-        let edgeWidth = currentTitle.size(attributes: [NSFontAttributeName: titleLabel.font]).width.ceilling
+        let edgeWidth = currentTitle.size(withAttributes: [.font: titleLabel.font]).width.ceilling
         
         titleEdgeInsets = UIEdgeInsetsMake(
             0,
@@ -228,48 +228,6 @@ public extension UIButton {
             0,
             -edgeWidth - halfSpace
         )
-    }
-}
-
-// MARK: - Animation
-
-
-public extension UIButton {
-    public fileprivate(set) var activityIndicatorContainerView: UIView? {
-        get { return associatedObject(forKey: &AssociationKey.activityIndicatorContainerView) as? UIView }
-        set { associate(assignObject: newValue, forKey: &AssociationKey.activityIndicatorContainerView) }
-    }
-    
-    public override func startActivityIndicatorAnimation(indicatorColor color: UIColor = UIColor.lightGray, dy: CGFloat = 0) {
-        if let activityIndicatorContainerView = self.activityIndicatorContainerView {
-            if activityIndicatorContainerView.isActivityIndicatorAnimating {
-                return
-            }
-            activityIndicatorContainerView.isHidden = false
-            activityIndicatorContainerView.startActivityIndicatorAnimation(indicatorColor: color, dy: dy)
-            return
-        }
-        
-        let activityIndicatorContainerView = UIView(frame: bounds)
-        activityIndicatorContainerView.isUserInteractionEnabled = false
-        activityIndicatorContainerView.clipsToBounds = true
-        activityIndicatorContainerView.cornerRadius = cornerRadius
-        activityIndicatorContainerView.startActivityIndicatorAnimation(indicatorColor: color, dy: dy)
-        addSubview(activityIndicatorContainerView)
-        activityIndicatorContainerView.backgroundColor = bgColor
-        self.activityIndicatorContainerView = activityIndicatorContainerView
-    }
-    
-    public override func stopActivityIndicatorAnimation() {
-        activityIndicatorContainerView?.stopActivityIndicatorAnimation()
-        activityIndicatorContainerView?.isHidden = true
-    }
-    
-    public override var isActivityIndicatorAnimating: Bool {
-        if let activityIndicatorContainerView = activityIndicatorContainerView {
-            return activityIndicatorContainerView.isActivityIndicatorAnimating
-        }
-        return false
     }
 }
 

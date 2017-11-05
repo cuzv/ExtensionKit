@@ -1,6 +1,6 @@
 //
 //  PlaceholderTextView.swift
-//  Copyright (c) 2015-2016 Moch Xiao (http://mochxiao.com).
+//  Copyright (c) 2015-2016 Red Rain (http://mochxiao.com).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -53,7 +53,7 @@ final public class PlaceholderTextView: UITextView {
     
     override public var text: String? {
         didSet {
-            if let text = text , text.length > 0 {
+            if let text = text , text.count > 0 {
                 placeholderLabel.isHidden = true
             } else {
                 placeholderLabel.isHidden = false

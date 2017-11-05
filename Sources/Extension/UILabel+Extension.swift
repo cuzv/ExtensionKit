@@ -1,6 +1,6 @@
 //
 //  UILabel+Extension.swift
-//  Copyright (c) 2015-2016 Moch Xiao (http://mochxiao.com).
+//  Copyright (c) 2015-2016 Red Rain (http://mochxiao.com).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -53,51 +53,3 @@ public extension UILabel {
         _ek_drawText(in: UIEdgeInsetsInsetRect(rect, contentInsets))
     }
 }
-
-// MARK: - 
-
-public extension UILabel {
-    /// Setup rounding corners radius.
-    /// **Note**: Before you invoke this method, ensure `self` already have correct frame and image.
-    public override func addRoundingCorners(
-        for corners: UIRectCorner = .allCorners,
-        radius: CGFloat = 3,
-        fillColor: UIColor? = nil,
-        strokeColor: UIColor? = nil,
-        strokeLineWidth: CGFloat = 0)
-    {
-        if frame.size.equalTo(CGSize.zero) {
-            logging("Could not set rounding corners on zero size view.")
-            return
-        }
-        if nil == superview {
-            return
-        }
-
-        DispatchQueue.global().async {
-            let backImage = UIImage.make(
-                color: fillColor ?? self.backgroundColor ?? UIColor.white,
-                size: self.frame.size,
-                roundingCorners: corners,
-                radius: radius,
-                strokeColor: strokeColor ?? self.backgroundColor ?? UIColor.clear,
-                strokeLineWidth: strokeLineWidth
-            )
-            DispatchQueue.main.async {
-                let backImageView = UIImageView(image: backImage)
-                backImageView.frame = self.frame
-                self.superview?.addSubview(backImageView)
-                self.superview?.sendSubview(toBack: backImageView)
-                self.backgroundColor = UIColor.clear
-                self.isRoundingCornersExists = true
-            }
-        }
-    }
-    
-    /// This will remove all added rounding corners on label's superview
-    public override func removeRoundingCorners() {
-        superview?.removeRoundingCorners()
-        isRoundingCornersExists = false
-    }
-}
-

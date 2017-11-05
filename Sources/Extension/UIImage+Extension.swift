@@ -1,6 +1,6 @@
 //
 //  UIImage+Extension.swift
-//  Copyright (c) 2015-2016 Moch Xiao (http://mochxiao.com).
+//  Copyright (c) 2015-2016 Red Rain (http://mochxiao.com).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -415,7 +415,7 @@ public extension UIImage {
         context!.setBlendMode(.normal)
         (text as NSString).draw(
             in: stringRect,
-            withAttributes: [NSForegroundColorAttributeName: color]
+            withAttributes: [NSAttributedStringKey.foregroundColor: color]
         )
         
         // Retrieve the new image
@@ -454,7 +454,7 @@ public extension UIImage {
             )
             let features = detector!.features(in: CIImage)
             if let first = features.first as? CIQRCodeFeature {
-                return first.messageString!.length > 0
+                return first.messageString!.count > 0
             }
         }
         return false

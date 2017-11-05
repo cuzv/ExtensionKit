@@ -1,6 +1,6 @@
 //
 //  UIBarButtonItem+Extension.swift
-//  Copyright (c) 2015-2016 Moch Xiao (http://mochxiao.com).
+//  Copyright (c) 2015-2016 Red Rain (http://mochxiao.com).
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -72,7 +72,7 @@ public extension UIBarButtonItem {
     }
     
     /// Helper func
-    internal class func performActionHandler(sender: UIBarButtonItem) {
+    @objc internal class func performActionHandler(sender: UIBarButtonItem) {
         sender.barButtonItemActionHandlerWrapper?.invoke(sender)
     }
 }
